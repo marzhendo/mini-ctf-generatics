@@ -272,6 +272,7 @@ function getInitialState(): MockDatabaseState {
     seconds_remaining: 1800,
     started_at: null,
     stopped_at: null,
+    active_air_drop: null,
     updated_at: new Date().toISOString(),
   };
 
@@ -313,6 +314,7 @@ export const mockDb = {
         seconds_remaining: db.eventState.duration_minutes * 60,
         started_at: null,
         stopped_at: null,
+        active_air_drop: null,
       };
     } else {
       // SCORES_ONLY: retain users, reset score, level, streak, submissions
@@ -331,6 +333,7 @@ export const mockDb = {
         seconds_remaining: db.eventState.duration_minutes * 60,
         started_at: null,
         stopped_at: null,
+        active_air_drop: null,
       };
     }
     return { success: true, mode };
@@ -650,13 +653,70 @@ export const mockDb = {
 
   triggerAirDrop() {
     const db = getMockDb();
+    const airDropId = `ad-${Date.now()}`;
+    db.eventState.active_air_drop = {
+      id: airDropId,
+      max_claims: 3,
+      claimed_by: [],
+      remaining_claims: 3,
+      created_at: new Date().toISOString(),
+    };
     db.battleEvents.unshift({
       id: `evt-${Date.now()}`,
       event_type: 'AIR_DROP',
-      description: 'Kotak Bantuan Air Drop mendarat di panggung auditorium!',
+      description: 'Kotak Bantuan Air Drop mendarat di panggung auditorium! (Hanya 3 tercepat)',
+      payload: { airDropId, remaining_claims: 3, max_claims: 3 },
       created_at: new Date().toISOString(),
     });
-    return { success: true };
+    return { success: true, airDropId };
+  },
+
+  claimAirDrop(userId: string, airDropId?: string) {
+    const db = getMockDb();
+    const activeDrop = db.eventState.active_air_drop;
+    if (!activeDrop) {
+      return { success: false, error: 'Tidak ada Air Drop yang sedang aktif.' };
+    }
+    if (airDropId && activeDrop.id !== airDropId) {
+      return { success: false, error: 'Air Drop ini sudah kadaluarsa.' };
+    }
+    if (activeDrop.claimed_by.includes(userId)) {
+      return {
+        success: true,
+        already_claimed: true,
+        remaining_claims: activeDrop.remaining_claims,
+        airDropId: activeDrop.id,
+      };
+    }
+    if (activeDrop.claimed_by.length >= activeDrop.max_claims) {
+      return {
+        success: false,
+        error: 'Kuota Air Drop habis! Sudah diambil 3 peserta tercepat.',
+        is_exhausted: true,
+      };
+    }
+
+    activeDrop.claimed_by.push(userId);
+    activeDrop.remaining_claims = Math.max(0, activeDrop.max_claims - activeDrop.claimed_by.length);
+
+    const user = db.users.find((u) => u.id === userId);
+    const userName = user ? user.name : 'Peserta';
+
+    db.battleEvents.unshift({
+      id: `evt-${Date.now()}`,
+      event_type: 'SKILL_EXECUTED',
+      actor_id: userId,
+      description: `${userName} mengklaim Kotak Air Drop! (Sisa kuota: ${activeDrop.remaining_claims}/${activeDrop.max_claims})`,
+      payload: { airDropId: activeDrop.id, remaining_claims: activeDrop.remaining_claims },
+      created_at: new Date().toISOString(),
+    });
+
+    return {
+      success: true,
+      airDropId: activeDrop.id,
+      remaining_claims: activeDrop.remaining_claims,
+      is_exhausted: activeDrop.remaining_claims === 0,
+    };
   },
 
   getBattleEvents(limit = 25): BattleEvent[] {

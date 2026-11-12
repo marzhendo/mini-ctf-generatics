@@ -6,6 +6,7 @@ import { createClient } from '@/lib/supabase/client';
 import { User, Challenge } from '@/lib/types';
 import { getChallenge } from '@/app/actions/getChallenge';
 import { submitFlag } from '@/app/actions/submitFlag';
+import { claimAirDrop } from '@/app/actions/claimAirDrop';
 import { getEventState } from '@/app/actions/getEventState';
 import { ArenaHeader } from '@/components/arena/ArenaHeader';
 import { AirDropBanner } from '@/components/arena/AirDropBanner';
@@ -41,6 +42,9 @@ export default function ArenaPage() {
   });
 
   const [airDropAvailable, setAirDropAvailable] = useState(false);
+  const [airDropId, setAirDropId] = useState<string | null>(null);
+  const [airDropQuota, setAirDropQuota] = useState<{ remaining: number; max: number }>({ remaining: 3, max: 3 });
+  const [isClaimingAirDrop, setIsClaimingAirDrop] = useState(false);
   const [airDropModalOpen, setAirDropModalOpen] = useState(false);
   const [isFrozen, setIsFrozen] = useState(false);
   const [attackerName, setAttackerName] = useState('Peserta Rival');
@@ -197,6 +201,12 @@ export default function ArenaPage() {
           const newEvent = payload.new;
           if (newEvent.event_type === 'AIR_DROP') {
             sound.playAirDropAlert();
+            const p = newEvent.payload as { airDropId?: string; remaining_claims?: number; max_claims?: number } | undefined;
+            setAirDropId(p?.airDropId || `ad-${Date.now()}`);
+            setAirDropQuota({
+              remaining: p?.remaining_claims ?? 3,
+              max: p?.max_claims ?? 3,
+            });
             setAirDropAvailable(true);
           } else if (
             newEvent.event_type === 'SKILL_EXECUTED' &&
@@ -227,9 +237,25 @@ export default function ArenaPage() {
     // Channel 3: Auditorium broadcast sync (ctf_arena)
     const arenaBroadcastChannel = supabase
       .channel('ctf_arena')
-      .on('broadcast', { event: 'air_drop_spawn' }, () => {
+      .on('broadcast', { event: 'air_drop_spawn' }, ({ payload }) => {
         sound.playAirDropAlert();
+        setAirDropId(payload?.airDropId || `ad-${Date.now()}`);
+        setAirDropQuota({
+          remaining: payload?.remaining_claims ?? 3,
+          max: payload?.max_claims ?? 3,
+        });
         setAirDropAvailable(true);
+      })
+      .on('broadcast', { event: 'air_drop_claim_update' }, ({ payload }) => {
+        if (payload?.remaining_claims !== undefined) {
+          setAirDropQuota((prev) => ({ ...prev, remaining: payload.remaining_claims }));
+          if (payload.remaining_claims <= 0) {
+            setAirDropAvailable(false);
+          }
+        }
+      })
+      .on('broadcast', { event: 'air_drop_exhausted' }, () => {
+        setAirDropAvailable(false);
       })
       .on('broadcast', { event: 'timer_sync' }, ({ payload }) => {
         if (payload?.secondsRemaining) {
@@ -320,10 +346,30 @@ export default function ArenaPage() {
     }
   };
 
-  // 7. Intercept Air Drop
-  const handleInterceptAirDrop = () => {
+  // 7. Intercept Air Drop (Race for the 3 fastest slots)
+  const handleInterceptAirDrop = async () => {
+    if (!user?.id || isClaimingAirDrop) return;
+    setIsClaimingAirDrop(true);
     sound.playBeep(1100, 0.05);
-    setAirDropModalOpen(true);
+
+    try {
+      const res = await claimAirDrop(user.id, airDropId || undefined);
+      setIsClaimingAirDrop(false);
+
+      if (res.success) {
+        // Successfully claimed 1 of 3 slots!
+        setAirDropAvailable(false);
+        setAirDropModalOpen(true);
+      } else {
+        // Quota already full (3 claims reached) or expired
+        setAirDropAvailable(false);
+        sound.playError();
+        alert(res.error || 'Kuota Air Drop habis! Sudah diserbu 3 peserta tercepat.');
+      }
+    } catch {
+      setIsClaimingAirDrop(false);
+      setAirDropAvailable(false);
+    }
   };
 
   // 8. Skill Deployed Callback
@@ -378,12 +424,15 @@ export default function ArenaPage() {
           </div>
         )}
 
-        {/* Air Drop Banner (if available) with 5s expiry */}
+        {/* Air Drop Banner (Available for first 3 fastest participants) */}
         {airDropAvailable && (
           <AirDropBanner
             onIntercept={handleInterceptAirDrop}
             onExpire={() => setAirDropAvailable(false)}
-            durationSeconds={5}
+            durationSeconds={12}
+            remainingQuota={airDropQuota.remaining}
+            maxQuota={airDropQuota.max}
+            isClaiming={isClaimingAirDrop}
           />
         )}
 

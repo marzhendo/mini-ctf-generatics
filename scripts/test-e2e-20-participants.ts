@@ -21,6 +21,7 @@ import { getChallenge } from '../app/actions/getChallenge';
 import { submitFlag } from '../app/actions/submitFlag';
 import { deploySkill } from '../app/actions/deploySkill';
 import { triggerAirDrop } from '../app/actions/triggerAirDrop';
+import { claimAirDrop } from '../app/actions/claimAirDrop';
 import { getLeaderboard } from '../app/actions/getLeaderboard';
 import { getAdminChallenges, saveChallenge, deleteChallenge } from '../app/actions/manageChallenges';
 import { User, ChallengeWithAnswer } from '../lib/types';
@@ -247,11 +248,30 @@ async function run20ParticipantsE2ETest() {
   );
 
   // ----------------------------------------------------
-  // STEP 9: Tactical Battle Skills & Air Drop
+  // STEP 9: Tactical Battle Skills & Air Drop (Strict 3 Claims Limit)
   // ----------------------------------------------------
-  console.log('\n--- STEP 9: Tactical Skills & Air Drop ---');
+  console.log('\n--- STEP 9: Tactical Skills & Air Drop (3-Person Quota) ---');
   const airDropRes = await triggerAirDrop();
   assert(airDropRes.success, 'Admin triggers manual Air Drop delivery');
+
+  // Test 3-Person Quota:
+  // First 3 participants claim successfully
+  const claim1 = await claimAirDrop(participants[0].id, airDropRes.airDropId);
+  assert(claim1.success && claim1.remaining_claims === 2, 'Claim 1/3: Participant 0 claims Air Drop slot (2 remaining)');
+
+  const claim2 = await claimAirDrop(participants[1].id, airDropRes.airDropId);
+  assert(claim2.success && claim2.remaining_claims === 1, 'Claim 2/3: Participant 1 claims Air Drop slot (1 remaining)');
+
+  const claim3 = await claimAirDrop(participants[2].id, airDropRes.airDropId);
+  assert(claim3.success && claim3.remaining_claims === 0 && claim3.is_exhausted === true, 'Claim 3/3: Participant 2 claims Air Drop slot (0 remaining, exhausted)');
+
+  // 4th participant attempts to claim -> MUST BE REJECTED!
+  const claim4 = await claimAirDrop(participants[3].id, airDropRes.airDropId);
+  assert(!claim4.success, 'Reject 4th participant: Air Drop quota exhausted (only 3 allowed)');
+
+  // Participant 0 attempts to double-claim
+  const claimDuplicate = await claimAirDrop(participants[0].id, airDropRes.airDropId);
+  assert(claimDuplicate.already_claimed === true, 'Participant 0 recognized as already claimed');
 
   // Participant 0 uses FREEZE_TIME on Participant 1
   const freezeRes = await deploySkill({

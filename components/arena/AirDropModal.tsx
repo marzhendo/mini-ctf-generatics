@@ -78,20 +78,21 @@ export function AirDropModal({
   useEffect(() => {
     if (!isOpen) return;
 
+    const endTime = Date.now() + durationSeconds * 1000;
     const timer = setInterval(() => {
-      setSecondsRemaining((prev) => {
-        if (prev <= 1) {
-          clearInterval(timer);
-          // Auto-deploy DOUBLE_POINTS if user didn't choose in time
-          handleAutoDeploy();
-          return 0;
-        }
-        return prev - 1;
-      });
-    }, 1000);
+      const now = Date.now();
+      const diff = Math.ceil((endTime - now) / 1000);
+      if (diff <= 0) {
+        clearInterval(timer);
+        setSecondsRemaining(0);
+        handleAutoDeploy();
+      } else {
+        setSecondsRemaining(diff);
+      }
+    }, 200);
 
     return () => clearInterval(timer);
-  }, [isOpen]);
+  }, [isOpen, durationSeconds]);
 
   const handleAutoDeploy = async () => {
     if (deployRef.current) return;

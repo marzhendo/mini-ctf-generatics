@@ -4,6 +4,15 @@ export type QuestionType = 'FLAG' | 'MULTIPLE_CHOICE';
 
 export type EventStatus = 'WAITING' | 'RUNNING' | 'PAUSED' | 'STOPPED';
 
+export interface ActiveAirDrop {
+  id: string;
+  max_claims: number;
+  claimed_by: string[];
+  remaining_claims: number;
+  created_at: string;
+  expires_at?: string;
+}
+
 export interface EventState {
   status: EventStatus;
   duration_minutes: number;
@@ -11,6 +20,7 @@ export interface EventState {
   started_at?: string | null;
   stopped_at?: string | null;
   updated_at?: string;
+  active_air_drop?: ActiveAirDrop | null;
 }
 
 export interface User {

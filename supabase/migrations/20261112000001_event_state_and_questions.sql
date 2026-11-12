@@ -11,8 +11,13 @@ CREATE TABLE IF NOT EXISTS event_state (
   seconds_remaining INTEGER NOT NULL DEFAULT 1800,
   started_at TIMESTAMP WITH TIME ZONE DEFAULT NULL,
   stopped_at TIMESTAMP WITH TIME ZONE DEFAULT NULL,
+  active_air_drop JSONB DEFAULT NULL,
   updated_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
 );
+
+-- Ensure active_air_drop exists if table was created previously
+ALTER TABLE event_state
+  ADD COLUMN IF NOT EXISTS active_air_drop JSONB DEFAULT NULL;
 
 -- Seed initial event state if not exists
 INSERT INTO event_state (id, status, duration_minutes, seconds_remaining)
