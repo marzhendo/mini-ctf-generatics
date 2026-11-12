@@ -141,12 +141,12 @@ async function run20ParticipantsE2ETest() {
   assert(!duplicateLvl1.success, 'Enforce One-Shot: Level 1 re-submission rejected');
 
   // ----------------------------------------------------
-  // STEP 5: Level 2 (Text Flag - Core TDI: IDAA)
+  // STEP 5: Level 2 (Text Flag - Koor TDI: RIDHA)
   // ----------------------------------------------------
   console.log('\n--- STEP 5: Level 2 Submissions ---');
   const lvl2Subs = await Promise.all(
     participants.map((user, idx) => {
-      const flag = idx < 16 ? 'IDAA' : 'WRONG';
+      const flag = idx < 16 ? 'RIDHA' : 'WRONG';
       return submitFlag({
         userId: user.id,
         level: 2,

@@ -53,12 +53,12 @@ VALUES
 (
   2,
   'FLAG',
-  'Struktur Organisasi · Core TDI',
-  'Pada slide struktur kepengurusan departemen TDI, siapakah nama panggilan/singkatan dari sosok yang menjabat sebagai "Core of Departement"? (Tuliskan nama panggilannya)',
+  'Struktur Organisasi · Koordinator TDI',
+  'Pada slide struktur kepengurusan departemen TDI, siapakah nama panggilan dari sosok yang menjabat sebagai Koordinator (Core of Department)?',
   '[]'::jsonb,
-  'IDAA',
+  'RIDHA',
   100,
-  'Nama terdiri dari 4 huruf di slide kedua (I-d-A-a).'
+  'Nama koordinator departemen TDI (R-i-d-h-a).'
 ),
 (
   3,
@@ -123,12 +123,12 @@ VALUES
 (
   9,
   'MULTIPLE_CHOICE',
-  'Fun Fact & Meme Presentasi',
-  'Pada slide Q&A / sesi tanya jawab di akhir presentasi, apa pesan peringatan kocak yang tertera di tengah slide sebelum audiens bertanya?',
-  '["A. Dilarang bertanya yang sulit-sulit", "B. Sebelum bertanya pastikan pertanyaanmu masuk akal PAHAM👊🖐️", "C. Pertanyaan terbaik dapat doorprize takjil", "D. Tanya ke ChatGPT saja ya teman-teman"]'::jsonb,
+  'Program Kerja TDI · Podcast Informatics',
+  'Dalam salah satu episode program kerja "Podcast Informatics" oleh departemen TDI, topik IT apakah yang dibahas bersama narasumber?',
+  '["A. Merakit PC Gaming Hemat Budget", "B. Cyber Security & Secure Coding", "C. Trik Menguasai Rumus Excel", "D. Strategi Menjadi Selebgram Kampus"]'::jsonb,
   'B',
   300,
-  'Ada foto meme tangan terbuka dan tinju bertuliskan PAHAM👊🖐️.'
+  'Topik keamanan siber yang sangat relevan dengan tema Mini CTF ini.'
 ),
 (
   10,
