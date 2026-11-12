@@ -2,14 +2,15 @@
 
 import React, { useState, useEffect } from 'react';
 import Image from 'next/image';
-import { Maximize, Minimize, Wifi, ShieldCheck, Users } from 'lucide-react';
+import { Maximize, Minimize, Wifi, ShieldCheck, Users, BarChart3 } from 'lucide-react';
 import { sound } from '@/lib/audio';
 
 interface ProjectorHeaderProps {
   totalOperators: number;
+  onOpenAnalysis?: () => void;
 }
 
-export function ProjectorHeader({ totalOperators }: ProjectorHeaderProps) {
+export function ProjectorHeader({ totalOperators, onOpenAnalysis }: ProjectorHeaderProps) {
   const [isFullscreen, setIsFullscreen] = useState(false);
 
   useEffect(() => {
@@ -89,6 +90,20 @@ export function ProjectorHeader({ totalOperators }: ProjectorHeaderProps) {
             <span className="text-[11px]">Auto-Sync (2.5s)</span>
           </div>
         </div>
+
+        {onOpenAnalysis && (
+          <button
+            onClick={() => {
+              sound.playBeep(950, 0.04);
+              onOpenAnalysis();
+            }}
+            className="border border-cyan-500/30 hover:border-cyan-500/50 bg-cyan-500/10 hover:bg-cyan-500/20 text-cyan-300 font-sans text-xs px-2.5 py-1.5 rounded-md transition-all flex items-center gap-1.5 font-semibold shadow-sm"
+            title="Analisis Soal & Jawaban (Quizizz Mode)"
+          >
+            <BarChart3 className="w-3.5 h-3.5 text-cyan-400" />
+            <span className="hidden md:inline">Analisis Soal</span>
+          </button>
+        )}
 
         <button
           onClick={toggleFullscreen}

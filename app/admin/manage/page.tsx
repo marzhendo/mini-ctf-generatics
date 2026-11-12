@@ -21,6 +21,7 @@ import {
   X,
   ListChecks,
   Key,
+  BarChart3,
 } from 'lucide-react';
 import { EventState, ChallengeWithAnswer } from '@/lib/types';
 import { getEventState } from '@/app/actions/getEventState';
@@ -28,6 +29,7 @@ import { updateEventState } from '@/app/actions/updateEventState';
 import { resetTournament } from '@/app/actions/resetTournament';
 import { triggerAirDrop } from '@/app/actions/triggerAirDrop';
 import { getAdminChallenges, saveChallenge, deleteChallenge } from '@/app/actions/manageChallenges';
+import QuestionAnalysisModal from '@/components/admin/QuestionAnalysisModal';
 import { sound } from '@/lib/audio';
 
 export default function AdminManagePage() {
@@ -41,6 +43,7 @@ export default function AdminManagePage() {
   const [customMinutes, setCustomMinutes] = useState(30);
   const [isLoading, setIsLoading] = useState(true);
   const [isActionLoading, setIsActionLoading] = useState(false);
+  const [isAnalysisModalOpen, setIsAnalysisModalOpen] = useState(false);
   const [statusNotice, setStatusNotice] = useState<string | null>(null);
 
   // Confirmation Modal States
@@ -272,8 +275,19 @@ export default function AdminManagePage() {
           </div>
         </div>
 
-        {/* Action Link to Stage Projector */}
+        {/* Action Link to Stage Projector & Question Analysis */}
         <div className="flex items-center gap-2">
+          <button
+            type="button"
+            onClick={() => {
+              sound.playBeep(950, 0.04);
+              setIsAnalysisModalOpen(true);
+            }}
+            className="px-3 py-1.5 rounded-lg text-xs font-semibold flex items-center gap-1.5 transition-all text-cyan-300 bg-cyan-500/10 border border-cyan-500/30 hover:border-cyan-400 hover:bg-cyan-500/20 shadow-sm"
+          >
+            <BarChart3 className="w-3.5 h-3.5 text-cyan-400" />
+            <span>Analisis Soal (Quizizz Mode)</span>
+          </button>
           <a
             href="/admin/dashboard"
             target="_blank"
@@ -321,6 +335,16 @@ export default function AdminManagePage() {
           >
             <Layers className="w-4 h-4 text-amber-400" />
             <span>Bank &amp; Manajemen Soal ({challenges.length} Soal)</span>
+          </button>
+          <button
+            onClick={() => {
+              sound.playBeep(950, 0.04);
+              setIsAnalysisModalOpen(true);
+            }}
+            className="pb-2.5 px-3 text-sm font-semibold transition-all border-b-2 border-transparent text-cyan-400 hover:text-cyan-300 flex items-center gap-2 ml-auto"
+          >
+            <BarChart3 className="w-4 h-4 text-cyan-400" />
+            <span className="hidden sm:inline">📊 Analisis Akurasi Soal</span>
           </button>
         </div>
 
@@ -890,6 +914,12 @@ export default function AdminManagePage() {
           </div>
         </div>
       )}
+
+      {/* Quizizz-Style Question Performance Analysis Modal */}
+      <QuestionAnalysisModal
+        isOpen={isAnalysisModalOpen}
+        onClose={() => setIsAnalysisModalOpen(false)}
+      />
     </div>
   );
 }

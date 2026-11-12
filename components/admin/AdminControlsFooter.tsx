@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useState } from 'react';
-import { Package, Pause, Play, Trophy, Loader2, RefreshCw } from 'lucide-react';
+import { Package, Pause, Play, Trophy, Loader2, RefreshCw, BarChart3 } from 'lucide-react';
 import { triggerAirDrop } from '@/app/actions/triggerAirDrop';
 import { sound } from '@/lib/audio';
 import confetti from 'canvas-confetti';
@@ -12,6 +12,7 @@ interface AdminControlsFooterProps {
   onRevealWinners: () => void;
   onRefresh?: () => void;
   isRefreshing?: boolean;
+  onOpenAnalysis?: () => void;
 }
 
 export function AdminControlsFooter({
@@ -20,6 +21,7 @@ export function AdminControlsFooter({
   onRevealWinners,
   onRefresh,
   isRefreshing = false,
+  onOpenAnalysis,
 }: AdminControlsFooterProps) {
   const [isTriggeringDrop, setIsTriggeringDrop] = useState(false);
 
@@ -81,6 +83,21 @@ export function AdminControlsFooter({
           >
             <RefreshCw className={`w-3.5 h-3.5 ${isRefreshing ? 'animate-spin text-cyan-400' : ''}`} />
             <span>Sync</span>
+          </button>
+        )}
+
+        {/* Question Analysis (Quizizz Mode) Button */}
+        {onOpenAnalysis && (
+          <button
+            onClick={() => {
+              sound.playBeep(950, 0.04);
+              onOpenAnalysis();
+            }}
+            className="border border-cyan-500/30 hover:border-cyan-500/50 bg-cyan-500/10 hover:bg-cyan-500/20 text-cyan-300 font-sans text-xs px-3 py-1.5 rounded-md transition-all flex items-center gap-1.5 font-semibold shadow-sm"
+            title="Buka Analisis Soal & Jawaban (Quizizz Mode)"
+          >
+            <BarChart3 className="w-3.5 h-3.5 text-cyan-400" />
+            <span>Analisis Soal</span>
           </button>
         )}
 

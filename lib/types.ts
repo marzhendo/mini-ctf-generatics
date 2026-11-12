@@ -114,3 +114,36 @@ export interface DeploySkillResult {
   skill_type?: SkillType;
   new_score?: number;
 }
+
+export interface ParticipantSubmissionDetail {
+  userId: string;
+  userName: string;
+  submittedAnswer?: string;
+  isCorrect: boolean;
+  createdAt?: string;
+}
+
+export interface PendingParticipantDetail {
+  userId: string;
+  userName: string;
+  currentLevel: number;
+}
+
+export interface QuestionAnalysisItem {
+  challengeId: number;
+  level: number;
+  questionText: string;
+  questionType: QuestionType;
+  options?: string[];
+  flagAnswer: string;
+  category?: string;
+  points: number;
+  totalSubmissions: number;
+  correctCount: number;
+  wrongCount: number;
+  pendingCount: number;
+  accuracyRate: number; // percentage 0 - 100
+  correctParticipants: ParticipantSubmissionDetail[];
+  wrongParticipants: ParticipantSubmissionDetail[];
+  pendingParticipants: PendingParticipantDetail[];
+}

@@ -13,6 +13,7 @@ import { FieldRosterTable } from '@/components/admin/FieldRosterTable';
 import { CombatLogFeed } from '@/components/admin/CombatLogFeed';
 import { AdminControlsFooter } from '@/components/admin/AdminControlsFooter';
 import { WinnerRevealModal } from '@/components/admin/WinnerRevealModal';
+import QuestionAnalysisModal from '@/components/admin/QuestionAnalysisModal';
 import { sound } from '@/lib/audio';
 
 export default function AdminDashboardPage() {
@@ -21,6 +22,7 @@ export default function AdminDashboardPage() {
   const [secondsRemaining, setSecondsRemaining] = useState(1800); // 30 minutes match
   const [isTimerPaused, setIsTimerPaused] = useState(false);
   const [isWinnerModalOpen, setIsWinnerModalOpen] = useState(false);
+  const [isAnalysisModalOpen, setIsAnalysisModalOpen] = useState(false);
   const [isRefreshing, setIsRefreshing] = useState(false);
   const isFetchingRef = useRef(false);
 
@@ -182,7 +184,10 @@ export default function AdminDashboardPage() {
   return (
     <div className="bg-[#080A0F] text-zinc-100 font-sans select-none overflow-hidden h-screen w-screen flex flex-col justify-between relative subtle-grid">
       {/* Top Header */}
-      <ProjectorHeader totalOperators={users.length} />
+      <ProjectorHeader
+        totalOperators={users.length}
+        onOpenAnalysis={() => setIsAnalysisModalOpen(true)}
+      />
 
       {/* Giant Projector Countdown Clock */}
       <GiantClockSection
@@ -212,6 +217,7 @@ export default function AdminDashboardPage() {
         onRevealWinners={() => setIsWinnerModalOpen(true)}
         onRefresh={() => fetchData(true)}
         isRefreshing={isRefreshing}
+        onOpenAnalysis={() => setIsAnalysisModalOpen(true)}
       />
 
       {/* Winner Reveal Modal */}
@@ -219,6 +225,12 @@ export default function AdminDashboardPage() {
         isOpen={isWinnerModalOpen}
         onClose={() => setIsWinnerModalOpen(false)}
         topUsers={users.slice(0, 3)}
+      />
+
+      {/* Quizizz-Style Question Performance Analysis Modal */}
+      <QuestionAnalysisModal
+        isOpen={isAnalysisModalOpen}
+        onClose={() => setIsAnalysisModalOpen(false)}
       />
     </div>
   );

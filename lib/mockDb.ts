@@ -8,6 +8,9 @@ import {
   RivalUser,
   SkillType,
   EventState,
+  QuestionAnalysisItem,
+  ParticipantSubmissionDetail,
+  PendingParticipantDetail,
 } from './types';
 
 export function isSupabaseConfigured(): boolean {
@@ -770,5 +773,69 @@ export const mockDb = {
       correctCount,
       nodes,
     };
+  },
+
+  getQuestionAnalysis(): QuestionAnalysisItem[] {
+    const db = getMockDb();
+    const sortedChallenges = [...db.challenges].sort((a, b) => a.level - b.level);
+    const users = db.users;
+    const userMap = new Map(users.map((u) => [u.id, u.name]));
+
+    return sortedChallenges.map((ch) => {
+      const challengeSubs = db.submissions.filter((s) => s.challenge_level === ch.level);
+      const correctParticipants: ParticipantSubmissionDetail[] = [];
+      const wrongParticipants: ParticipantSubmissionDetail[] = [];
+      const answeredUserIds = new Set<string>();
+
+      challengeSubs.forEach((sub) => {
+        answeredUserIds.add(sub.user_id);
+        const userName = userMap.get(sub.user_id) || 'Peserta';
+        const detail: ParticipantSubmissionDetail = {
+          userId: sub.user_id,
+          userName,
+          submittedAnswer: sub.submitted_answer,
+          isCorrect: sub.is_correct,
+          createdAt: sub.created_at,
+        };
+        if (sub.is_correct) {
+          correctParticipants.push(detail);
+        } else {
+          wrongParticipants.push(detail);
+        }
+      });
+
+      const pendingParticipants: PendingParticipantDetail[] = users
+        .filter((u) => !answeredUserIds.has(u.id))
+        .map((u) => ({
+          userId: u.id,
+          userName: u.name,
+          currentLevel: u.current_level,
+        }));
+
+      const totalSubmissions = challengeSubs.length;
+      const correctCount = correctParticipants.length;
+      const wrongCount = wrongParticipants.length;
+      const pendingCount = pendingParticipants.length;
+      const accuracyRate = totalSubmissions > 0 ? Math.round((correctCount / totalSubmissions) * 100) : 0;
+
+      return {
+        challengeId: ch.id,
+        level: ch.level,
+        questionText: ch.question_text,
+        questionType: ch.question_type || 'FLAG',
+        options: ch.options || [],
+        flagAnswer: ch.flag_answer,
+        category: ch.category || 'Pengetahuan Umum IT',
+        points: ch.points,
+        totalSubmissions,
+        correctCount,
+        wrongCount,
+        pendingCount,
+        accuracyRate,
+        correctParticipants,
+        wrongParticipants,
+        pendingParticipants,
+      };
+    });
   },
 };
