@@ -45,7 +45,7 @@ export default function LandingPage() {
 
       sound.playSuccess();
       localStorage.setItem('nexus_user', JSON.stringify(res.user));
-      router.push('/arena');
+      router.push('/lobby');
     } catch {
       sound.playError();
       setErrorMsg('Terjadi kesalahan koneksi server.');

@@ -8,6 +8,7 @@ import {
   Sparkles,
   Zap,
   CornerDownLeft,
+  Flame,
 } from 'lucide-react';
 import { sound } from '@/lib/audio';
 
@@ -17,6 +18,8 @@ interface FeedbackModalProps {
   pointsAwarded: number;
   currentLevel: number;
   hasDoublePoints?: boolean;
+  streakCount?: number;
+  streakMultiplier?: number;
   onAdvance: () => void;
 }
 
@@ -26,6 +29,8 @@ export function FeedbackModal({
   pointsAwarded,
   currentLevel,
   hasDoublePoints = false,
+  streakCount = 0,
+  streakMultiplier = 1,
   onAdvance,
 }: FeedbackModalProps) {
   const [secondsRemaining, setSecondsRemaining] = useState(4);
@@ -73,6 +78,7 @@ export function FeedbackModal({
 
   const nextLevel = currentLevel + 1;
   const isFinalNode = currentLevel >= 10;
+  const hasStreakBonus = isCorrect && streakCount >= 4 && streakMultiplier > 1;
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-sm animate-in fade-in duration-200">
@@ -99,26 +105,41 @@ export function FeedbackModal({
                 Jawaban Benar!
               </h2>
               <p className="text-xs text-zinc-400 mt-1">
-                Flag berhasil diverifikasi. Poin telah masuk ke papan skor.
+                Poin telah berhasil ditambahkan ke saldo skormu.
               </p>
             </div>
 
             {/* Points Awarded Card */}
-            <div className="p-3 rounded-lg bg-[#121826] border border-emerald-500/20 flex items-center justify-between">
-              <div className="flex items-center gap-2">
-                <Sparkles className="w-4 h-4 text-emerald-400" />
-                <span className="font-sans text-sm font-semibold text-emerald-300">
-                  +{pointsAwarded} Poin
-                </span>
-                {hasDoublePoints && (
-                  <span className="px-1.5 py-0.5 bg-amber-400 text-zinc-950 font-mono text-[10px] font-bold rounded flex items-center gap-0.5">
-                    <Zap className="w-3 h-3" /> 2X BONUS
+            <div className="p-3 rounded-lg bg-[#121826] border border-emerald-500/20 flex flex-col gap-2">
+              <div className="flex items-center justify-between">
+                <div className="flex items-center gap-2">
+                  <Sparkles className="w-4 h-4 text-emerald-400" />
+                  <span className="font-sans text-sm font-semibold text-emerald-300">
+                    +{pointsAwarded} Poin
                   </span>
-                )}
+                  {hasDoublePoints && (
+                    <span className="px-1.5 py-0.5 bg-amber-400 text-zinc-950 font-mono text-[10px] font-bold rounded flex items-center gap-0.5">
+                      <Zap className="w-3 h-3" /> 2X BONUS
+                    </span>
+                  )}
+                </div>
+                <span className="font-mono text-xs text-zinc-400">
+                  1st Attempt
+                </span>
               </div>
-              <span className="font-mono text-xs text-zinc-400">
-                1st Attempt
-              </span>
+
+              {/* Streak Multiplier Notice */}
+              {hasStreakBonus && (
+                <div className="pt-2 border-t border-white/5 flex items-center justify-between text-xs font-mono text-amber-300">
+                  <span className="flex items-center gap-1.5 font-bold">
+                    <Flame className="w-3.5 h-3.5 text-rose-400 animate-bounce" />
+                    <span>STREAK {streakCount}X BERTURUT-TURUT!</span>
+                  </span>
+                  <span className="px-1.5 py-0.2 bg-rose-500/20 text-rose-300 rounded font-bold">
+                    +{streakMultiplier === 1.25 ? '25%' : '50%'} BONUS
+                  </span>
+                </div>
+              )}
             </div>
 
             {/* Auto-advance Countdown Bar */}

@@ -20,9 +20,10 @@ export async function getChallenge(level: number): Promise<{ success: boolean; c
 
     const supabase = createAdminClient();
 
+    // STRICT INVARIANT: Never expose flag_answer in getChallenge query
     const { data, error } = await supabase
       .from('challenges')
-      .select('id, level, question_text, points')
+      .select('id, level, question_text, points, question_type, options, category, hint')
       .eq('level', level)
       .single();
 

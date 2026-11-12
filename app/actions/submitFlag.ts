@@ -26,7 +26,7 @@ export async function submitFlag({
 
     const trimmedInput = (inputFlag || '').trim();
     if (!trimmedInput) {
-      return { success: false, error: 'Flag jawaban tidak boleh kosong.' };
+      return { success: false, error: 'Flag atau jawaban tidak boleh kosong.' };
     }
 
     if (!isSupabaseConfigured()) {
@@ -38,7 +38,7 @@ export async function submitFlag({
     // 1. Verifikasi integritas User
     const { data: userData, error: userError } = await supabase
       .from('users')
-      .select('id, score, current_level, frozen_until, has_double_points')
+      .select('id, name, score, current_level, current_streak, frozen_until, has_double_points')
       .eq('id', userId)
       .single();
 
@@ -51,7 +51,7 @@ export async function submitFlag({
       const remainingSec = Math.ceil((new Date(userData.frozen_until).getTime() - Date.now()) / 1000);
       return {
         success: false,
-        error: `TERMINAL LOCKOUT: Sistem kamu sedang dibekukan oleh serangan Cryo Freeze! Tunggu ${remainingSec} detik lagi.`,
+        error: `Layar sedang terkunci sementara karena efek Freeze dari lawan! Tunggu ${remainingSec} detik lagi.`,
       };
     }
 
@@ -78,14 +78,14 @@ export async function submitFlag({
     if (existingSubmission) {
       return {
         success: false,
-        error: 'SYSTEM BREACH DETECTED: Kamu sudah pernah mengirimkan jawaban di level ini. Hanya 1x percobaan diperbolehkan!',
+        error: 'Satu kesempatan telah digunakan untuk level ini (Aturan One-Shot Attempt).',
       };
     }
 
     // 3. Tarik Jawaban Asli & Poin dari tabel challenges (Aman di Server)
     const { data: challengeData, error: challengeError } = await supabase
       .from('challenges')
-      .select('flag_answer, points')
+      .select('flag_answer, points, question_type')
       .eq('level', level)
       .single();
 
@@ -93,19 +93,48 @@ export async function submitFlag({
       return { success: false, error: 'Data tantangan tidak ditemukan.' };
     }
 
-    // 4. Komparasi Flag (Case-insensitive & Trimmed)
+    // 4. Komparasi Flag / Opsi Jawaban
     const normalizedInput = trimmedInput.toUpperCase();
     const normalizedTarget = challengeData.flag_answer.trim().toUpperCase();
-    const isCorrect = normalizedInput === normalizedTarget;
 
-    // Evaluasi Multiplier (Overclock 2X)
-    const multiplier = userData.has_double_points ? 2 : 1;
-    const basePoints = isCorrect ? challengeData.points : 0;
-    const pointsAwarded = basePoints * multiplier;
+    let isCorrect = false;
+    if (challengeData.question_type === 'MULTIPLE_CHOICE') {
+      const optionLetter = normalizedInput.charAt(0);
+      const targetLetter = normalizedTarget.charAt(0);
+      isCorrect = optionLetter === targetLetter || normalizedInput === normalizedTarget;
+    } else {
+      isCorrect = normalizedInput === normalizedTarget;
+    }
+
+    // 5. Evaluasi Multiplier (Overclock 2X + Streak Bonus)
+    let pointsAwarded = 0;
+    let streakCount = 0;
+    let streakMultiplier = 1;
+
+    if (isCorrect) {
+      const currentStreak = userData.current_streak || 0;
+      streakCount = currentStreak + 1;
+
+      // Streak bonus:
+      // Streak 4: +25%
+      // Streak >= 5: +50%
+      if (streakCount === 4) {
+        streakMultiplier = 1.25;
+      } else if (streakCount >= 5) {
+        streakMultiplier = 1.5;
+      }
+
+      const doubleMultiplier = userData.has_double_points ? 2 : 1;
+      const basePoints = challengeData.points;
+      pointsAwarded = Math.round(basePoints * doubleMultiplier * streakMultiplier);
+    } else {
+      streakCount = 0;
+    }
+
     const nextLevel = level + 1;
     const newScore = (userData.score || 0) + pointsAwarded;
 
-    // 5. Catat submission ke tabel submissions
+    // 6. Catat submission ke tabel submissions
     const { error: insertSubError } = await supabase
       .from('submissions')
       .insert({
@@ -116,7 +145,6 @@ export async function submitFlag({
       });
 
     if (insertSubError) {
-      // Jika terjadi race condition dan constraint unik terkena benturan
       if (insertSubError.code === '23505') {
         return {
           success: false,
@@ -126,13 +154,14 @@ export async function submitFlag({
       return { success: false, error: 'Gagal mencatat jawaban ke database.' };
     }
 
-    // 6. Update user (Naikkan level; tambah skor jika benar; reset has_double_points)
+    // 7. Update user (Skor, level, current_streak, reset has_double_points)
     const { error: updateUserError } = await supabase
       .from('users')
       .update({
         score: newScore,
         current_level: nextLevel,
-        has_double_points: false, // Reset booster setelah level diselesaikan
+        current_streak: streakCount,
+        has_double_points: false,
       })
       .eq('id', userId);
 
@@ -140,18 +169,35 @@ export async function submitFlag({
       return { success: false, error: 'Gagal memperbarui status skor peserta.' };
     }
 
+    // 8. Catat battle event jika jawaban benar
+    if (isCorrect) {
+      try {
+        await supabase.from('battle_events').insert({
+          event_type: 'SKILL_EXECUTED',
+          actor_id: userId,
+          description: `${userData.name} menyelesaikan Level 0${level} (+${pointsAwarded} Poin)${
+            streakMultiplier > 1 ? ` 🔥 Streak ${streakCount}x!` : ''
+          }`,
+        });
+      } catch {
+        // Fallback
+      }
+    }
+
     return {
       success: true,
       is_correct: isCorrect,
       points_awarded: pointsAwarded,
+      streak_count: streakCount,
+      streak_multiplier: streakMultiplier,
       new_score: newScore,
       next_level: nextLevel,
       message: isCorrect
-        ? `ACCESS GRANTED! +${pointsAwarded} Poin`
-        : 'ACCESS DENIED! SYSTEM BREACH FAILED (+0 Poin)',
+        ? `Jawaban Benar! +${pointsAwarded} Poin`
+        : 'Jawaban Kurang Tepat. Level hangus (0 Poin)',
     };
   } catch (err: unknown) {
-    const message = err instanceof Error ? err.message : 'Terjadi kegagalan server saat evaluasi flag.';
+    const message = err instanceof Error ? err.message : 'Terjadi kegagalan server saat evaluasi jawaban.';
     return { success: false, error: message };
   }
 }

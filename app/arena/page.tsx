@@ -6,6 +6,7 @@ import { createClient } from '@/lib/supabase/client';
 import { User, Challenge } from '@/lib/types';
 import { getChallenge } from '@/app/actions/getChallenge';
 import { submitFlag } from '@/app/actions/submitFlag';
+import { getEventState } from '@/app/actions/getEventState';
 import { ArenaHeader } from '@/components/arena/ArenaHeader';
 import { AirDropBanner } from '@/components/arena/AirDropBanner';
 import { ChallengeTerminal } from '@/components/arena/ChallengeTerminal';
@@ -15,7 +16,7 @@ import { AirDropModal } from '@/components/arena/AirDropModal';
 import { CryoLockoutOverlay } from '@/components/arena/CryoLockoutOverlay';
 import { AttackToast } from '@/components/arena/AttackToast';
 import { EndGameScorecard } from '@/components/arena/EndGameScorecard';
-import { Loader2 } from 'lucide-react';
+import { Loader2, AlertOctagon } from 'lucide-react';
 import { sound } from '@/lib/audio';
 
 export default function ArenaPage() {
@@ -24,12 +25,15 @@ export default function ArenaPage() {
   const [challenge, setChallenge] = useState<Challenge | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [isEventStopped, setIsEventStopped] = useState(false);
 
   // Modal & Overlay States
   const [feedback, setFeedback] = useState<{
     isOpen: boolean;
     isCorrect: boolean;
     pointsAwarded: number;
+    streakCount?: number;
+    streakMultiplier?: number;
   }>({
     isOpen: false,
     isCorrect: false,
@@ -62,7 +66,7 @@ export default function ArenaPage() {
     return `${mins.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
   };
 
-  // 1. Session check on mount
+  // 1. Session check & event status check on mount
   useEffect(() => {
     const savedUserJson = localStorage.getItem('nexus_user');
     if (!savedUserJson) {
@@ -84,7 +88,26 @@ export default function ArenaPage() {
     } catch {
       localStorage.removeItem('nexus_user');
       router.replace('/');
+      return;
     }
+
+    // Verify if event is running
+    async function verifyEventState() {
+      const stateRes = await getEventState();
+      if (stateRes.success) {
+        if (stateRes.state.status === 'WAITING') {
+          router.replace('/lobby');
+          return;
+        } else if (stateRes.state.status === 'STOPPED') {
+          setIsEventStopped(true);
+        }
+        if (stateRes.state.seconds_remaining) {
+          setSecondsRemaining(stateRes.state.seconds_remaining);
+        }
+      }
+    }
+
+    verifyEventState();
   }, [router]);
 
   // 2. Fetch current challenge
@@ -110,11 +133,13 @@ export default function ArenaPage() {
 
   // 3. Match countdown timer interval
   useEffect(() => {
+    if (isEventStopped) return;
+
     const timer = setInterval(() => {
       setSecondsRemaining((prev) => (prev > 0 ? prev - 1 : 0));
     }, 1000);
     return () => clearInterval(timer);
-  }, []);
+  }, [isEventStopped]);
 
   // 4. Supabase Realtime Listeners
   useEffect(() => {
@@ -122,7 +147,7 @@ export default function ArenaPage() {
 
     const supabase = createClient();
 
-    // Channel 1: Listen to user table changes (score, frozen_until, current_level, has_double_points)
+    // Channel 1: Listen to user table changes (score, frozen_until, current_level, current_streak)
     const userChannel = supabase
       .channel(`user_state_${user.id}`)
       .on(
@@ -141,6 +166,7 @@ export default function ArenaPage() {
               ...prev,
               score: updated.score,
               current_level: updated.current_level,
+              current_streak: updated.current_streak,
               frozen_until: updated.frozen_until,
               has_double_points: updated.has_double_points,
             };
@@ -210,6 +236,18 @@ export default function ArenaPage() {
           setSecondsRemaining(payload.secondsRemaining);
         }
       })
+      .on('broadcast', { event: 'EVENT_STOPPED' }, () => {
+        setIsEventStopped(true);
+        sound.playError();
+      })
+      .on('broadcast', { event: 'TOURNAMENT_RESET' }, ({ payload }) => {
+        if (payload?.mode === 'ALL_USERS') {
+          localStorage.removeItem('nexus_user');
+          router.replace('/');
+        } else {
+          router.replace('/lobby');
+        }
+      })
       .subscribe();
 
     return () => {
@@ -217,11 +255,11 @@ export default function ArenaPage() {
       supabase.removeChannel(battleChannel);
       supabase.removeChannel(arenaBroadcastChannel);
     };
-  }, [user?.id]);
+  }, [user?.id, router]);
 
   // 5. Submit Flag Handler
   const handleFlagSubmit = async (flag: string) => {
-    if (!user || !challenge || isSubmitting || isFrozen) return;
+    if (!user || !challenge || isSubmitting || isFrozen || isEventStopped) return;
 
     setIsSubmitting(true);
     try {
@@ -249,6 +287,7 @@ export default function ArenaPage() {
         ...user,
         score: newScore,
         current_level: nextLvl,
+        current_streak: res.streak_count ?? 0,
         has_double_points: false, // consumed on answer
       };
       setUser(updatedUser);
@@ -259,6 +298,8 @@ export default function ArenaPage() {
         isOpen: true,
         isCorrect,
         pointsAwarded: points,
+        streakCount: res.streak_count,
+        streakMultiplier: res.streak_multiplier,
       });
     } catch {
       sound.playError();
@@ -324,7 +365,18 @@ export default function ArenaPage() {
           timeLeftFormatted={formatTimer(secondsRemaining)}
           pointsForCurrentLevel={challenge?.points ?? 100}
           hasDoublePoints={user?.has_double_points ?? false}
+          currentStreak={user?.current_streak ?? 0}
         />
+
+        {/* Stopped Event Banner */}
+        {isEventStopped && (
+          <div className="p-3 rounded-lg bg-rose-500/15 border border-rose-500/40 text-rose-300 flex items-center gap-2.5 text-xs font-sans">
+            <AlertOctagon className="w-5 h-5 flex-shrink-0 text-rose-400" />
+            <div>
+              <strong className="font-bold">Pertandingan Dihentikan:</strong> Panitia telah menghentikan babak ini. Silakan perhatikan layar proyektor utama di auditorium.
+            </div>
+          </div>
+        )}
 
         {/* Air Drop Banner (if available) with 5s expiry */}
         {airDropAvailable && (
@@ -346,23 +398,27 @@ export default function ArenaPage() {
             {/* Terminal Window with Code & Problem */}
             <ChallengeTerminal challenge={challenge} />
 
-            {/* Flag Submission Input Section */}
+            {/* Flag / Multiple Choice Submission Input Section */}
             <FlagInputSection
               onSubmit={handleFlagSubmit}
-              isSubmitting={isSubmitting}
-              isFrozen={isFrozen}
+              isSubmitting={isSubmitting || isEventStopped}
+              isFrozen={isFrozen || isEventStopped}
+              isMultipleChoice={challenge.question_type === 'MULTIPLE_CHOICE'}
+              options={challenge.options || []}
             />
           </>
         )}
       </main>
 
-      {/* Feedback Modal (State A Breach Confirmed / State B Breach Failed) */}
+      {/* Feedback Modal (Jawaban Benar / Salah) */}
       <FeedbackModal
         isOpen={feedback.isOpen}
         isCorrect={feedback.isCorrect}
         pointsAwarded={feedback.pointsAwarded}
         currentLevel={challenge?.level ?? (user?.current_level ?? 1)}
         hasDoublePoints={user?.has_double_points}
+        streakCount={feedback.streakCount}
+        streakMultiplier={feedback.streakMultiplier}
         onAdvance={handleAdvance}
       />
 

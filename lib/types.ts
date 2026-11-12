@@ -1,10 +1,24 @@
 export type SkillType = 'DOUBLE_POINTS' | 'FREEZE_TIME' | 'DEDUCT_POINTS' | 'STEAL_POINTS';
 
+export type QuestionType = 'FLAG' | 'MULTIPLE_CHOICE';
+
+export type EventStatus = 'WAITING' | 'RUNNING' | 'PAUSED' | 'STOPPED';
+
+export interface EventState {
+  status: EventStatus;
+  duration_minutes: number;
+  seconds_remaining: number;
+  started_at?: string | null;
+  stopped_at?: string | null;
+  updated_at?: string;
+}
+
 export interface User {
   id: string;
   name: string;
   score: number;
   current_level: number;
+  current_streak?: number;
   frozen_until?: string | null;
   has_double_points?: boolean;
   created_at: string;
@@ -14,7 +28,11 @@ export interface Challenge {
   id: number;
   level: number;
   question_text: string;
+  question_type?: QuestionType;
+  options?: string[]; // e.g. ["A. Option 1", "B. Option 2", "C. Option 3", "D. Option 4"]
+  category?: string;
   points: number;
+  hint?: string;
 }
 
 export interface ChallengeWithAnswer extends Challenge {
@@ -53,6 +71,8 @@ export interface SubmitFlagResult {
   success: boolean;
   is_correct?: boolean;
   points_awarded?: number;
+  streak_count?: number;
+  streak_multiplier?: number;
   new_score?: number;
   next_level?: number;
   error?: string;

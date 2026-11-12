@@ -136,11 +136,11 @@ async function runAllTests() {
 
   assert(buff2x.success, 'Activate DOUBLE_POINTS skill');
 
-  // Level 3 answer is 'GENERATICS' (base 150 PTS -> double should be 300 PTS)
+  // Level 3 answer is 'B' (Multiple Choice - TDI HMIF, base 150 PTS -> double should be 300 PTS)
   const subLvl3 = await submitFlag({
     userId: user.id,
     level: 3,
-    inputFlag: 'GENERATICS',
+    inputFlag: 'B',
   });
 
   assert(subLvl3.success && subLvl3.is_correct === true, 'Level 3 solved correctly');

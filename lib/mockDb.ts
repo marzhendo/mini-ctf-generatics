@@ -1,4 +1,14 @@
-import { User, Challenge, ChallengeWithAnswer, Submission, BattleEvent, LeaderboardUser, RivalUser, SkillType } from './types';
+import {
+  User,
+  Challenge,
+  ChallengeWithAnswer,
+  Submission,
+  BattleEvent,
+  LeaderboardUser,
+  RivalUser,
+  SkillType,
+  EventState,
+} from './types';
 
 export function isSupabaseConfigured(): boolean {
   const url = process.env.NEXT_PUBLIC_SUPABASE_URL || '';
@@ -15,72 +25,126 @@ export const SEED_CHALLENGES: ChallengeWithAnswer[] = [
   {
     id: 1,
     level: 1,
+    question_type: 'FLAG',
+    category: 'Kriptografi · Base64',
     question_text: 'Selamat datang di Nexus of Innovation! Sebuah pesan terenkripsi Base64 ditemukan di gateway sistem: "R0VORVJBVElDU19ORVhVU19TVEFSVA==". Dekode pesan tersebut untuk membuka gerbang pertama.',
     flag_answer: 'GENERATICS_NEXUS_START',
     points: 100,
+    hint: 'Gunakan command `echo "..." | base64 -d` atau online base64 decoder.',
   },
   {
     id: 2,
     level: 2,
+    question_type: 'FLAG',
+    category: 'Encoding · Biner ASCII',
     question_text: 'Sensor keamanan mendeteksi transmisi biner dari mainframe: 01001000 01001101 01001001 01000110. Konversikan biner 8-bit tersebut ke dalam karakter ASCII.',
     flag_answer: 'HMIF',
     points: 100,
+    hint: 'Setiap 8 bit merepresentasikan 1 huruf alfabet ASCII (misal: 01001000 = H).',
   },
   {
     id: 3,
     level: 3,
-    question_text: 'Sebuah sinyal Caesar Cipher terdeteksi dengan pergeseran 3 langkah ke kanan (ROT3): "JHQHUDWLFV". Temukan kata sandi aslinya!',
-    flag_answer: 'GENERATICS',
+    question_type: 'MULTIPLE_CHOICE',
+    category: 'Organisasi HMIF · Divisi TDI',
+    question_text: 'Divisi manakah di dalam kepengurusan HMIF yang berfokus pada riset teknologi, pengembangan web platform, dan inovasi internal?',
+    options: [
+      'A. Departemen Hubungan Luar (HUBLU)',
+      'B. Divisi Teknologi, Desain, & Inovasi (TDI)',
+      'C. Departemen Minat & Bakat (MIKAT)',
+      'D. Badan Pengurus Harian (BPH)',
+    ],
+    flag_answer: 'B',
     points: 150,
+    hint: 'Divisi pelaksana event Generatics CTF ini.',
   },
   {
     id: 4,
     level: 4,
+    question_type: 'FLAG',
+    category: 'Hexadecimal · Memory Dump',
     question_text: 'Penyusup meninggalkan jejak string heksadesimal pada memory dump kernel: "43 59 42 45 52 53 50 41 43 45". Terjemahkan byte hex tersebut ke teks.',
     flag_answer: 'CYBERSPACE',
     points: 150,
+    hint: 'Ubah pasangan digit hex 0x43, 0x59 ke ASCII.',
   },
   {
     id: 5,
     level: 5,
+    question_type: 'FLAG',
+    category: 'Kriptografi · ROT13',
     question_text: 'Sebuah protokol enkripsi kuno menggunakan ROT13 menghasilkan teks: "GBXVA_ONXR_FHPPRF". Lakukan dekripsi ROT13 untuk mendapatkan flag akses.',
     flag_answer: 'TOKEN_BAKE_SUCCESS',
     points: 200,
+    hint: 'Rotasikan alfabet 13 langkah mundur.',
   },
   {
     id: 6,
     level: 6,
-    question_text: 'Dalam sistem berkas Linux, seorang admin ingin memberikan izin: Pemilik dapat membaca, menulis, dan mengeksekusi (rwx); Grup hanya dapat membaca dan mengeksekusi (r-x); Publik hanya dapat membaca (r--). Berapakah representasi nilai numerik izin tersebut (contoh format: 755)?',
-    flag_answer: '754',
+    question_type: 'MULTIPLE_CHOICE',
+    category: 'Sistem Operasi Linux · Izin Berkas',
+    question_text: 'Dalam sistem Linux, seorang admin ingin mengatur izin file: Pemilik (rwx), Grup (r-x), dan Others (r--). Berapakah representasi nilai numerik oktal izin tersebut?',
+    options: [
+      'A. 777',
+      'B. 754',
+      'C. 755',
+      'D. 644',
+    ],
+    flag_answer: 'B',
     points: 200,
+    hint: 'Hitung Read(4) + Write(2) + Execute(1) untuk masing-masing bagian.',
   },
   {
     id: 7,
     level: 7,
-    question_text: 'Protokol keamanan web HTTPS berjalan pada port default jaringan TCP bernomor berapa?',
-    flag_answer: '443',
+    question_type: 'MULTIPLE_CHOICE',
+    category: 'Jaringan Komputer · TCP Ports',
+    question_text: 'Protokol keamanan web HTTPS (SSL/TLS) secara standar berkomunikasi pada port jaringan nomor berapa?',
+    options: [
+      'A. Port 80',
+      'B. Port 22',
+      'C. Port 443',
+      'D. Port 8080',
+    ],
+    flag_answer: 'C',
     points: 250,
+    hint: 'Port 80 untuk HTTP standar, sedangkan protokol aman HTTPS menggunakan port 3 digit.',
   },
   {
     id: 8,
     level: 8,
+    question_type: 'FLAG',
+    category: 'Telegrafi · Sandi Morse',
     question_text: 'Sebuah transmisi telegraf darurat mengirimkan kode morse: "... --- ..." diikuti "...- .. -.-. - --- .-. -.--". Gabungkan kedua kata dalam bahasa Inggris dengan pemisah garis bawah (underscore).',
     flag_answer: 'SOS_VICTORY',
     points: 250,
+    hint: '"... --- ..." adalah sinyal maritim universal.',
   },
   {
     id: 9,
     level: 9,
-    question_text: 'Hash MD5 dari sebuah kata sandi penting adalah: "e10adc3949ba59abbe56e057f20f883e". Kata sandi umum apakah yang menghasilkan hash tersebut?',
+    question_type: 'FLAG',
+    category: 'Keamanan Data · Hash MD5',
+    question_text: 'Hash MD5 dari sebuah kata sandi penting adalah: "e10adc3949ba59abbe56e057f20f883e". Kata sandi umum 6-digit apakah yang menghasilkan hash tersebut?',
     flag_answer: '123456',
     points: 300,
+    hint: 'Kata sandi paling banyak digunakan di dunia.',
   },
   {
     id: 10,
     level: 10,
-    question_text: 'Level Terakhir! Sistem Nexus Core AI terkunci dengan teka-teki logika: "Aku adalah bahasa yang menggerakkan web, diciptakan dalam 10 hari oleh Brendan Eich pada tahun 1995. Siapakah aku?". Masukkan nama bahasa tersebut tanpa spasi.',
-    flag_answer: 'JAVASCRIPT',
+    question_type: 'MULTIPLE_CHOICE',
+    category: 'Trivia Pemrograman · Web Core',
+    question_text: 'Bahasa pemrograman yang menggerakkan interaktivitas web modern ini diciptakan hanya dalam waktu 10 hari pada tahun 1995 oleh Brendan Eich. Siapakah bahasa tersebut?',
+    options: [
+      'A. Python',
+      'B. JavaScript',
+      'C. Ruby',
+      'D. Java',
+    ],
+    flag_answer: 'B',
     points: 500,
+    hint: 'Sering disingkat JS.',
   },
 ];
 
@@ -88,6 +152,8 @@ interface MockDatabaseState {
   users: User[];
   submissions: Submission[];
   battleEvents: BattleEvent[];
+  challenges: ChallengeWithAnswer[];
+  eventState: EventState;
 }
 
 declare global {
@@ -102,6 +168,7 @@ function getInitialState(): MockDatabaseState {
       name: 'AXEL_99',
       score: 1750,
       current_level: 9,
+      current_streak: 3,
       created_at: new Date(Date.now() - 3600000).toISOString(),
     },
     {
@@ -109,6 +176,7 @@ function getInitialState(): MockDatabaseState {
       name: 'GHOST_X',
       score: 1600,
       current_level: 11,
+      current_streak: 5,
       created_at: new Date(Date.now() - 3500000).toISOString(),
     },
     {
@@ -116,6 +184,7 @@ function getInitialState(): MockDatabaseState {
       name: 'DEV_ZERO',
       score: 1450,
       current_level: 8,
+      current_streak: 1,
       created_at: new Date(Date.now() - 3400000).toISOString(),
     },
     {
@@ -123,6 +192,7 @@ function getInitialState(): MockDatabaseState {
       name: 'CYBER_NINJA',
       score: 1300,
       current_level: 8,
+      current_streak: 0,
       created_at: new Date(Date.now() - 3300000).toISOString(),
     },
     {
@@ -130,6 +200,7 @@ function getInitialState(): MockDatabaseState {
       name: 'SARAH',
       score: 1050,
       current_level: 6,
+      current_streak: 2,
       created_at: new Date(Date.now() - 3200000).toISOString(),
     },
   ];
@@ -152,7 +223,7 @@ function getInitialState(): MockDatabaseState {
     {
       id: 'evt-1',
       event_type: 'AIR_DROP',
-      description: 'AIR DROP DETECTED in Sector 07 Auditorium! Floor pods unlocked.',
+      description: 'Kotak Bantuan Air Drop mendarat di panggung auditorium!',
       created_at: new Date(Date.now() - 300000).toISOString(),
     },
     {
@@ -161,7 +232,7 @@ function getInitialState(): MockDatabaseState {
       actor_id: 'usr-axel99-mock',
       target_id: 'usr-devzero-mock',
       skill_type: 'FREEZE_TIME',
-      description: 'AXEL_99 injected Cryo Lockout into DEV_ZERO for 15s!',
+      description: 'AXEL_99 membekukan layar DEV_ZERO selama 15 detik!',
       created_at: new Date(Date.now() - 240000).toISOString(),
     },
     {
@@ -170,12 +241,23 @@ function getInitialState(): MockDatabaseState {
       actor_id: 'usr-sarah-mock',
       target_id: 'usr-cyberninja-mock',
       skill_type: 'STEAL_POINTS',
-      description: 'SARAH siphoned 100 PTS from CYBER_NINJA!',
+      description: 'SARAH mencuri 100 poin dari CYBER_NINJA!',
       created_at: new Date(Date.now() - 180000).toISOString(),
     },
   ];
 
-  return { users, submissions, battleEvents };
+  const challenges = JSON.parse(JSON.stringify(SEED_CHALLENGES)) as ChallengeWithAnswer[];
+
+  const eventState: EventState = {
+    status: 'WAITING',
+    duration_minutes: 30,
+    seconds_remaining: 1800,
+    started_at: null,
+    stopped_at: null,
+    updated_at: new Date().toISOString(),
+  };
+
+  return { users, submissions, battleEvents, challenges, eventState };
 }
 
 export function getMockDb(): MockDatabaseState {
@@ -186,6 +268,56 @@ export function getMockDb(): MockDatabaseState {
 }
 
 export const mockDb = {
+  getEventState(): EventState {
+    const db = getMockDb();
+    return db.eventState;
+  },
+
+  updateEventState(partial: Partial<EventState>): EventState {
+    const db = getMockDb();
+    db.eventState = {
+      ...db.eventState,
+      ...partial,
+      updated_at: new Date().toISOString(),
+    };
+    return db.eventState;
+  },
+
+  resetTournament(mode: 'ALL_USERS' | 'SCORES_ONLY') {
+    const db = getMockDb();
+    if (mode === 'ALL_USERS') {
+      db.users = [];
+      db.submissions = [];
+      db.battleEvents = [];
+      db.eventState = {
+        ...db.eventState,
+        status: 'WAITING',
+        seconds_remaining: db.eventState.duration_minutes * 60,
+        started_at: null,
+        stopped_at: null,
+      };
+    } else {
+      // SCORES_ONLY: retain users, reset score, level, streak, submissions
+      db.users.forEach((u) => {
+        u.score = 0;
+        u.current_level = 1;
+        u.current_streak = 0;
+        u.frozen_until = null;
+        u.has_double_points = false;
+      });
+      db.submissions = [];
+      db.battleEvents = [];
+      db.eventState = {
+        ...db.eventState,
+        status: 'WAITING',
+        seconds_remaining: db.eventState.duration_minutes * 60,
+        started_at: null,
+        stopped_at: null,
+      };
+    }
+    return { success: true, mode };
+  },
+
   registerUser(name: string): User {
     const db = getMockDb();
     const existing = db.users.find((u) => u.name.toUpperCase() === name.toUpperCase());
@@ -198,21 +330,59 @@ export const mockDb = {
       name,
       score: 0,
       current_level: 1,
+      current_streak: 0,
       created_at: new Date().toISOString(),
     };
     db.users.push(newUser);
     return newUser;
   },
 
+  getAllChallenges(): ChallengeWithAnswer[] {
+    const db = getMockDb();
+    return db.challenges.sort((a, b) => a.level - b.level);
+  },
+
   getChallenge(level: number): Challenge | null {
-    const c = SEED_CHALLENGES.find((ch) => ch.level === level);
+    const db = getMockDb();
+    const c = db.challenges.find((ch) => ch.level === level);
     if (!c) return null;
     return {
       id: c.id,
       level: c.level,
       question_text: c.question_text,
+      question_type: c.question_type || 'FLAG',
+      options: c.options || [],
+      category: c.category || 'Pengetahuan Umum IT',
       points: c.points,
+      hint: c.hint,
     };
+  },
+
+  addChallenge(c: Omit<ChallengeWithAnswer, 'id'>): ChallengeWithAnswer {
+    const db = getMockDb();
+    const nextId = db.challenges.length > 0 ? Math.max(...db.challenges.map((x) => x.id)) + 1 : 1;
+    const newChallenge: ChallengeWithAnswer = {
+      ...c,
+      id: nextId,
+    };
+    db.challenges.push(newChallenge);
+    return newChallenge;
+  },
+
+  updateChallenge(id: number, c: Partial<ChallengeWithAnswer>): ChallengeWithAnswer | null {
+    const db = getMockDb();
+    const target = db.challenges.find((x) => x.id === id);
+    if (!target) return null;
+    Object.assign(target, c);
+    return target;
+  },
+
+  deleteChallenge(id: number): boolean {
+    const db = getMockDb();
+    const index = db.challenges.findIndex((x) => x.id === id);
+    if (index === -1) return false;
+    db.challenges.splice(index, 1);
+    return true;
   },
 
   submitFlag(userId: string, level: number, inputFlag: string) {
@@ -244,21 +414,50 @@ export const mockDb = {
       return { success: false, error: 'Anda sudah pernah menjawab level ini (Aturan One-Shot Attempt).' };
     }
 
-    const challenge = SEED_CHALLENGES.find((c) => c.level === level);
+    const challenge = db.challenges.find((c) => c.level === level);
     if (!challenge) {
       return { success: false, error: 'Tantangan tidak ditemukan.' };
     }
 
     const normalizedInput = inputFlag.trim().toUpperCase();
     const normalizedTarget = challenge.flag_answer.trim().toUpperCase();
-    const isCorrect = normalizedInput === normalizedTarget;
+
+    let isCorrect = false;
+    if (challenge.question_type === 'MULTIPLE_CHOICE') {
+      // Allow e.g. "B" or "B. Divisi..." or full matching text
+      const optionLetter = normalizedInput.charAt(0);
+      const targetLetter = normalizedTarget.charAt(0);
+      isCorrect = optionLetter === targetLetter || normalizedInput === normalizedTarget;
+    } else {
+      isCorrect = normalizedInput === normalizedTarget;
+    }
 
     let pointsAwarded = 0;
+    let streakCount = 0;
+    let streakMultiplier = 1;
+
     if (isCorrect) {
+      const currentStreak = user.current_streak || 0;
+      streakCount = currentStreak + 1;
+      user.current_streak = streakCount;
+
+      // Streak Bonus Logic:
+      // Streak 4: +25%
+      // Streak >= 5: +50%
+      if (streakCount === 4) {
+        streakMultiplier = 1.25;
+      } else if (streakCount >= 5) {
+        streakMultiplier = 1.5;
+      }
+
+      const doubleMultiplier = user.has_double_points ? 2 : 1;
       const basePoints = challenge.points;
-      const multiplier = user.has_double_points ? 2 : 1;
-      pointsAwarded = basePoints * multiplier;
+      pointsAwarded = Math.round(basePoints * doubleMultiplier * streakMultiplier);
       user.score += pointsAwarded;
+    } else {
+      // Reset streak on error
+      user.current_streak = 0;
+      streakCount = 0;
     }
 
     user.current_level = level + 1;
@@ -278,7 +477,9 @@ export const mockDb = {
         id: `evt-${Date.now()}`,
         event_type: 'SKILL_EXECUTED',
         actor_id: user.id,
-        description: `${user.name} unlocked Node 0${level} (+${pointsAwarded} PTS)!`,
+        description: `${user.name} menyelesaikan Level 0${level} (+${pointsAwarded} Poin)${
+          streakMultiplier > 1 ? ` 🔥 Streak ${streakCount}x!` : ''
+        }`,
         created_at: new Date().toISOString(),
       });
     }
@@ -287,6 +488,8 @@ export const mockDb = {
       success: true,
       is_correct: isCorrect,
       points_awarded: pointsAwarded,
+      streak_count: streakCount,
+      streak_multiplier: streakMultiplier,
       new_score: user.score,
       next_level: user.current_level,
     };
@@ -306,9 +509,9 @@ export const mockDb = {
       const isFrozen = frozenTime > now;
       const frozenSecs = isFrozen ? Math.ceil((frozenTime - now) / 1000) : 0;
 
-      let statusText = `HACKING N${u.current_level < 10 ? `0${u.current_level}` : u.current_level}`;
-      if (isFinished) statusText = 'FINISHED (10/10)';
-      else if (isFrozen) statusText = `FROZEN ${frozenSecs}s`;
+      let statusText = `LEVEL 0${u.current_level < 10 ? `0${u.current_level}` : u.current_level}`;
+      if (isFinished) statusText = 'SELESAI (10/10)';
+      else if (isFrozen) statusText = `FREEZE ${frozenSecs}s`;
 
       const userSubs = db.submissions.filter((s) => s.user_id === u.id);
       const subMap = new Map(userSubs.map((s) => [s.challenge_level, s.is_correct]));
@@ -334,7 +537,7 @@ export const mockDb = {
         isFinished,
         isFrozen,
         nodeMatrix,
-        streak: streak > 1 ? streak : undefined,
+        streak: u.current_streak && u.current_streak > 1 ? u.current_streak : streak > 1 ? streak : undefined,
       };
     });
   },
@@ -369,7 +572,7 @@ export const mockDb = {
           event_type: 'SKILL_EXECUTED',
           actor_id: actor.id,
           skill_type: 'DOUBLE_POINTS',
-          description: `${actor.name} activated Overclock 2X Multiplier!`,
+          description: `${actor.name} mengaktifkan bonus Overclock 2X!`,
           created_at: new Date().toISOString(),
         });
         return { success: true, skill_type: skillType, new_score: actor.score };
@@ -384,7 +587,7 @@ export const mockDb = {
           actor_id: actor.id,
           target_id: target.id,
           skill_type: 'FREEZE_TIME',
-          description: `${actor.name} injected Cryo Freeze into ${target.name} for 15s!`,
+          description: `${actor.name} membekukan layar ${target.name} selama 15 detik!`,
           created_at: new Date().toISOString(),
         });
         return { success: true, skill_type: skillType, message: `Berhasil membekukan layar ${target.name} selama 15 detik.` };
@@ -399,7 +602,7 @@ export const mockDb = {
           actor_id: actor.id,
           target_id: target.id,
           skill_type: 'DEDUCT_POINTS',
-          description: `${actor.name} drained 100 PTS from ${target.name}!`,
+          description: `${actor.name} mengurangi 100 poin milik ${target.name}!`,
           created_at: new Date().toISOString(),
         });
         return { success: true, skill_type: skillType, message: `Berhasil mengurangi 100 poin milik ${target.name}.` };
@@ -416,7 +619,7 @@ export const mockDb = {
           actor_id: actor.id,
           target_id: target.id,
           skill_type: 'STEAL_POINTS',
-          description: `${actor.name} siphoned ${pointsToSteal} PTS from ${target.name}!`,
+          description: `${actor.name} mencuri ${pointsToSteal} poin dari ${target.name}!`,
           created_at: new Date().toISOString(),
         });
         return { success: true, skill_type: skillType, new_score: actor.score, message: `Berhasil mencuri ${pointsToSteal} poin dari ${target.name}.` };
@@ -432,7 +635,7 @@ export const mockDb = {
     db.battleEvents.unshift({
       id: `evt-${Date.now()}`,
       event_type: 'AIR_DROP',
-      description: 'AIR DROP DETECTED in Sector 07 Auditorium! Floor pods unlocked.',
+      description: 'Kotak Bantuan Air Drop mendarat di panggung auditorium!',
       created_at: new Date().toISOString(),
     });
     return { success: true };
@@ -452,12 +655,12 @@ export const mockDb = {
     const subMap = new Map(userSubs.map((s) => [s.challenge_level, s.is_correct]));
 
     let correctCount = 0;
-    const nodes = SEED_CHALLENGES.map((ch) => {
+    const nodes = db.challenges.map((ch) => {
       const ok = subMap.get(ch.level) ?? false;
       if (ok) correctCount++;
       return {
         level: ch.level,
-        title: `Node 0${ch.level} - ${ch.flag_answer}`,
+        title: `Node 0${ch.level} - ${ch.question_type === 'MULTIPLE_CHOICE' ? `[Pilihan Ganda] Opsi ${ch.flag_answer}` : ch.flag_answer}`,
         is_correct: ok,
         points: ok ? ch.points : 0,
       };

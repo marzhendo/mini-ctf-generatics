@@ -2,7 +2,7 @@
 
 import React from 'react';
 import Image from 'next/image';
-import { Terminal, Bot, Trophy, Timer, Radio, Zap } from 'lucide-react';
+import { Terminal, Bot, Trophy, Timer, Radio, Zap, Flame } from 'lucide-react';
 
 interface ArenaHeaderProps {
   userName: string;
@@ -11,6 +11,7 @@ interface ArenaHeaderProps {
   timeLeftFormatted: string;
   pointsForCurrentLevel: number;
   hasDoublePoints?: boolean;
+  currentStreak?: number;
 }
 
 export function ArenaHeader({
@@ -20,13 +21,22 @@ export function ArenaHeader({
   timeLeftFormatted,
   pointsForCurrentLevel,
   hasDoublePoints = false,
+  currentStreak = 0,
 }: ArenaHeaderProps) {
   const solvedCount = Math.max(0, Math.min(10, currentLevel - 1));
+
+  const getStreakBonusText = (streak: number) => {
+    if (streak === 4) return '+25%';
+    if (streak >= 5) return '+50%';
+    return null;
+  };
+
+  const streakBonusText = getStreakBonusText(currentStreak);
 
   return (
     <>
       {/* Top Brand Bar */}
-      <header className="fixed top-0 left-0 right-0 z-50 flex items-center justify-between px-4 h-14 bg-[#080a0f]/95 backdrop-blur-md max-w-[420px] mx-auto border-b border-white/10 font-mono">
+      <header className="fixed top-0 left-0 right-0 z-50 flex items-center justify-between px-4 h-14 bg-[#080a0f]/95 backdrop-blur-md max-w-[440px] mx-auto border-b border-white/10 font-mono">
         <div className="flex items-center space-x-2">
           <div className="w-7 h-7 rounded-md bg-emerald-500/10 border border-emerald-500/30 flex items-center justify-center text-emerald-400">
             <Terminal className="w-3.5 h-3.5" />
@@ -50,33 +60,48 @@ export function ArenaHeader({
               height={18}
               className="object-contain"
             />
+            <Image
+              src="/img/assets/tdi-logo.png"
+              alt="TDI Logo"
+              width={18}
+              height={18}
+              className="object-contain"
+            />
           </div>
         </div>
       </header>
 
-      {/* Telemetry HUD */}
-      <section className="dev-card p-3 space-y-2.5 mt-2 font-mono shadow-md">
-        {/* Row 1: Operator, Score, Countdown */}
-        <div className="flex items-center justify-between gap-1.5 flex-wrap">
-          {/* Operator Pill */}
-          <div className="flex items-center space-x-1.5 px-2.5 py-1 bg-white/[0.04] border border-white/10 rounded-md max-w-[150px]">
-            <Bot className="text-cyan-400 w-3.5 h-3.5 flex-shrink-0" />
-            <span className="text-[11px] text-slate-200 uppercase font-bold tracking-wider truncate">
-              {userName || 'PESERTA'}
-            </span>
+      {/* Main Telemetry Card */}
+      <section className="dev-card p-3 space-y-2.5 font-mono">
+        {/* User Stats Row */}
+        <div className="flex items-center justify-between text-xs">
+          <div className="flex items-center space-x-2">
+            <div className="w-7 h-7 rounded-md bg-white/5 border border-white/10 flex items-center justify-center text-cyan-400">
+              <Bot className="w-4 h-4" />
+            </div>
+            <div className="flex flex-col">
+              <span className="text-white font-bold leading-none truncate max-w-[120px]">
+                {userName}
+              </span>
+              <span className="text-[10px] text-slate-400 mt-0.5 flex items-center gap-1">
+                <Radio className="w-2.5 h-2.5 text-emerald-400" />
+                <span>ONLINE</span>
+              </span>
+            </div>
           </div>
 
-          {/* Score Badge */}
-          <div className="flex items-center space-x-1 px-2.5 py-1 bg-amber-500/[0.08] border border-amber-400/40 rounded-md">
-            <Trophy className="text-amber-400 w-3.5 h-3.5" />
-            <span className="text-xs text-amber-300 font-extrabold tracking-wider tabular-nums">
-              {score.toLocaleString()} PTS
+          {/* Points / Score Badge */}
+          <div className="flex items-center space-x-1.5 px-2.5 py-1 rounded bg-amber-400/10 border border-amber-400/30">
+            <Trophy className="w-3.5 h-3.5 text-amber-400" />
+            <span className="text-amber-300 font-extrabold text-sm tabular-nums">
+              {score.toLocaleString()}
             </span>
+            <span className="text-[10px] text-amber-400/80">PTS</span>
           </div>
 
-          {/* Session Countdown Timer */}
-          <div className="flex items-center space-x-1 px-2 py-1 bg-white/[0.04] border border-white/10 rounded-md">
-            <Timer className="text-cyan-400 w-3.5 h-3.5" />
+          {/* Countdown Clock */}
+          <div className="flex items-center space-x-1.5 px-2.5 py-1 rounded bg-cyan-500/10 border border-cyan-500/30">
+            <Timer className="w-3.5 h-3.5 text-cyan-400" />
             <span className="text-xs text-cyan-300 font-bold tracking-wider tabular-nums">
               {timeLeftFormatted}
             </span>
@@ -86,7 +111,7 @@ export function ArenaHeader({
         {/* 10-Node Progress Bar */}
         <div className="space-y-1">
           <div className="flex items-center justify-between text-slate-400 text-[10px]">
-            <span>SECTOR PROGRESS</span>
+            <span>PROGRES LEVEL</span>
             <span className="text-emerald-400 font-bold">
               {solvedCount} / 10 SELESAI
             </span>
@@ -117,7 +142,7 @@ export function ArenaHeader({
           </div>
         </div>
 
-        {/* Level Info & Bounty */}
+        {/* Level Info, Streak & Bounty */}
         <div className="flex items-center justify-between pt-1 border-t border-white/10">
           <div className="flex items-center space-x-1.5">
             <span className="inline-block w-2 h-2 bg-cyan-400 rounded-full animate-pulse" />
@@ -127,10 +152,17 @@ export function ArenaHeader({
           </div>
 
           <div className="flex items-center gap-1.5">
+            {currentStreak >= 3 && (
+              <span className="px-2 py-0.5 bg-rose-500/20 border border-rose-500/50 text-rose-300 text-[10px] font-bold rounded flex items-center gap-1">
+                <Flame className="w-3 h-3 text-rose-400 animate-bounce" />
+                <span>{currentStreak}X{streakBonusText ? ` (${streakBonusText})` : ''}</span>
+              </span>
+            )}
+
             {hasDoublePoints && (
               <span className="px-2 py-0.5 bg-amber-400/20 border border-amber-400/50 text-amber-300 text-[10px] font-bold rounded flex items-center gap-1 animate-pulse">
                 <Zap className="w-3 h-3 text-amber-400" />
-                2X OVERCLOCK
+                2X
               </span>
             )}
             <div className="px-2 py-0.5 bg-emerald-500/10 border border-emerald-500/30 rounded">
