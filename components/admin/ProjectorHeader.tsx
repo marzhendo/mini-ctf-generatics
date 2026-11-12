@@ -86,7 +86,7 @@ export function ProjectorHeader({ totalOperators }: ProjectorHeaderProps) {
           <span className="text-white/20">•</span>
           <div className="flex items-center gap-1 text-emerald-400 font-medium">
             <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
-            <span className="text-[11px]">Realtime</span>
+            <span className="text-[11px]">Auto-Sync (2.5s)</span>
           </div>
         </div>
 

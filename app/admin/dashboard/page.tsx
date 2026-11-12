@@ -1,10 +1,11 @@
 'use client';
 
-import React, { useEffect, useState, useCallback } from 'react';
+import React, { useEffect, useState, useCallback, useRef } from 'react';
 import { createClient } from '@/lib/supabase/client';
 import { LeaderboardUser, BattleEvent } from '@/lib/types';
 import { getLeaderboard } from '@/app/actions/getLeaderboard';
 import { getBattleEvents } from '@/app/actions/getBattleEvents';
+import { getEventState } from '@/app/actions/getEventState';
 import { ProjectorHeader } from '@/components/admin/ProjectorHeader';
 import { GiantClockSection } from '@/components/admin/GiantClockSection';
 import { TopThreePodium } from '@/components/admin/TopThreePodium';
@@ -20,24 +21,52 @@ export default function AdminDashboardPage() {
   const [secondsRemaining, setSecondsRemaining] = useState(1800); // 30 minutes match
   const [isTimerPaused, setIsTimerPaused] = useState(false);
   const [isWinnerModalOpen, setIsWinnerModalOpen] = useState(false);
+  const [isRefreshing, setIsRefreshing] = useState(false);
+  const isFetchingRef = useRef(false);
 
-  // 1. Initial Data Fetch
-  const fetchData = useCallback(async () => {
-    const [leaderboardRes, eventsRes] = await Promise.all([
-      getLeaderboard(),
-      getBattleEvents(25),
-    ]);
+  // 1. Initial & Periodic Data Fetch (Auto-Sync)
+  const fetchData = useCallback(async (isManual = false) => {
+    if (isFetchingRef.current) return;
+    isFetchingRef.current = true;
+    if (isManual) setIsRefreshing(true);
 
-    if (leaderboardRes.success && leaderboardRes.users) {
-      setUsers(leaderboardRes.users);
-    }
-    if (eventsRes.success && eventsRes.events) {
-      setEvents(eventsRes.events);
+    try {
+      const [leaderboardRes, eventsRes, stateRes] = await Promise.all([
+        getLeaderboard(),
+        getBattleEvents(25),
+        getEventState(),
+      ]);
+
+      if (leaderboardRes.success && leaderboardRes.users) {
+        setUsers(leaderboardRes.users);
+      }
+      if (eventsRes.success && eventsRes.events) {
+        setEvents(eventsRes.events);
+      }
+      if (stateRes.success && stateRes.state) {
+        if (stateRes.state.status === 'PAUSED' || stateRes.state.status === 'STOPPED') {
+          setIsTimerPaused(true);
+        } else if (stateRes.state.status === 'RUNNING') {
+          setIsTimerPaused(false);
+        }
+      }
+    } catch (err) {
+      console.error('Failed to auto-sync leaderboard:', err);
+    } finally {
+      isFetchingRef.current = false;
+      if (isManual) setIsRefreshing(false);
     }
   }, []);
 
+  // Auto-refresh interval (Polls every 2.5 seconds so rankings update automatically without manual reload)
   useEffect(() => {
     fetchData();
+
+    const autoSyncInterval = setInterval(() => {
+      fetchData();
+    }, 2500);
+
+    return () => clearInterval(autoSyncInterval);
   }, [fetchData]);
 
   // 2. Realtime Subscriptions
@@ -80,13 +109,38 @@ export default function AdminDashboardPage() {
           } else {
             sound.playBeep(950, 0.05);
           }
+          fetchData();
         }
       )
+      .subscribe();
+
+    // Listen to arena broadcast events (start, stop, reset, airdrops)
+    const arenaChannel = supabase
+      .channel('ctf_arena')
+      .on('broadcast', { event: 'air_drop_spawn' }, () => {
+        sound.playAirDropAlert();
+        fetchData();
+      })
+      .on('broadcast', { event: 'air_drop_claim_update' }, () => {
+        fetchData();
+      })
+      .on('broadcast', { event: 'EVENT_STARTED' }, () => {
+        setIsTimerPaused(false);
+        fetchData();
+      })
+      .on('broadcast', { event: 'EVENT_STOPPED' }, () => {
+        setIsTimerPaused(true);
+        fetchData();
+      })
+      .on('broadcast', { event: 'TOURNAMENT_RESET' }, () => {
+        fetchData();
+      })
       .subscribe();
 
     return () => {
       supabase.removeChannel(userChannel);
       supabase.removeChannel(battleChannel);
+      supabase.removeChannel(arenaChannel);
     };
   }, [fetchData]);
 
@@ -171,6 +225,8 @@ export default function AdminDashboardPage() {
         isTimerPaused={isTimerPaused}
         onTogglePauseTimer={togglePauseTimer}
         onRevealWinners={() => setIsWinnerModalOpen(true)}
+        onRefresh={() => fetchData(true)}
+        isRefreshing={isRefreshing}
       />
 
       {/* Winner Reveal Modal */}

@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useState } from 'react';
-import { Package, Pause, Play, Trophy, Loader2 } from 'lucide-react';
+import { Package, Pause, Play, Trophy, Loader2, RefreshCw } from 'lucide-react';
 import { triggerAirDrop } from '@/app/actions/triggerAirDrop';
 import { sound } from '@/lib/audio';
 import confetti from 'canvas-confetti';
@@ -10,12 +10,16 @@ interface AdminControlsFooterProps {
   isTimerPaused: boolean;
   onTogglePauseTimer: () => void;
   onRevealWinners: () => void;
+  onRefresh?: () => void;
+  isRefreshing?: boolean;
 }
 
 export function AdminControlsFooter({
   isTimerPaused,
   onTogglePauseTimer,
   onRevealWinners,
+  onRefresh,
+  isRefreshing = false,
 }: AdminControlsFooterProps) {
   const [isTriggeringDrop, setIsTriggeringDrop] = useState(false);
 
@@ -64,6 +68,22 @@ export function AdminControlsFooter({
 
       {/* Action Buttons */}
       <div className="flex items-center gap-2.5 flex-wrap justify-end">
+        {/* Quick Sync Button */}
+        {onRefresh && (
+          <button
+            onClick={() => {
+              sound.playBeep(900, 0.03);
+              onRefresh();
+            }}
+            disabled={isRefreshing}
+            className="border border-white/10 hover:border-white/20 bg-white/5 hover:bg-white/10 text-zinc-300 hover:text-white font-sans text-xs px-2.5 py-1.5 rounded-md transition-colors flex items-center gap-1.5 disabled:opacity-50"
+            title="Segarkan data leaderboard dan urutan ranking"
+          >
+            <RefreshCw className={`w-3.5 h-3.5 ${isRefreshing ? 'animate-spin text-cyan-400' : ''}`} />
+            <span>Sync</span>
+          </button>
+        )}
+
         {/* Trigger Air Drop Button */}
         <button
           onClick={handleAirDropClick}
