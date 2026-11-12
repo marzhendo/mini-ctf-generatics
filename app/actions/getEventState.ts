@@ -31,12 +31,20 @@ export async function getEventState(): Promise<{ success: boolean; state: EventS
       };
     }
 
+    let calculatedSeconds = data.seconds_remaining;
+    if (data.status === 'RUNNING' && data.started_at) {
+      const elapsed = Math.max(0, Math.floor((Date.now() - new Date(data.started_at).getTime()) / 1000));
+      calculatedSeconds = Math.max(0, (data.duration_minutes || 30) * 60 - elapsed);
+    } else if (data.status === 'WAITING') {
+      calculatedSeconds = (data.duration_minutes || 30) * 60;
+    }
+
     return {
       success: true,
       state: {
         status: data.status,
         duration_minutes: data.duration_minutes,
-        seconds_remaining: data.seconds_remaining,
+        seconds_remaining: calculatedSeconds,
         started_at: data.started_at,
         stopped_at: data.stopped_at,
         updated_at: data.updated_at,

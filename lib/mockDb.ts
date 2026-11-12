@@ -289,11 +289,27 @@ export function getMockDb(): MockDatabaseState {
 export const mockDb = {
   getEventState(): EventState {
     const db = getMockDb();
-    return db.eventState;
+    let calculatedSeconds = db.eventState.seconds_remaining;
+    if (db.eventState.status === 'RUNNING' && db.eventState.started_at) {
+      const elapsed = Math.max(0, Math.floor((Date.now() - new Date(db.eventState.started_at).getTime()) / 1000));
+      calculatedSeconds = Math.max(0, (db.eventState.duration_minutes || 30) * 60 - elapsed);
+    } else if (db.eventState.status === 'WAITING') {
+      calculatedSeconds = (db.eventState.duration_minutes || 30) * 60;
+    }
+    return {
+      ...db.eventState,
+      seconds_remaining: calculatedSeconds,
+    };
   },
 
   updateEventState(partial: Partial<EventState>): EventState {
     const db = getMockDb();
+    if (partial.status === 'RUNNING') {
+      partial.started_at = partial.started_at || new Date().toISOString();
+      const dur = partial.duration_minutes || db.eventState.duration_minutes || 30;
+      partial.duration_minutes = dur;
+      partial.seconds_remaining = dur * 60;
+    }
     db.eventState = {
       ...db.eventState,
       ...partial,

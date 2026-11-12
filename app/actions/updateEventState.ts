@@ -26,9 +26,9 @@ export async function updateEventState(params: UpdateEventParams): Promise<{
 
     if (isStarting) {
       updates.started_at = new Date().toISOString();
-      if (params.duration_minutes) {
-        updates.seconds_remaining = params.duration_minutes * 60;
-      }
+      const dur = params.duration_minutes || 30;
+      updates.duration_minutes = dur;
+      updates.seconds_remaining = dur * 60;
     } else if (isStopping) {
       updates.stopped_at = new Date().toISOString();
     }
@@ -60,6 +60,17 @@ export async function updateEventState(params: UpdateEventParams): Promise<{
         event: isStarting ? 'EVENT_STARTED' : isStopping ? 'EVENT_STOPPED' : 'EVENT_UPDATED',
         payload: data,
       });
+      if (isStarting && data.seconds_remaining) {
+        await channel.send({
+          type: 'broadcast',
+          event: 'timer_sync',
+          payload: {
+            secondsRemaining: data.seconds_remaining,
+            duration_minutes: data.duration_minutes,
+            started_at: data.started_at,
+          },
+        });
+      }
     } catch {
       // Broadcast fallback
     }

@@ -373,7 +373,7 @@ export default function AdminManagePage() {
                     <span>Atur Durasi Pertandingan:</span>
                   </label>
                   <div className="flex flex-wrap items-center gap-2">
-                    {[15, 20, 25, 30, 45].map((m) => (
+                    {[5, 10, 15, 20, 30, 45].map((m) => (
                       <button
                         key={m}
                         type="button"

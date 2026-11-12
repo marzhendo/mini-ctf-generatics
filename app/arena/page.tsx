@@ -104,8 +104,10 @@ export default function ArenaPage() {
           return;
         } else if (stateRes.state.status === 'STOPPED') {
           setIsEventStopped(true);
+        } else if (stateRes.state.status === 'RUNNING') {
+          setIsEventStopped(false);
         }
-        if (stateRes.state.seconds_remaining) {
+        if (typeof stateRes.state.seconds_remaining === 'number') {
           setSecondsRemaining(stateRes.state.seconds_remaining);
         }
       }
@@ -140,7 +142,13 @@ export default function ArenaPage() {
     if (isEventStopped) return;
 
     const timer = setInterval(() => {
-      setSecondsRemaining((prev) => (prev > 0 ? prev - 1 : 0));
+      setSecondsRemaining((prev) => {
+        if (prev <= 1) {
+          setIsEventStopped(true);
+          return 0;
+        }
+        return prev - 1;
+      });
     }, 1000);
     return () => clearInterval(timer);
   }, [isEventStopped]);
@@ -257,8 +265,15 @@ export default function ArenaPage() {
       .on('broadcast', { event: 'air_drop_exhausted' }, () => {
         setAirDropAvailable(false);
       })
+      .on('broadcast', { event: 'EVENT_STARTED' }, ({ payload }) => {
+        setIsEventStopped(false);
+        const rem = payload?.seconds_remaining ?? (payload?.duration_minutes ? payload.duration_minutes * 60 : undefined);
+        if (typeof rem === 'number') {
+          setSecondsRemaining(rem);
+        }
+      })
       .on('broadcast', { event: 'timer_sync' }, ({ payload }) => {
-        if (payload?.secondsRemaining) {
+        if (typeof payload?.secondsRemaining === 'number') {
           setSecondsRemaining(payload.secondsRemaining);
         }
       })

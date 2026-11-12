@@ -46,8 +46,17 @@ export default function AdminDashboardPage() {
       if (stateRes.success && stateRes.state) {
         if (stateRes.state.status === 'PAUSED' || stateRes.state.status === 'STOPPED') {
           setIsTimerPaused(true);
+          if (typeof stateRes.state.seconds_remaining === 'number') {
+            setSecondsRemaining(stateRes.state.seconds_remaining);
+          }
         } else if (stateRes.state.status === 'RUNNING') {
           setIsTimerPaused(false);
+          if (typeof stateRes.state.seconds_remaining === 'number') {
+            setSecondsRemaining(stateRes.state.seconds_remaining);
+          }
+        } else if (stateRes.state.status === 'WAITING') {
+          setIsTimerPaused(true);
+          setSecondsRemaining((stateRes.state.duration_minutes || 30) * 60);
         }
       }
     } catch (err) {
@@ -124,8 +133,12 @@ export default function AdminDashboardPage() {
       .on('broadcast', { event: 'air_drop_claim_update' }, () => {
         fetchData();
       })
-      .on('broadcast', { event: 'EVENT_STARTED' }, () => {
+      .on('broadcast', { event: 'EVENT_STARTED' }, ({ payload }) => {
         setIsTimerPaused(false);
+        const rem = payload?.seconds_remaining ?? (payload?.duration_minutes ? payload.duration_minutes * 60 : undefined);
+        if (typeof rem === 'number') {
+          setSecondsRemaining(rem);
+        }
         fetchData();
       })
       .on('broadcast', { event: 'EVENT_STOPPED' }, () => {
@@ -161,34 +174,6 @@ export default function AdminDashboardPage() {
     return () => clearInterval(timer);
   }, [isTimerPaused]);
 
-  // Broadcast timer sync to participants periodically
-  useEffect(() => {
-    const supabase = createClient();
-    const broadcastChannel = supabase.channel('ctf_arena');
-
-    broadcastChannel.subscribe((status) => {
-      if (status === 'SUBSCRIBED') {
-        broadcastChannel.send({
-          type: 'broadcast',
-          event: 'timer_sync',
-          payload: { secondsRemaining },
-        });
-      }
-    });
-
-    const syncInterval = setInterval(() => {
-      broadcastChannel.send({
-        type: 'broadcast',
-        event: 'timer_sync',
-        payload: { secondsRemaining },
-      });
-    }, 10000);
-
-    return () => {
-      clearInterval(syncInterval);
-      supabase.removeChannel(broadcastChannel);
-    };
-  }, [secondsRemaining]);
 
   const togglePauseTimer = () => {
     setIsTimerPaused((prev) => !prev);
