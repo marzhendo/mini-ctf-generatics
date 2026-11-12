@@ -1,0 +1,852 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>CTF//TELEMETRY_HUD::v4.2 - GENERATICS CTF: NEXUS OF INNOVATION</title>
+<!-- Fonts -->
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700;800&amp;family=Space+Mono:ital,wght@0,400;0,700;1,700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<!-- Tailwind Script -->
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+    tailwind.config = {
+      darkMode: "class",
+      theme: {
+        extend: {
+          "colors": {
+            "surface": "#0f131d",
+            "on-error-container": "#ffdad6",
+            "tertiary-fixed-dim": "#c4c7c9",
+            "on-error": "#690005",
+            "on-primary": "#00391f",
+            "on-tertiary": "#2d3133",
+            "surface-container-lowest": "#0a0e18",
+            "surface-container-high": "#262a35",
+            "inverse-on-surface": "#2c303b",
+            "primary-container": "#00ff9d",
+            "on-surface-variant": "#b9cbbc",
+            "on-primary-fixed": "#002110",
+            "on-tertiary-container": "#606365",
+            "on-primary-container": "#007143",
+            "error-container": "#93000a",
+            "secondary-fixed": "#9cf0ff",
+            "surface-container-low": "#171b26",
+            "error": "#ffb4ab",
+            "surface-container": "#1c1f2a",
+            "outline": "#849587",
+            "on-tertiary-fixed-variant": "#444749",
+            "primary-fixed": "#56ffa8",
+            "surface-dim": "#0f131d",
+            "on-secondary-fixed-variant": "#004f58",
+            "primary": "#f4fff3",
+            "on-surface": "#dfe2f1",
+            "tertiary-fixed": "#e0e3e5",
+            "tertiary": "#fafcfe",
+            "on-secondary-container": "#00616d",
+            "on-primary-fixed-variant": "#00522f",
+            "surface-tint": "#00e38b",
+            "secondary": "#bdf4ff",
+            "outline-variant": "#3b4a3f",
+            "on-tertiary-fixed": "#191c1e",
+            "inverse-primary": "#006d40",
+            "inverse-surface": "#dfe2f1",
+            "surface-bright": "#353944",
+            "on-secondary-fixed": "#001f24",
+            "background": "#0f131d",
+            "secondary-fixed-dim": "#00daf3",
+            "tertiary-container": "#dee0e2",
+            "secondary-container": "#00e3fd",
+            "primary-fixed-dim": "#00e38b",
+            "on-background": "#dfe2f1",
+            "surface-container-highest": "#313540",
+            "on-secondary": "#00363d",
+            "surface-variant": "#313540"
+          },
+          "borderRadius": {
+            "DEFAULT": "0.25rem",
+            "lg": "0.5rem",
+            "xl": "0.75rem",
+            "full": "9999px"
+          },
+          "spacing": {
+            "gutter": "0.75rem",
+            "space-md": "0.75rem",
+            "space-xl": "1.5rem",
+            "space-xs": "0.25rem",
+            "space-lg": "1rem",
+            "space-sm": "0.5rem",
+            "margin": "1rem"
+          },
+          "fontFamily": {
+            "headline-sm": ["Space Mono"],
+            "label-lg": ["JetBrains Mono"],
+            "headline-md": ["Space Mono"],
+            "label-md": ["JetBrains Mono"],
+            "body-lg": ["JetBrains Mono"],
+            "headline-xl": ["Space Mono"],
+            "body-sm": ["JetBrains Mono"],
+            "body-md": ["JetBrains Mono"],
+            "label-sm": ["JetBrains Mono"],
+            "headline-xl-mobile": ["Space Mono"],
+            "headline-lg": ["Space Mono"]
+          },
+          "fontSize": {
+            "headline-sm": ["16px", { "lineHeight": "22px", "letterSpacing": "0.02em", "fontWeight": "700" }],
+            "label-lg": ["12px", { "lineHeight": "16px", "letterSpacing": "0.08em", "fontWeight": "700" }],
+            "headline-md": ["20px", { "lineHeight": "28px", "letterSpacing": "-0.01em", "fontWeight": "700" }],
+            "label-md": ["10px", { "lineHeight": "14px", "letterSpacing": "0.1em", "fontWeight": "700" }],
+            "body-lg": ["14px", { "lineHeight": "22px", "letterSpacing": "0.01em", "fontWeight": "500" }],
+            "headline-xl": ["36px", { "lineHeight": "44px", "letterSpacing": "-0.04em", "fontWeight": "700" }],
+            "body-sm": ["11px", { "lineHeight": "16px", "letterSpacing": "0.03em", "fontWeight": "400" }],
+            "body-md": ["12px", { "lineHeight": "18px", "letterSpacing": "0.02em", "fontWeight": "400" }],
+            "label-sm": ["9px", { "lineHeight": "12px", "letterSpacing": "0.12em", "fontWeight": "700" }],
+            "headline-xl-mobile": ["28px", { "lineHeight": "34px", "letterSpacing": "-0.03em", "fontWeight": "700" }],
+            "headline-lg": ["24px", { "lineHeight": "32px", "letterSpacing": "-0.02em", "fontWeight": "700" }]
+          }
+        }
+      }
+    }
+  </script>
+<style>
+    /* CRT Scanline & Phosphor Radiance Styling */
+    .crt-overlay {
+      background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.35) 50%), linear-gradient(90deg, rgba(255, 0, 0, 0.04), rgba(0, 255, 0, 0.02), rgba(0, 0, 255, 0.04));
+      background-size: 100% 3px, 4px 100%;
+      pointer-events: none;
+    }
+    .cyber-grid {
+      background-image: linear-gradient(to right, rgba(0, 229, 255, 0.04) 1px, transparent 1px),
+                        linear-gradient(to bottom, rgba(0, 255, 157, 0.04) 1px, transparent 1px);
+      background-size: 32px 32px;
+    }
+    .glow-gold {
+      box-shadow: 0 0 25px rgba(255, 215, 0, 0.3), inset 0 0 15px rgba(255, 215, 0, 0.15);
+    }
+    .glow-silver {
+      box-shadow: 0 0 20px rgba(226, 232, 240, 0.25), inset 0 0 10px rgba(226, 232, 240, 0.1);
+    }
+    .glow-bronze {
+      box-shadow: 0 0 20px rgba(245, 158, 11, 0.25), inset 0 0 10px rgba(245, 158, 11, 0.1);
+    }
+    .glow-cyan {
+      box-shadow: 0 0 18px rgba(0, 227, 253, 0.35);
+    }
+    .glow-green {
+      box-shadow: 0 0 18px rgba(0, 255, 157, 0.35);
+    }
+    .chamfer-card {
+      clip-path: polygon(0 8px, 8px 0, calc(100% - 8px) 0, 100% 8px, 100% calc(100% - 8px), calc(100% - 8px) 100%, 8px 100%, 0 calc(100% - 8px));
+    }
+    .chamfer-btn {
+      clip-path: polygon(0 5px, 5px 0, calc(100% - 5px) 0, 100% 5px, 100% calc(100% - 5px), calc(100% - 5px) 100%, 5px 100%, 0 calc(100% - 5px));
+    }
+    @keyframes pulse-radar {
+      0% { transform: scale(0.95); opacity: 0.9; }
+      50% { transform: scale(1.08); opacity: 0.4; }
+      100% { transform: scale(0.95); opacity: 0.9; }
+    }
+    .animate-radar {
+      animation: pulse-radar 2.4s infinite ease-in-out;
+    }
+    /* Custom thin scrollbar */
+    ::-webkit-scrollbar {
+      width: 4px;
+      height: 4px;
+    }
+    ::-webkit-scrollbar-track {
+      background: #0a0e18;
+    }
+    ::-webkit-scrollbar-thumb {
+      background: #3b4a3f;
+    }
+  </style>
+</head>
+<body class="bg-[#090D16] text-on-surface font-body-md select-none overflow-hidden h-screen w-screen flex flex-col justify-between relative crt-container">
+<!-- Ambient Scanlines & Cyber Mesh -->
+<div class="absolute inset-0 cyber-grid pointer-events-none z-0"></div>
+<div class="absolute inset-0 crt-overlay pointer-events-none z-50"></div>
+<div class="absolute inset-0 bg-radial from-transparent via-transparent to-[#05080e]/90 pointer-events-none z-10"></div>
+<!-- ==================== TOP NAVIGATION / SYSTEM STATUS (Shared Component Anchor) ==================== -->
+<header class="flex justify-between items-center w-full px-6 py-2.5 border-b border-outline-variant bg-surface-container-lowest backdrop-blur-md z-40 shrink-0 shadow-[0_0_15px_rgba(0,255,157,0.15)]">
+<!-- Left: Identity & Tournament Logos -->
+<div class="flex items-center gap-3">
+<div class="flex items-center gap-1.5 font-headline-sm font-bold tracking-widest text-primary-container">
+<span class="material-symbols-outlined text-primary-container text-[20px]" data-icon="terminal">terminal</span>
+<span class="tracking-widest">CTF//TELEMETRY_HUD::v4.2</span>
+</div>
+<div class="h-4 w-px bg-outline-variant mx-1"></div>
+<div class="flex items-center gap-1.5">
+<span class="px-2 py-0.5 bg-[#00e3fd]/15 text-[#00e3fd] border border-[#00e3fd]/40 font-headline-sm text-xs font-bold tracking-wider rounded-none">HMIF</span>
+<span class="px-2 py-0.5 bg-primary-container/15 text-primary-container border border-primary-container/40 font-headline-sm text-xs font-bold tracking-wider rounded-none">TDI</span>
+<span class="text-on-surface-variant font-headline-sm text-xs tracking-wider ml-1 hidden lg:inline-block">GENERATICS CTF: NEXUS OF INNOVATION</span>
+</div>
+</div>
+<!-- Center: Navigation Hub (JSON Anchor Matches) -->
+<nav class="hidden xl:flex items-center gap-6">
+<a class="border-b-2 border-primary-container text-primary-container font-headline-sm tracking-wider pb-1 flex items-center gap-1.5" href="#">
+<span class="w-1.5 h-1.5 rounded-full bg-primary-container animate-ping"></span>
+        LIVE ROSTER
+      </a>
+<a class="text-on-surface-variant hover:text-on-surface font-label-lg tracking-wider transition-colors duration-150" href="#">COMBAT LOG</a>
+<a class="text-on-surface-variant hover:text-on-surface font-label-lg tracking-wider transition-colors duration-150" href="#">NODE MATRIX</a>
+<a class="text-on-surface-variant hover:text-on-surface font-label-lg tracking-wider transition-colors duration-150" href="#">TELEMETRY</a>
+</nav>
+<!-- Right: Telemetry & Actions (JSON Anchor) -->
+<div class="flex items-center gap-3">
+<div class="hidden sm:flex items-center gap-2 bg-surface-container-low px-3 py-1 border border-outline-variant/60">
+<span class="w-2 h-2 rounded-full bg-primary-container"></span>
+<span class="font-label-md text-on-surface">64 OPERATORS</span>
+<span class="text-outline-variant">•</span>
+<span class="font-label-md text-[#00e3fd]">10 NODES</span>
+<span class="text-outline-variant">•</span>
+<span class="font-label-md text-on-surface-variant">12ms</span>
+</div>
+<button class="border border-outline-variant hover:border-primary-container/40 hover:text-primary-container text-on-surface-variant font-label-md px-2.5 py-1 tracking-wider uppercase transition-all duration-150 active:scale-95">
+        DIAGNOSTICS
+      </button>
+<button class="bg-primary-container text-[#070A10] font-headline-sm text-xs font-bold px-3 py-1 tracking-wider chamfer-btn glow-green transition-all duration-150 active:scale-95">
+        MC_OVERRIDE
+      </button>
+</div>
+</header>
+<!-- ==================== SUB-HEADER / MASSIVE GIANT PROJECTOR CLOCK ==================== -->
+<section class="relative z-30 px-6 py-2 bg-surface-container-lowest/80 border-b border-outline-variant/70 shrink-0">
+<div class="max-w-[1920px] mx-auto flex flex-col md:flex-row items-center justify-between gap-4">
+<!-- Left Meta Indicator -->
+<div class="flex items-center gap-3">
+<div class="flex flex-col">
+<div class="flex items-center gap-2">
+<span class="relative flex h-3 w-3">
+<span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-primary-container opacity-75"></span>
+<span class="relative inline-flex rounded-full h-3 w-3 bg-primary-container"></span>
+</span>
+<span class="font-headline-sm text-sm tracking-widest text-primary-container">SPECTATOR HUD // TOURNAMENT ACTIVE</span>
+</div>
+<span class="font-label-sm text-on-surface-variant tracking-widest mt-0.5">LOCATION: MAIN ARENA STAGE • PROTOCOL: CYPHER_STRIKE_v2</span>
+</div>
+</div>
+<!-- Center Projector Countdown Clock (High visibility 20m+) -->
+<div class="flex items-center gap-5 bg-surface-container-low/90 px-8 py-1.5 border border-[#00e3fd]/40 glow-cyan chamfer-card">
+<div class="text-right">
+<div class="font-headline-sm text-[11px] text-[#00e3fd] tracking-widest flex items-center justify-end gap-1.5">
+<span class="w-1.5 h-1.5 bg-[#00e3fd] rounded-full animate-pulse"></span>
+            MATCH TIME REMAINING
+          </div>
+<div class="font-label-sm text-on-surface-variant tracking-wider">PHASE 03: CLIMAX SURGE</div>
+</div>
+<div class="h-10 w-px bg-outline-variant"></div>
+<div class="font-headline-xl text-4xl lg:text-5xl font-extrabold tracking-widest text-[#00e3fd] drop-shadow-[0_0_15px_rgba(0,227,253,0.7)] flex items-center gap-1 font-mono">
+<span id="clock-min">14</span>
+<span class="animate-pulse text-white">:</span>
+<span id="clock-sec">32</span>
+</div>
+<div class="hidden sm:block pl-2 text-left">
+<span class="px-2 py-0.5 bg-error-container/30 border border-error/50 text-error font-label-sm tracking-widest inline-block animate-pulse">
+            HIGH INTENSITY
+          </span>
+</div>
+</div>
+<!-- Right Sync Status -->
+<div class="flex items-center gap-3">
+<div class="text-right hidden sm:block">
+<div class="font-label-md text-on-surface flex items-center justify-end gap-1">
+<span class="w-2 h-2 rounded-full bg-primary-container"></span>
+<span>REALTIME SYNC: ACTIVE</span>
+</div>
+<span class="font-label-sm text-on-surface-variant tracking-wider">🟢 Supabase Edge Mesh (2.4 GB/s)</span>
+</div>
+<div class="flex items-center gap-1 border border-outline-variant p-1 bg-surface-container-high/40">
+<span class="material-symbols-outlined text-[#00e3fd] text-sm" data-icon="wifi_tethering">wifi_tethering</span>
+<span class="material-symbols-outlined text-primary-container text-sm" data-icon="security">security</span>
+<span class="material-symbols-outlined text-on-surface-variant text-sm" data-icon="timer">timer</span>
+</div>
+</div>
+</div>
+</section>
+<!-- ==================== MAIN EXPANSIVE STAGE (PODIUM + SPLIT CONTENT) ==================== -->
+<main class="relative z-20 flex-1 px-6 py-3 flex flex-col gap-3 min-h-0 overflow-hidden max-w-[1920px] w-full mx-auto">
+<!-- TOP 3 SPOTLIGHT PODIUM -->
+<section class="grid grid-cols-1 md:grid-cols-3 gap-3 shrink-0">
+<!-- 2ND PLACE (SILVER) -->
+<div class="bg-surface-container-low/90 border-2 border-[#E2E8F0] glow-silver p-3 chamfer-card relative overflow-hidden flex items-center justify-between">
+<div class="absolute -right-6 -bottom-6 w-28 h-28 bg-[#E2E8F0]/5 rounded-full pointer-events-none"></div>
+<div class="flex items-center gap-3 z-10">
+<div class="w-12 h-12 bg-surface-container-high border border-[#E2E8F0] flex items-center justify-center font-headline-lg text-[#E2E8F0] font-bold shadow-[0_0_10px_rgba(226,232,240,0.3)]">
+            2
+          </div>
+<div>
+<div class="flex items-center gap-2">
+<span class="font-headline-sm text-base text-[#E2E8F0] tracking-wider">RANK #2: MARZHEN</span>
+<span class="text-xs px-1.5 py-0.2 bg-[#E2E8F0]/10 text-[#E2E8F0] border border-[#E2E8F0]/30 font-label-sm">DEF</span>
+</div>
+<div class="flex items-center gap-2 mt-1">
+<span class="px-2 py-0.5 bg-primary-container/15 text-primary-container border border-primary-container/40 font-label-sm tracking-wider">FINISHED (10/10)</span>
+<span class="font-label-sm text-on-surface-variant">DELTA: +450</span>
+</div>
+</div>
+</div>
+<div class="text-right z-10">
+<div class="font-headline-xl text-3xl font-extrabold text-[#E2E8F0] tracking-tight">1,600</div>
+<div class="font-label-sm text-on-surface-variant tracking-widest uppercase">POINTS [PTS]</div>
+</div>
+</div>
+<!-- 1ST PLACE (GOLD - ELEVATED CENTER) -->
+<div class="bg-surface-container/95 border-2 border-[#FFD700] glow-gold p-3.5 chamfer-card relative overflow-hidden flex items-center justify-between scale-[1.02] transform transition-transform shadow-[0_0_30px_rgba(255,215,0,0.25)]">
+<div class="absolute -top-8 -right-8 w-32 h-32 bg-[#FFD700]/10 rounded-full blur-xl pointer-events-none"></div>
+<div class="flex items-center gap-3.5 z-10">
+<div class="relative">
+<div class="w-14 h-14 bg-[#FFD700]/20 border-2 border-[#FFD700] flex items-center justify-center font-headline-xl text-[#FFD700] font-bold shadow-[0_0_15px_rgba(255,215,0,0.5)]">
+              1
+            </div>
+<span class="material-symbols-outlined absolute -top-3 -right-2 text-[#FFD700] text-xl" data-icon="star" data-weight="fill" style="font-variation-settings: 'FILL' 1;">star</span>
+</div>
+<div>
+<div class="flex items-center gap-2">
+<span class="font-headline-md text-lg text-[#FFD700] tracking-wider font-extrabold">RANK #1: AXEL_99</span>
+<span class="px-1.5 py-0.2 bg-[#FFD700] text-[#070A10] font-headline-sm text-[10px] font-black uppercase">APEX</span>
+</div>
+<div class="flex items-center gap-2 mt-1">
+<span class="px-2 py-0.5 bg-[#FFD700]/15 text-[#FFD700] border border-[#FFD700]/40 font-label-sm tracking-wider flex items-center gap-1">
+<span class="w-1.5 h-1.5 rounded-full bg-[#FFD700] animate-ping"></span>
+                HACKING NODE 09
+              </span>
+<span class="font-label-sm text-primary-container tracking-wider">STREAK: 5X</span>
+</div>
+</div>
+</div>
+<div class="text-right z-10">
+<div class="font-headline-xl text-4xl font-extrabold text-[#FFD700] tracking-tight drop-shadow-[0_0_12px_rgba(255,215,0,0.6)]">1,750</div>
+<div class="font-label-sm text-[#FFD700]/80 tracking-widest uppercase font-bold">TOTAL SCORE [PTS]</div>
+</div>
+</div>
+<!-- 3RD PLACE (BRONZE) -->
+<div class="bg-surface-container-low/90 border-2 border-[#F59E0B] glow-bronze p-3 chamfer-card relative overflow-hidden flex items-center justify-between">
+<div class="absolute -right-6 -bottom-6 w-28 h-28 bg-[#F59E0B]/5 rounded-full pointer-events-none"></div>
+<div class="flex items-center gap-3 z-10">
+<div class="w-12 h-12 bg-surface-container-high border border-[#F59E0B] flex items-center justify-center font-headline-lg text-[#F59E0B] font-bold shadow-[0_0_10px_rgba(245,158,11,0.3)]">
+            3
+          </div>
+<div>
+<div class="flex items-center gap-2">
+<span class="font-headline-sm text-base text-[#F59E0B] tracking-wider">RANK #3: KEVIN_T</span>
+<span class="text-xs px-1.5 py-0.2 bg-[#F59E0B]/10 text-[#F59E0B] border border-[#F59E0B]/30 font-label-sm">ATK</span>
+</div>
+<div class="flex items-center gap-2 mt-1">
+<span class="px-2 py-0.5 bg-secondary-container/15 text-[#00e3fd] border border-[#00e3fd]/40 font-label-sm tracking-wider">HACKING NODE 08</span>
+<span class="font-label-sm text-on-surface-variant">SPEED: 1.2m</span>
+</div>
+</div>
+</div>
+<div class="text-right z-10">
+<div class="font-headline-xl text-3xl font-extrabold text-[#F59E0B] tracking-tight">1,450</div>
+<div class="font-label-sm text-on-surface-variant tracking-widest uppercase">POINTS [PTS]</div>
+</div>
+</div>
+</section>
+<!-- BOTTOM HALF - DUAL PANELS (ROSTER & COMBAT LOG) -->
+<div class="flex-1 grid grid-cols-12 gap-3 min-h-0">
+<!-- LEFT COLUMN: LIVE FIELD ROSTER (~65% width = 8 cols in 12-col grid) -->
+<section class="col-span-12 lg:col-span-8 bg-surface-container-lowest/90 border border-outline-variant/80 flex flex-col min-h-0 chamfer-card">
+<!-- Table Control Header -->
+<div class="px-4 py-2 bg-surface-container-low border-b border-outline-variant flex items-center justify-between shrink-0">
+<div class="flex items-center gap-2.5">
+<span class="material-symbols-outlined text-primary-container text-base" data-icon="table_chart">table_chart</span>
+<span class="font-headline-sm text-xs font-bold text-on-surface tracking-wider uppercase">LIVE FIELD ROSTER // RANKS 04 — 18</span>
+<span class="px-2 py-0.5 bg-surface-container text-on-surface-variant font-label-sm text-[9px] border border-outline-variant">ACTIVE SECTOR: AUDITORIUM</span>
+</div>
+<div class="flex items-center gap-3 font-label-sm text-on-surface-variant">
+<span class="flex items-center gap-1"><span class="w-2 h-2 bg-primary-container inline-block"></span> CLEARED</span>
+<span class="flex items-center gap-1"><span class="w-2 h-2 bg-[#00e3fd] inline-block"></span> ENGAGED</span>
+<span class="flex items-center gap-1"><span class="w-2 h-2 bg-surface-container-high inline-block"></span> LOCKED</span>
+<span class="flex items-center gap-1"><span class="w-2 h-2 bg-[#00e3fd]/60 border border-[#00e3fd] inline-block animate-pulse"></span> FROZEN</span>
+</div>
+</div>
+<!-- Table Columns Header -->
+<div class="grid grid-cols-12 px-4 py-1.5 bg-surface-container/60 border-b border-outline-variant/60 font-label-sm text-on-surface-variant uppercase tracking-wider text-[10px] shrink-0">
+<div class="col-span-1">RNK</div>
+<div class="col-span-3">OPERATOR CODENAME</div>
+<div class="col-span-4">NODE PROGRESS MATRIX [01-10]</div>
+<div class="col-span-2 text-right">SCORE (PTS)</div>
+<div class="col-span-2 text-right">TELEMETRY</div>
+</div>
+<!-- Scrollable High Density Rows -->
+<div class="flex-1 overflow-y-auto divide-y divide-outline-variant/30 pr-1 font-mono">
+<!-- Rank 04: CYBER_NINJA -->
+<div class="grid grid-cols-12 px-4 py-1.5 items-center hover:bg-surface-container/50 transition-colors">
+<div class="col-span-1 font-headline-sm text-xs text-on-surface">#04</div>
+<div class="col-span-3 font-headline-sm text-xs text-white font-bold flex items-center gap-1.5">
+<span>CYBER_NINJA</span>
+<span class="text-[9px] text-primary-container font-label-sm">[N08]</span>
+</div>
+<div class="col-span-4 flex items-center gap-1">
+<span class="h-3 w-4 bg-primary-container"></span>
+<span class="h-3 w-4 bg-primary-container"></span>
+<span class="h-3 w-4 bg-primary-container"></span>
+<span class="h-3 w-4 bg-primary-container"></span>
+<span class="h-3 w-4 bg-primary-container"></span>
+<span class="h-3 w-4 bg-primary-container"></span>
+<span class="h-3 w-4 bg-primary-container"></span>
+<span class="h-3 w-4 bg-[#00e3fd] animate-pulse"></span>
+<span class="h-3 w-4 bg-surface-container-high"></span>
+<span class="h-3 w-4 bg-surface-container-high"></span>
+</div>
+<div class="col-span-2 text-right font-headline-sm text-xs text-primary-container font-bold">1,300</div>
+<div class="col-span-2 text-right">
+<span class="px-1.5 py-0.5 bg-primary-container/10 border border-primary-container/30 text-primary-container text-[9px] font-label-sm">RUNNING</span>
+</div>
+</div>
+<!-- Rank 05: DEV_ZERO -->
+<div class="grid grid-cols-12 px-4 py-1.5 items-center hover:bg-surface-container/50 transition-colors">
+<div class="col-span-1 font-headline-sm text-xs text-on-surface">#05</div>
+<div class="col-span-3 font-headline-sm text-xs text-white font-bold flex items-center gap-1.5">
+<span>DEV_ZERO</span>
+<span class="text-[9px] text-[#00e3fd] font-label-sm">[N07]</span>
+</div>
+<div class="col-span-4 flex items-center gap-1">
+<span class="h-3 w-4 bg-primary-container"></span>
+<span class="h-3 w-4 bg-primary-container"></span>
+<span class="h-3 w-4 bg-primary-container"></span>
+<span class="h-3 w-4 bg-primary-container"></span>
+<span class="h-3 w-4 bg-primary-container"></span>
+<span class="h-3 w-4 bg-primary-container"></span>
+<span class="h-3 w-4 bg-[#00e3fd] animate-pulse"></span>
+<span class="h-3 w-4 bg-surface-container-high"></span>
+<span class="h-3 w-4 bg-surface-container-high"></span>
+<span class="h-3 w-4 bg-surface-container-high"></span>
+</div>
+<div class="col-span-2 text-right font-headline-sm text-xs text-primary-container font-bold">1,200</div>
+<div class="col-span-2 text-right">
+<span class="px-1.5 py-0.5 bg-surface-container-high border border-outline text-on-surface-variant text-[9px] font-label-sm">DECRYPT</span>
+</div>
+</div>
+<!-- Rank 06: GHOST_X -->
+<div class="grid grid-cols-12 px-4 py-1.5 items-center hover:bg-surface-container/50 transition-colors">
+<div class="col-span-1 font-headline-sm text-xs text-on-surface">#06</div>
+<div class="col-span-3 font-headline-sm text-xs text-white font-bold flex items-center gap-1.5">
+<span>GHOST_X</span>
+<span class="text-[9px] text-[#00e3fd] font-label-sm">[N07]</span>
+</div>
+<div class="col-span-4 flex items-center gap-1">
+<span class="h-3 w-4 bg-primary-container"></span>
+<span class="h-3 w-4 bg-primary-container"></span>
+<span class="h-3 w-4 bg-primary-container"></span>
+<span class="h-3 w-4 bg-primary-container"></span>
+<span class="h-3 w-4 bg-primary-container"></span>
+<span class="h-3 w-4 bg-primary-container"></span>
+<span class="h-3 w-4 bg-[#00e3fd] animate-pulse"></span>
+<span class="h-3 w-4 bg-surface-container-high"></span>
+<span class="h-3 w-4 bg-surface-container-high"></span>
+<span class="h-3 w-4 bg-surface-container-high"></span>
+</div>
+<div class="col-span-2 text-right font-headline-sm text-xs text-primary-container font-bold">1,150</div>
+<div class="col-span-2 text-right">
+<span class="px-1.5 py-0.5 bg-surface-container-high border border-outline text-on-surface-variant text-[9px] font-label-sm">DECRYPT</span>
+</div>
+</div>
+<!-- Rank 07: NEO_KID -->
+<div class="grid grid-cols-12 px-4 py-1.5 items-center hover:bg-surface-container/50 transition-colors">
+<div class="col-span-1 font-headline-sm text-xs text-on-surface">#07</div>
+<div class="col-span-3 font-headline-sm text-xs text-white font-bold flex items-center gap-1.5">
+<span>NEO_KID</span>
+<span class="text-[9px] text-on-surface-variant font-label-sm">[N06]</span>
+</div>
+<div class="col-span-4 flex items-center gap-1">
+<span class="h-3 w-4 bg-primary-container"></span>
+<span class="h-3 w-4 bg-primary-container"></span>
+<span class="h-3 w-4 bg-primary-container"></span>
+<span class="h-3 w-4 bg-primary-container"></span>
+<span class="h-3 w-4 bg-primary-container"></span>
+<span class="h-3 w-4 bg-[#00e3fd] animate-pulse"></span>
+<span class="h-3 w-4 bg-surface-container-high"></span>
+<span class="h-3 w-4 bg-surface-container-high"></span>
+<span class="h-3 w-4 bg-surface-container-high"></span>
+<span class="h-3 w-4 bg-surface-container-high"></span>
+</div>
+<div class="col-span-2 text-right font-headline-sm text-xs text-on-surface font-bold">1,100</div>
+<div class="col-span-2 text-right">
+<span class="px-1.5 py-0.5 bg-surface-container-high border border-outline-variant text-on-surface-variant text-[9px] font-label-sm">STABLE</span>
+</div>
+</div>
+<!-- Rank 08: SARAH -->
+<div class="grid grid-cols-12 px-4 py-1.5 items-center hover:bg-surface-container/50 transition-colors">
+<div class="col-span-1 font-headline-sm text-xs text-on-surface">#08</div>
+<div class="col-span-3 font-headline-sm text-xs text-[#56ffa8] font-bold flex items-center gap-1.5">
+<span>SARAH</span>
+<span class="text-[9px] text-primary-container font-label-sm">[SIPHON]</span>
+</div>
+<div class="col-span-4 flex items-center gap-1">
+<span class="h-3 w-4 bg-primary-container"></span>
+<span class="h-3 w-4 bg-primary-container"></span>
+<span class="h-3 w-4 bg-primary-container"></span>
+<span class="h-3 w-4 bg-primary-container"></span>
+<span class="h-3 w-4 bg-primary-container"></span>
+<span class="h-3 w-4 bg-[#00e3fd] animate-pulse"></span>
+<span class="h-3 w-4 bg-surface-container-high"></span>
+<span class="h-3 w-4 bg-surface-container-high"></span>
+<span class="h-3 w-4 bg-surface-container-high"></span>
+<span class="h-3 w-4 bg-surface-container-high"></span>
+</div>
+<div class="col-span-2 text-right font-headline-sm text-xs text-primary-container font-bold">1,050</div>
+<div class="col-span-2 text-right">
+<span class="px-1.5 py-0.5 bg-primary-container/20 border border-primary-container text-primary-container text-[9px] font-label-sm font-bold animate-pulse">OVERCLOCK</span>
+</div>
+</div>
+<!-- Rank 09: DAVID_W (FROZEN 08s) -->
+<div class="grid grid-cols-12 px-4 py-1.5 items-center bg-[#00e3fd]/10 border-l-2 border-[#00e3fd] hover:bg-[#00e3fd]/15 transition-colors">
+<div class="col-span-1 font-headline-sm text-xs text-[#00e3fd]">#09</div>
+<div class="col-span-3 font-headline-sm text-xs text-[#00e3fd] font-bold flex items-center gap-1.5">
+<span>DAVID_W</span>
+<span class="text-xs">🧊</span>
+</div>
+<div class="col-span-4 flex items-center gap-1 opacity-70">
+<span class="h-3 w-4 bg-primary-container"></span>
+<span class="h-3 w-4 bg-primary-container"></span>
+<span class="h-3 w-4 bg-primary-container"></span>
+<span class="h-3 w-4 bg-primary-container"></span>
+<span class="h-3 w-4 bg-primary-container"></span>
+<span class="h-3 w-4 bg-[#00e3fd]"></span>
+<span class="h-3 w-4 bg-surface-container-high"></span>
+<span class="h-3 w-4 bg-surface-container-high"></span>
+<span class="h-3 w-4 bg-surface-container-high"></span>
+<span class="h-3 w-4 bg-surface-container-high"></span>
+</div>
+<div class="col-span-2 text-right font-headline-sm text-xs text-on-surface font-bold">950</div>
+<div class="col-span-2 text-right">
+<span class="px-1.5 py-0.5 bg-[#00e3fd]/20 border border-[#00e3fd] text-[#00e3fd] text-[9px] font-label-sm font-bold glow-cyan animate-pulse">FROZEN 08s</span>
+</div>
+</div>
+<!-- Rank 10: RIZKY -->
+<div class="grid grid-cols-12 px-4 py-1.5 items-center hover:bg-surface-container/50 transition-colors">
+<div class="col-span-1 font-headline-sm text-xs text-on-surface">#10</div>
+<div class="col-span-3 font-headline-sm text-xs text-white font-bold flex items-center gap-1.5">
+<span>RIZKY</span>
+<span class="text-[9px] text-primary-container font-label-sm">[N07]</span>
+</div>
+<div class="col-span-4 flex items-center gap-1">
+<span class="h-3 w-4 bg-primary-container"></span>
+<span class="h-3 w-4 bg-primary-container"></span>
+<span class="h-3 w-4 bg-primary-container"></span>
+<span class="h-3 w-4 bg-primary-container"></span>
+<span class="h-3 w-4 bg-primary-container"></span>
+<span class="h-3 w-4 bg-primary-container"></span>
+<span class="h-3 w-4 bg-primary-container"></span>
+<span class="h-3 w-4 bg-surface-container-high"></span>
+<span class="h-3 w-4 bg-surface-container-high"></span>
+<span class="h-3 w-4 bg-surface-container-high"></span>
+</div>
+<div class="col-span-2 text-right font-headline-sm text-xs text-primary-container font-bold">900</div>
+<div class="col-span-2 text-right">
+<span class="px-1.5 py-0.5 bg-primary-container/10 border border-primary-container/30 text-primary-container text-[9px] font-label-sm">+250 PTS</span>
+</div>
+</div>
+<!-- Rank 11: BYTE_ME -->
+<div class="grid grid-cols-12 px-4 py-1.5 items-center hover:bg-surface-container/50 transition-colors">
+<div class="col-span-1 font-headline-sm text-xs text-on-surface">#11</div>
+<div class="col-span-3 font-headline-sm text-xs text-white font-bold flex items-center gap-1.5">
+<span>BYTE_ME</span>
+<span class="text-[9px] text-on-surface-variant font-label-sm">[N05]</span>
+</div>
+<div class="col-span-4 flex items-center gap-1">
+<span class="h-3 w-4 bg-primary-container"></span>
+<span class="h-3 w-4 bg-primary-container"></span>
+<span class="h-3 w-4 bg-primary-container"></span>
+<span class="h-3 w-4 bg-primary-container"></span>
+<span class="h-3 w-4 bg-[#00e3fd] animate-pulse"></span>
+<span class="h-3 w-4 bg-surface-container-high"></span>
+<span class="h-3 w-4 bg-surface-container-high"></span>
+<span class="h-3 w-4 bg-surface-container-high"></span>
+<span class="h-3 w-4 bg-surface-container-high"></span>
+<span class="h-3 w-4 bg-surface-container-high"></span>
+</div>
+<div class="col-span-2 text-right font-headline-sm text-xs text-on-surface font-bold">850</div>
+<div class="col-span-2 text-right">
+<span class="px-1.5 py-0.5 bg-surface-container-high border border-outline-variant text-on-surface-variant text-[9px] font-label-sm">INFILTRATE</span>
+</div>
+</div>
+<!-- Rank 12: PHANTOM -->
+<div class="grid grid-cols-12 px-4 py-1.5 items-center hover:bg-surface-container/50 transition-colors">
+<div class="col-span-1 font-headline-sm text-xs text-on-surface">#12</div>
+<div class="col-span-3 font-headline-sm text-xs text-white font-bold flex items-center gap-1.5">
+<span>PHANTOM</span>
+<span class="text-[9px] text-on-surface-variant font-label-sm">[N05]</span>
+</div>
+<div class="col-span-4 flex items-center gap-1">
+<span class="h-3 w-4 bg-primary-container"></span>
+<span class="h-3 w-4 bg-primary-container"></span>
+<span class="h-3 w-4 bg-primary-container"></span>
+<span class="h-3 w-4 bg-primary-container"></span>
+<span class="h-3 w-4 bg-[#00e3fd] animate-pulse"></span>
+<span class="h-3 w-4 bg-surface-container-high"></span>
+<span class="h-3 w-4 bg-surface-container-high"></span>
+<span class="h-3 w-4 bg-surface-container-high"></span>
+<span class="h-3 w-4 bg-surface-container-high"></span>
+<span class="h-3 w-4 bg-surface-container-high"></span>
+</div>
+<div class="col-span-2 text-right font-headline-sm text-xs text-on-surface font-bold">800</div>
+<div class="col-span-2 text-right">
+<span class="px-1.5 py-0.5 bg-surface-container-high border border-outline-variant text-on-surface-variant text-[9px] font-label-sm">INFILTRATE</span>
+</div>
+</div>
+<!-- Rank 13: CIPHER_PUNX -->
+<div class="grid grid-cols-12 px-4 py-1.5 items-center hover:bg-surface-container/50 transition-colors">
+<div class="col-span-1 font-headline-sm text-xs text-on-surface">#13</div>
+<div class="col-span-3 font-headline-sm text-xs text-white font-bold flex items-center gap-1.5">
+<span>CIPHER_PUNX</span>
+<span class="text-[9px] text-on-surface-variant font-label-sm">[N04]</span>
+</div>
+<div class="col-span-4 flex items-center gap-1">
+<span class="h-3 w-4 bg-primary-container"></span>
+<span class="h-3 w-4 bg-primary-container"></span>
+<span class="h-3 w-4 bg-primary-container"></span>
+<span class="h-3 w-4 bg-[#00e3fd] animate-pulse"></span>
+<span class="h-3 w-4 bg-surface-container-high"></span>
+<span class="h-3 w-4 bg-surface-container-high"></span>
+<span class="h-3 w-4 bg-surface-container-high"></span>
+<span class="h-3 w-4 bg-surface-container-high"></span>
+<span class="h-3 w-4 bg-surface-container-high"></span>
+<span class="h-3 w-4 bg-surface-container-high"></span>
+</div>
+<div class="col-span-2 text-right font-headline-sm text-xs text-on-surface font-bold">750</div>
+<div class="col-span-2 text-right">
+<span class="px-1.5 py-0.5 bg-surface-container-high border border-outline-variant text-on-surface-variant text-[9px] font-label-sm">BRUTE_FORCE</span>
+</div>
+</div>
+<!-- Rank 14: NULL_PTR -->
+<div class="grid grid-cols-12 px-4 py-1.5 items-center hover:bg-surface-container/50 transition-colors">
+<div class="col-span-1 font-headline-sm text-xs text-on-surface">#14</div>
+<div class="col-span-3 font-headline-sm text-xs text-white font-bold flex items-center gap-1.5">
+<span>NULL_PTR</span>
+<span class="text-[9px] text-on-surface-variant font-label-sm">[N04]</span>
+</div>
+<div class="col-span-4 flex items-center gap-1">
+<span class="h-3 w-4 bg-primary-container"></span>
+<span class="h-3 w-4 bg-primary-container"></span>
+<span class="h-3 w-4 bg-primary-container"></span>
+<span class="h-3 w-4 bg-[#00e3fd] animate-pulse"></span>
+<span class="h-3 w-4 bg-surface-container-high"></span>
+<span class="h-3 w-4 bg-surface-container-high"></span>
+<span class="h-3 w-4 bg-surface-container-high"></span>
+<span class="h-3 w-4 bg-surface-container-high"></span>
+<span class="h-3 w-4 bg-surface-container-high"></span>
+<span class="h-3 w-4 bg-surface-container-high"></span>
+</div>
+<div class="col-span-2 text-right font-headline-sm text-xs text-on-surface font-bold">700</div>
+<div class="col-span-2 text-right">
+<span class="px-1.5 py-0.5 bg-surface-container-high border border-outline-variant text-on-surface-variant text-[9px] font-label-sm">BRUTE_FORCE</span>
+</div>
+</div>
+<!-- Rank 15: SYN_ACK (FROZEN 12s) -->
+<div class="grid grid-cols-12 px-4 py-1.5 items-center bg-[#00e3fd]/10 border-l-2 border-[#00e3fd] hover:bg-[#00e3fd]/15 transition-colors">
+<div class="col-span-1 font-headline-sm text-xs text-[#00e3fd]">#15</div>
+<div class="col-span-3 font-headline-sm text-xs text-[#00e3fd] font-bold flex items-center gap-1.5">
+<span>SYN_ACK</span>
+<span class="text-xs">🧊</span>
+</div>
+<div class="col-span-4 flex items-center gap-1 opacity-70">
+<span class="h-3 w-4 bg-primary-container"></span>
+<span class="h-3 w-4 bg-primary-container"></span>
+<span class="h-3 w-4 bg-primary-container"></span>
+<span class="h-3 w-4 bg-[#00e3fd]"></span>
+<span class="h-3 w-4 bg-surface-container-high"></span>
+<span class="h-3 w-4 bg-surface-container-high"></span>
+<span class="h-3 w-4 bg-surface-container-high"></span>
+<span class="h-3 w-4 bg-surface-container-high"></span>
+<span class="h-3 w-4 bg-surface-container-high"></span>
+<span class="h-3 w-4 bg-surface-container-high"></span>
+</div>
+<div class="col-span-2 text-right font-headline-sm text-xs text-on-surface font-bold">650</div>
+<div class="col-span-2 text-right">
+<span class="px-1.5 py-0.5 bg-[#00e3fd]/20 border border-[#00e3fd] text-[#00e3fd] text-[9px] font-label-sm font-bold glow-cyan animate-pulse">FROZEN 12s</span>
+</div>
+</div>
+<!-- Rank 16: MATRIX_V -->
+<div class="grid grid-cols-12 px-4 py-1.5 items-center hover:bg-surface-container/50 transition-colors">
+<div class="col-span-1 font-headline-sm text-xs text-on-surface">#16</div>
+<div class="col-span-3 font-headline-sm text-xs text-white font-bold flex items-center gap-1.5">
+<span>MATRIX_V</span>
+<span class="text-[9px] text-on-surface-variant font-label-sm">[N03]</span>
+</div>
+<div class="col-span-4 flex items-center gap-1">
+<span class="h-3 w-4 bg-primary-container"></span>
+<span class="h-3 w-4 bg-primary-container"></span>
+<span class="h-3 w-4 bg-[#00e3fd] animate-pulse"></span>
+<span class="h-3 w-4 bg-surface-container-high"></span>
+<span class="h-3 w-4 bg-surface-container-high"></span>
+<span class="h-3 w-4 bg-surface-container-high"></span>
+<span class="h-3 w-4 bg-surface-container-high"></span>
+<span class="h-3 w-4 bg-surface-container-high"></span>
+<span class="h-3 w-4 bg-surface-container-high"></span>
+<span class="h-3 w-4 bg-surface-container-high"></span>
+</div>
+<div class="col-span-2 text-right font-headline-sm text-xs text-on-surface font-bold">600</div>
+<div class="col-span-2 text-right">
+<span class="px-1.5 py-0.5 bg-surface-container-high border border-outline-variant text-on-surface-variant text-[9px] font-label-sm">PORT_SCAN</span>
+</div>
+</div>
+</div>
+</section>
+<!-- RIGHT COLUMN: LIVE BATTLE EVENTS FEED (~35% width = 4 cols in 12-col grid) -->
+<section class="col-span-12 lg:col-span-4 bg-surface-container-lowest/90 border border-outline-variant/80 flex flex-col min-h-0 chamfer-card relative">
+<!-- Header with Live Scanline & Pulsating Radar -->
+<div class="px-4 py-2 bg-surface-container-low border-b border-outline-variant flex items-center justify-between shrink-0">
+<div class="flex items-center gap-2">
+<span class="relative flex h-2.5 w-2.5">
+<span class="animate-radar absolute inline-flex h-full w-full rounded-full bg-error opacity-75"></span>
+<span class="relative inline-flex rounded-full h-2.5 w-2.5 bg-error"></span>
+</span>
+<span class="font-headline-sm text-xs font-bold text-white tracking-wider">🚨 TACTICAL COMBAT LOG (REALTIME)</span>
+</div>
+<div class="font-label-sm text-primary-container text-[10px] flex items-center gap-1 font-mono">
+<span class="animate-pulse">●</span> LIVE STREAM
+          </div>
+</div>
+<!-- Combat Feed Events List -->
+<div class="flex-1 overflow-y-auto p-3 flex flex-col gap-2 font-mono">
+<!-- Event 1: Supply Crate (Gold) -->
+<div class="p-2.5 bg-surface-container-low/80 border-l-4 border-[#FFD700] border-t border-r border-b border-outline-variant/50 relative">
+<div class="flex items-center justify-between mb-1">
+<span class="px-1.5 py-0.2 bg-[#FFD700]/20 text-[#FFD700] border border-[#FFD700]/50 font-label-sm text-[9px] font-bold tracking-widest flex items-center gap-1">
+<span>⚡</span> SUPPLY CRATE DEPLOYED
+              </span>
+<span class="font-label-sm text-on-surface-variant text-[10px]">[14:28]</span>
+</div>
+<p class="font-body-sm text-xs text-white leading-tight">
+<span class="text-[#FFD700] font-bold">MARZHEN</span> claimed Supply Crate! <span class="text-primary-container font-bold">(Overclock 2X deployed!)</span>
+</p>
+</div>
+<!-- Event 2: Freeze attack (Cyan Ice) -->
+<div class="p-2.5 bg-surface-container-low/80 border-l-4 border-[#00e3fd] border-t border-r border-b border-outline-variant/50 relative">
+<div class="flex items-center justify-between mb-1">
+<span class="px-1.5 py-0.2 bg-[#00e3fd]/20 text-[#00e3fd] border border-[#00e3fd]/50 font-label-sm text-[9px] font-bold tracking-widest flex items-center gap-1">
+<span>🧊</span> CRYO FREEZE LOCK
+              </span>
+<span class="font-label-sm text-on-surface-variant text-[10px]">[14:26]</span>
+</div>
+<p class="font-body-sm text-xs text-white leading-tight">
+<span class="text-[#FFD700] font-bold">AXEL_99</span> froze <span class="text-[#F59E0B] font-bold">KEVIN_T</span> for 15s! Tactical stall inflicted.
+            </p>
+</div>
+<!-- Event 3: Point Siphon (Neon Magenta/Crimson) -->
+<div class="p-2.5 bg-surface-container-low/80 border-l-4 border-[#ff5370] border-t border-r border-b border-outline-variant/50 relative">
+<div class="flex items-center justify-between mb-1">
+<span class="px-1.5 py-0.2 bg-[#ff5370]/20 text-[#ff5370] border border-[#ff5370]/50 font-label-sm text-[9px] font-bold tracking-widest flex items-center gap-1">
+<span>💥</span> POINT SIPHON
+              </span>
+<span class="font-label-sm text-on-surface-variant text-[10px]">[14:24]</span>
+</div>
+<p class="font-body-sm text-xs text-white leading-tight">
+<span class="text-[#56ffa8] font-bold">SARAH</span> siphoned <span class="text-[#ff5370] font-bold">100 PTS</span> from <span class="text-[#00e3fd] font-bold">DAVID_W</span>!
+            </p>
+</div>
+<!-- Event 4: Node Unlocked (Neon Emerald) -->
+<div class="p-2.5 bg-surface-container-low/80 border-l-4 border-primary-container border-t border-r border-b border-outline-variant/50 relative">
+<div class="flex items-center justify-between mb-1">
+<span class="px-1.5 py-0.2 bg-primary-container/20 text-primary-container border border-primary-container/50 font-label-sm text-[9px] font-bold tracking-widest flex items-center gap-1">
+<span>🎯</span> NODE BREACH CONFIRMED
+              </span>
+<span class="font-label-sm text-on-surface-variant text-[10px]">[14:20]</span>
+</div>
+<p class="font-body-sm text-xs text-white leading-tight">
+<span class="text-white font-bold">RIZKY</span> unlocked <span class="text-primary-container font-bold">Node 07</span> (+250 PTS added to tally)
+            </p>
+</div>
+<!-- Event 5: Air Drop Warning (Amber) -->
+<div class="p-2.5 bg-surface-container-low/80 border-l-4 border-[#F59E0B] border-t border-r border-b border-outline-variant/50 relative">
+<div class="flex items-center justify-between mb-1">
+<span class="px-1.5 py-0.2 bg-[#F59E0B]/20 text-[#F59E0B] border border-[#F59E0B]/50 font-label-sm text-[9px] font-bold tracking-widest flex items-center gap-1">
+<span>📦</span> ARENA SUPPLY INCOMING
+              </span>
+<span class="font-label-sm text-on-surface-variant text-[10px]">[14:15]</span>
+</div>
+<p class="font-body-sm text-xs text-[#F59E0B] leading-tight">
+              AIR DROP DETECTED in Sector 07 Auditorium! Floor pods unlocking.
+            </p>
+</div>
+<!-- Event 6: Cryo Lockout (Cyan) -->
+<div class="p-2.5 bg-surface-container-low/80 border-l-4 border-[#00e3fd] border-t border-r border-b border-outline-variant/50 relative">
+<div class="flex items-center justify-between mb-1">
+<span class="px-1.5 py-0.2 bg-[#00e3fd]/20 text-[#00e3fd] border border-[#00e3fd]/50 font-label-sm text-[9px] font-bold tracking-widest flex items-center gap-1">
+<span>❄️</span> CRYO LOCKOUT
+              </span>
+<span class="font-label-sm text-on-surface-variant text-[10px]">[14:11]</span>
+</div>
+<p class="font-body-sm text-xs text-white leading-tight">
+<span class="text-[#FFD700] font-bold">AXEL_99</span> deployed Cryo Lockout on <span class="text-white font-bold">DEV_ZERO</span>.
+            </p>
+</div>
+<!-- Event 7: Node 06 Breached (Green) -->
+<div class="p-2.5 bg-surface-container-low/80 border-l-4 border-primary-container border-t border-r border-b border-outline-variant/50 relative">
+<div class="flex items-center justify-between mb-1">
+<span class="px-1.5 py-0.2 bg-primary-container/20 text-primary-container border border-primary-container/50 font-label-sm text-[9px] font-bold tracking-widest flex items-center gap-1">
+<span>⚡</span> SYSTEM OVERRIDE
+              </span>
+<span class="font-label-sm text-on-surface-variant text-[10px]">[14:02]</span>
+</div>
+<p class="font-body-sm text-xs text-white leading-tight">
+<span class="text-white font-bold">CYBER_NINJA</span> breached <span class="text-primary-container font-bold">Node 06 (+200 PTS)</span>.
+            </p>
+</div>
+</div>
+<!-- Live Diagnostic Status Footer inside panel -->
+<div class="px-3 py-1.5 bg-surface-container border-t border-outline-variant flex items-center justify-between font-label-sm text-on-surface-variant shrink-0">
+<span class="text-[9px]">ENCRYPTION: AES-GCM-256</span>
+<span class="text-primary-container text-[9px] font-mono">LATENCY: 14ms (OPTIMAL)</span>
+</div>
+</section>
+</div>
+</main>
+<!-- ==================== OPERATOR CONTROLS BAR / MC ADMIN FOOTER (Shared Anchor) ==================== -->
+<footer class="w-full z-40 flex flex-col sm:flex-row justify-between items-center px-6 py-2 border-t border-outline-variant bg-surface-container-lowest/90 backdrop-blur-md shrink-0 shadow-[0_-4px_20px_rgba(0,227,253,0.1)]">
+<!-- Left: Tournament Metadata (JSON Anchor match) -->
+<div class="flex items-center gap-3 mb-2 sm:mb-0">
+<span class="font-label-md font-bold text-secondary-container tracking-wider">SYSTEM CONTROL // SPECTATOR HUD LAYER // TOURNAMENT ACTIVE</span>
+<div class="hidden md:flex items-center gap-3 text-on-surface-variant text-xs">
+<span class="text-outline-variant">|</span>
+<span class="font-label-sm uppercase tracking-widest text-[#00e3fd]">SESSION: CTF-AUDITORIUM-2025</span>
+<span class="text-outline-variant">|</span>
+<span class="font-label-sm uppercase tracking-widest">FPS: 60.0 (SYNC LOCKED)</span>
+</div>
+</div>
+<!-- Center/Right: MC & Admin Tactical Quick Triggers -->
+<div class="flex items-center gap-2.5">
+<!-- Air Drop Button (Red Glowing) -->
+<button class="bg-[#ff1a40] hover:bg-[#ff3355] text-white font-headline-sm text-xs font-bold px-3 py-1.5 tracking-wider chamfer-btn shadow-[0_0_15px_rgba(255,26,64,0.4)] transition-all duration-150 active:scale-95 flex items-center gap-1.5">
+<span class="material-symbols-outlined text-sm" data-icon="deployed_code">deployed_code</span>
+        [🚨 TRIGGER AIR DROP NOW]
+      </button>
+<!-- Pause Button (Amber/Yellow) -->
+<button class="bg-[#F59E0B] hover:bg-[#fbbf24] text-[#070A10] font-headline-sm text-xs font-bold px-3 py-1.5 tracking-wider chamfer-btn shadow-[0_0_12px_rgba(245,158,11,0.35)] transition-all duration-150 active:scale-95 flex items-center gap-1.5">
+<span class="material-symbols-outlined text-sm" data-icon="pause">pause</span>
+        [⏸ PAUSE TIMER]
+      </button>
+<!-- End Match & Reveal Button (Red Outline) -->
+<button class="bg-transparent hover:bg-error-container/30 border border-error text-error font-headline-sm text-xs font-bold px-3 py-1.5 tracking-wider chamfer-btn transition-all duration-150 active:scale-95 flex items-center gap-1.5">
+<span class="material-symbols-outlined text-sm" data-icon="stop">stop</span>
+        [⏹ END MATCH &amp; REVEAL WINNERS]
+      </button>
+</div>
+</footer>
+<!-- Light Vanilla Script for Dynamic Telemetry & Clock Simulation -->
+<script>
+    // Live Clock Countdown Simulation for the Auditorium Projector
+    let totalSeconds = 14 * 60 + 32;
+    const minEl = document.getElementById('clock-min');
+    const secEl = document.getElementById('clock-sec');
+
+    setInterval(() => {
+      if (totalSeconds > 0) {
+        totalSeconds--;
+        const m = Math.floor(totalSeconds / 60);
+        const s = totalSeconds % 60;
+        if (minEl && secEl) {
+          minEl.textContent = m < 10 ? '0' + m : m;
+          secEl.textContent = s < 10 ? '0' + s : s;
+        }
+      }
+    }, 1000);
+  </script>
+</body></html>

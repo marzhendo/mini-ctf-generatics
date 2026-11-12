@@ -1,0 +1,444 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>GENERATICS CTF // ARENA TERMINAL</title>
+<!-- Fonts -->
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700;800&amp;family=Space+Mono:ital,wght@0,400;0,700;1,400&amp;display=swap" rel="stylesheet"/>
+<!-- Material Symbols -->
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<!-- Tailwind Script -->
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+    tailwind.config = {
+      darkMode: "class",
+      theme: {
+        extend: {
+          colors: {
+            "surface-container-low": "#171b26",
+            "primary": "#f4fff3",
+            "on-surface-variant": "#b9cbbc",
+            "on-tertiary-fixed": "#191c1e",
+            "on-tertiary-fixed-variant": "#444749",
+            "primary-fixed-dim": "#00e38b",
+            "on-error": "#690005",
+            "on-secondary": "#00363d",
+            "secondary": "#bdf4ff",
+            "on-error-container": "#ffdad6",
+            "on-secondary-fixed": "#001f24",
+            "on-primary-container": "#007143",
+            "surface-container-highest": "#313540",
+            "tertiary-fixed": "#e0e3e5",
+            "on-background": "#dfe2f1",
+            "outline": "#849587",
+            "inverse-primary": "#006d40",
+            "outline-variant": "#3b4a3f",
+            "surface-bright": "#353944",
+            "on-tertiary-container": "#606365",
+            "tertiary-container": "#dee0e2",
+            "on-primary": "#00391f",
+            "secondary-fixed": "#9cf0ff",
+            "surface-variant": "#313540",
+            "on-secondary-fixed-variant": "#004f58",
+            "on-secondary-container": "#00616d",
+            "secondary-fixed-dim": "#00daf3",
+            "on-primary-fixed-variant": "#00522f",
+            "tertiary": "#fafcfe",
+            "tertiary-fixed-dim": "#c4c7c9",
+            "primary-fixed": "#56ffa8",
+            "primary-container": "#00ff9d",
+            "surface": "#0f131d",
+            "on-surface": "#dfe2f1",
+            "error": "#ffb4ab",
+            "inverse-on-surface": "#2c303b",
+            "on-primary-fixed": "#002110",
+            "secondary-container": "#00e3fd",
+            "surface-tint": "#00e38b",
+            "surface-dim": "#0f131d",
+            "inverse-surface": "#dfe2f1",
+            "surface-container-lowest": "#0a0e18",
+            "surface-container": "#1c1f2a",
+            "background": "#0f131d",
+            "error-container": "#93000a",
+            "on-tertiary": "#2d3133",
+            "surface-container-high": "#262a35"
+          },
+          borderRadius: {
+            "DEFAULT": "0.25rem",
+            "lg": "0.5rem",
+            "xl": "0.75rem",
+            "full": "9999px"
+          },
+          spacing: {
+            "space-lg": "1rem",
+            "gutter": "0.75rem",
+            "space-sm": "0.5rem",
+            "margin": "1rem",
+            "space-xs": "0.25rem",
+            "space-md": "0.75rem",
+            "space-xl": "1.5rem"
+          },
+          fontFamily: {
+            "body-lg": ["JetBrains Mono"],
+            "headline-lg": ["Space Mono"],
+            "headline-sm": ["Space Mono"],
+            "headline-xl": ["Space Mono"],
+            "headline-md": ["Space Mono"],
+            "label-md": ["JetBrains Mono"],
+            "headline-xl-mobile": ["Space Mono"],
+            "body-sm": ["JetBrains Mono"],
+            "label-lg": ["JetBrains Mono"],
+            "body-md": ["JetBrains Mono"],
+            "label-sm": ["JetBrains Mono"]
+          },
+          fontSize: {
+            "body-lg": ["14px", { "lineHeight": "22px", "letterSpacing": "0.01em", "fontWeight": "500" }],
+            "headline-lg": ["24px", { "lineHeight": "32px", "letterSpacing": "-0.02em", "fontWeight": "700" }],
+            "headline-sm": ["16px", { "lineHeight": "22px", "letterSpacing": "0.02em", "fontWeight": "700" }],
+            "headline-xl": ["36px", { "lineHeight": "44px", "letterSpacing": "-0.04em", "fontWeight": "700" }],
+            "headline-md": ["20px", { "lineHeight": "28px", "letterSpacing": "-0.01em", "fontWeight": "700" }],
+            "label-md": ["10px", { "lineHeight": "14px", "letterSpacing": "0.1em", "fontWeight": "700" }],
+            "headline-xl-mobile": ["28px", { "lineHeight": "34px", "letterSpacing": "-0.03em", "fontWeight": "700" }],
+            "body-sm": ["11px", { "lineHeight": "16px", "letterSpacing": "0.03em", "fontWeight": "400" }],
+            "label-lg": ["12px", { "lineHeight": "16px", "letterSpacing": "0.08em", "fontWeight": "700" }],
+            "body-md": ["12px", { "lineHeight": "18px", "letterSpacing": "0.02em", "fontWeight": "400" }],
+            "label-sm": ["9px", { "lineHeight": "12px", "letterSpacing": "0.12em", "fontWeight": "700" }]
+          }
+        }
+      }
+    }
+  </script>
+<style>
+    /* Scanline & HUD Grids */
+    .crt-overlay {
+      background: repeating-linear-gradient(
+        0deg,
+        rgba(0, 0, 0, 0.15),
+        rgba(0, 0, 0, 0.15) 1px,
+        transparent 1px,
+        transparent 2px
+      );
+      pointer-events: none;
+    }
+    
+    .cyber-grid {
+      background-size: 24px 24px;
+      background-image: 
+        linear-gradient(to right, rgba(0, 229, 255, 0.03) 1px, transparent 1px),
+        linear-gradient(to bottom, rgba(0, 229, 255, 0.03) 1px, transparent 1px);
+    }
+
+    .phosphor-glow-cyan {
+      box-shadow: 0 0 14px rgba(0, 229, 255, 0.35);
+    }
+
+    .phosphor-glow-green {
+      box-shadow: 0 0 14px rgba(0, 255, 157, 0.35);
+    }
+
+    .chamfer-btn {
+      clip-path: polygon(8px 0%, 100% 0%, 100% calc(100% - 8px), calc(100% - 8px) 100%, 0% 100%, 0% 8px);
+    }
+    
+    @keyframes blink {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0; }
+    }
+    
+    .cursor-blink {
+      animation: blink 1s infinite;
+    }
+
+    @keyframes radar-pulse {
+      0% { transform: scale(0.95); opacity: 0.8; }
+      50% { transform: scale(1.4); opacity: 0.2; }
+      100% { transform: scale(0.95); opacity: 0.8; }
+    }
+
+    .animate-radar {
+      animation: radar-pulse 1.8s ease-in-out infinite;
+    }
+  </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-surface-container-lowest text-on-surface antialiased min-h-screen flex justify-center selection:bg-secondary-container selection:text-on-secondary-fixed">
+<!-- Scanline Layer -->
+<div class="fixed inset-0 crt-overlay z-40"></div>
+<!-- Primary Mobile Frame (390px viewport simulation container) -->
+<div class="w-full max-w-[390px] min-h-screen bg-surface-container-lowest flex flex-col relative cyber-grid border-x border-outline-variant/30 shadow-2xl pb-6">
+<!-- TopAppBar (Brand Anchor) -->
+<header class="fixed top-0 left-0 right-0 z-50 flex items-center justify-between px-space-lg h-14 bg-surface-container-lowest/90 backdrop-blur-md max-w-[390px] mx-auto border-b border-outline-variant/40">
+<div class="flex items-center space-x-2">
+<span class="material-symbols-outlined text-primary-container text-xl" data-icon="terminal">terminal</span>
+<span class="text-headline-sm font-headline-sm font-bold text-primary-container tracking-wider">NEXUS // CTF</span>
+</div>
+<div class="flex items-center space-x-space-sm">
+<span class="flex h-2 w-2 relative">
+<span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-secondary-fixed-dim opacity-75"></span>
+<span class="relative inline-flex rounded-full h-2 w-2 bg-secondary-container"></span>
+</span>
+<span class="material-symbols-outlined text-primary-container hover:text-primary-container hover:bg-surface-container/50 transition-colors duration-150 active:scale-95 cursor-pointer text-xl" data-icon="sensors">sensors</span>
+</div>
+</header>
+<!-- Main Dynamic Content Canvas -->
+<main class="flex-1 flex flex-col pt-16 px-margin space-y-space-md z-10">
+<!-- Sticky Telemetry HUD -->
+<section class="bg-surface-container-low/95 border border-outline-variant/40 rounded-lg p-space-sm backdrop-blur-md space-y-space-sm mt-1">
+<!-- Telemetry Row 1: Operator, Score, Countdown -->
+<div class="flex items-center justify-between gap-1.5">
+<!-- Operator Pill -->
+<div class="flex items-center space-x-1.5 px-2 py-1 bg-surface-container-highest/60 border border-outline-variant/50 rounded">
+<span class="material-symbols-outlined text-secondary-fixed text-sm" data-icon="smart_toy">smart_toy</span>
+<span class="font-label-sm text-label-sm text-primary uppercase font-bold tracking-wider">OP: MARZHEN</span>
+</div>
+<!-- Score Badge -->
+<div class="flex items-center space-x-1 px-2.5 py-1 bg-surface-container-lowest border border-amber-400/80 rounded shadow-[0_0_8px_rgba(251,191,36,0.25)]">
+<span class="material-symbols-outlined text-amber-400 text-xs" data-icon="military_tech">military_tech</span>
+<span class="font-label-md text-label-md text-amber-300 font-extrabold tracking-wider">350 PTS</span>
+</div>
+<!-- Session Countdown Timer -->
+<div class="flex items-center space-x-1 px-2 py-1 bg-surface-container-lowest border border-secondary-container/80 rounded phosphor-glow-cyan">
+<span class="material-symbols-outlined text-secondary-container text-xs" data-icon="timer">timer</span>
+<span class="font-label-sm text-label-sm text-secondary font-bold tracking-wider">23:45</span>
+</div>
+</div>
+<!-- Segmented 10-Node Progress Bar -->
+<div class="space-y-1">
+<div class="flex items-center justify-between text-on-surface-variant font-label-sm text-label-sm">
+<span>SECTOR_PROGRESS</span>
+<span class="text-primary-container font-bold">2/10 SECURED</span>
+</div>
+<div class="grid grid-cols-10 gap-1 h-2">
+<!-- Node 1: Solved -->
+<div class="h-full bg-primary-container rounded-[1px] phosphor-glow-green" title="Node 01: Solved"></div>
+<!-- Node 2: Solved -->
+<div class="h-full bg-primary-container rounded-[1px] phosphor-glow-green" title="Node 02: Solved"></div>
+<!-- Node 3: Active Pulsing -->
+<div class="h-full bg-secondary-container/40 border border-secondary-container rounded-[1px] relative phosphor-glow-cyan animate-pulse" title="Node 03: Active">
+<span class="absolute inset-0 bg-secondary-container opacity-50"></span>
+</div>
+<!-- Nodes 4-10: Inactive/Locked -->
+<div class="h-full bg-surface-container-highest/60 rounded-[1px]"></div>
+<div class="h-full bg-surface-container-highest/60 rounded-[1px]"></div>
+<div class="h-full bg-surface-container-highest/60 rounded-[1px]"></div>
+<div class="h-full bg-surface-container-highest/60 rounded-[1px]"></div>
+<div class="h-full bg-surface-container-highest/60 rounded-[1px]"></div>
+<div class="h-full bg-surface-container-highest/60 rounded-[1px]"></div>
+<div class="h-full bg-surface-container-highest/60 rounded-[1px]"></div>
+</div>
+</div>
+<!-- Node Level Badge & Bounty Info -->
+<div class="flex items-center justify-between pt-0.5 border-t border-outline-variant/30">
+<div class="flex items-center space-x-1.5">
+<span class="inline-block w-1.5 h-1.5 bg-secondary-container rounded-full"></span>
+<span class="font-label-sm text-label-sm text-secondary-fixed font-bold tracking-wide">NODE 03 // CRYPTO &amp; CIPHERS</span>
+</div>
+<div class="px-2 py-0.5 bg-primary-container/15 border border-primary-container/40 rounded">
+<span class="font-label-sm text-label-sm text-primary-container font-extrabold">+150 PTS</span>
+</div>
+</div>
+</section>
+<!-- Supply Drop Radar Alert (Dynamic Banner) -->
+<aside class="relative overflow-hidden bg-gradient-to-r from-amber-500/20 via-surface-container to-amber-950/30 border border-amber-400/60 rounded-lg p-space-sm flex items-center justify-between cursor-pointer active:scale-[0.98] transition-all group">
+<div class="flex items-center space-x-2.5">
+<div class="relative flex items-center justify-center w-7 h-7 bg-amber-500/20 rounded border border-amber-400/50">
+<span class="absolute w-5 h-5 rounded-full bg-amber-400/30 animate-radar"></span>
+<span class="material-symbols-outlined text-amber-300 text-sm" data-icon="deployed_code_alert">deployed_code_alert</span>
+</div>
+<div class="flex flex-col">
+<div class="flex items-center space-x-1">
+<span class="font-label-sm text-label-sm text-amber-300 font-bold uppercase tracking-wider">AIR DROP INCOMING!</span>
+<span class="w-1.5 h-1.5 rounded-full bg-amber-400 animate-ping"></span>
+</div>
+<p class="font-body-sm text-body-sm text-on-surface-variant leading-none mt-0.5">Supply crate spotted in auditorium</p>
+</div>
+</div>
+<div class="flex items-center text-amber-300 group-hover:translate-x-0.5 transition-transform">
+<span class="material-symbols-outlined text-base" data-icon="chevron_right">chevron_right</span>
+</div>
+</aside>
+<!-- Challenge Terminal Window -->
+<article class="bg-surface-container-lowest border border-outline-variant/60 rounded-lg overflow-hidden shadow-lg">
+<!-- Terminal Header / Titlebar -->
+<div class="h-9 px-space-sm bg-surface-container-low border-b border-outline-variant/40 flex items-center justify-between">
+<div class="flex items-center space-x-1.5">
+<span class="w-2.5 h-2.5 rounded-full bg-red-500/80 inline-block border border-red-400/40"></span>
+<span class="w-2.5 h-2.5 rounded-full bg-amber-500/80 inline-block border border-amber-400/40"></span>
+<span class="w-2.5 h-2.5 rounded-full bg-primary-container/80 inline-block border border-primary-container/40"></span>
+<span class="ml-2 font-label-sm text-label-sm text-on-surface-variant font-bold">node_03_payload.py</span>
+</div>
+<div class="flex items-center space-x-1">
+<button class="flex items-center space-x-1 text-on-surface-variant hover:text-secondary text-label-sm font-label-sm px-1.5 py-0.5 rounded hover:bg-surface-container transition-colors">
+<span class="material-symbols-outlined text-xs" data-icon="terminal">terminal</span>
+<span>REPL</span>
+</button>
+<button class="flex items-center space-x-1 text-secondary-fixed-dim hover:text-secondary-fixed text-label-sm font-label-sm px-1.5 py-0.5 rounded hover:bg-surface-container transition-colors" id="copy-btn">
+<span class="material-symbols-outlined text-xs" data-icon="content_copy">content_copy</span>
+<span>COPY</span>
+</button>
+</div>
+</div>
+<!-- Problem Statement Section -->
+<div class="p-space-sm border-b border-outline-variant/20 bg-surface-container/20">
+<p class="font-body-md text-body-md text-on-surface leading-relaxed">
+            Intercepted transmission from sector 7. Decrypt the multi-layered ROT13 and Base64 cipher to recover the access token.
+          </p>
+</div>
+<!-- Inset Terminal Box with Line Numbers & Code -->
+<div class="bg-[#050811] p-space-sm font-body-sm text-body-sm overflow-x-auto selection:bg-secondary-container/40 selection:text-white">
+<table class="w-full border-collapse font-body-sm">
+<tbody>
+<tr class="leading-relaxed">
+<td class="select-none text-outline-variant/70 text-right pr-3 font-label-sm w-6">01</td>
+<td class="text-on-surface-variant"># PROTOCOL // TACTICAL INTERCEPT VECTOR</td>
+</tr>
+<tr class="leading-relaxed">
+<td class="select-none text-outline-variant/70 text-right pr-3 font-label-sm w-6">02</td>
+<td>
+<span class="text-secondary-fixed-dim font-bold">cipher_text</span>
+<span class="text-primary-container">=</span>
+<span class="text-amber-300">"TGl2ZSBmcmVlIG9yIGRpZSBieSB0aGUgZmxhZw=="</span>
+</td>
+</tr>
+<tr class="leading-relaxed">
+<td class="select-none text-outline-variant/70 text-right pr-3 font-label-sm w-6">03</td>
+<td>
+<span class="text-secondary-fixed-dim font-bold">key_offset</span>
+<span class="text-primary-container">=</span>
+<span class="text-primary-container font-mono">0x13</span>
+</td>
+</tr>
+<tr class="leading-relaxed">
+<td class="select-none text-outline-variant/70 text-right pr-3 font-label-sm w-6">04</td>
+<td>
+<span class="text-secondary-fixed-dim font-bold">target_stream</span>
+<span class="text-primary-container">=</span>
+<span class="text-on-surface-variant">rot13_decode(base64_decode(cipher_text))</span>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+<!-- Terminal Quick Action Bar -->
+<div class="px-space-sm py-1.5 bg-surface-container-low/70 border-t border-outline-variant/30 flex items-center justify-between text-label-sm font-label-sm text-on-surface-variant">
+<div class="flex items-center space-x-2">
+<span class="text-primary-container font-bold">SHA-1:</span>
+<span class="font-mono text-outline">e4d909c2...</span>
+</div>
+<span class="text-secondary-container">UTF-8 // UNIX</span>
+</div>
+</article>
+<!-- Hint Drawer (Collapsible) -->
+<section class="border border-amber-500/40 bg-surface-container-low/60 rounded-lg overflow-hidden transition-all">
+<button class="w-full p-space-sm flex items-center justify-between hover:bg-surface-container/50 transition-colors text-left" id="hint-toggle">
+<div class="flex items-center space-x-2">
+<span class="material-symbols-outlined text-amber-400 text-sm" data-icon="lock">lock</span>
+<span class="font-label-md text-label-md text-amber-300 font-bold uppercase tracking-wider">DECRYPT INTEL HINT</span>
+</div>
+<div class="flex items-center space-x-1.5">
+<span class="font-label-sm text-label-sm text-error font-extrabold">-50 PTS</span>
+<span class="material-symbols-outlined text-on-surface-variant text-base transition-transform" data-icon="expand_more" id="hint-chevron">expand_more</span>
+</div>
+</button>
+<div class="hidden p-space-sm pt-0 border-t border-amber-500/20 bg-surface-container-lowest/80" id="hint-content">
+<p class="font-body-sm text-body-sm text-amber-200/90 pt-2 leading-relaxed">
+            [HINT UNLOCKED]: Base64 decode string produces: "Live free or die by the flag". Now apply ROT13 reverse shift of 19 positions (0x13).
+          </p>
+</div>
+</section>
+<!-- Flag Submission Section -->
+<section class="bg-surface-container-low border border-outline-variant/50 rounded-lg p-space-sm space-y-space-sm relative">
+<!-- Warning Tag -->
+<div class="flex items-center space-x-1.5 text-error px-1">
+<span class="material-symbols-outlined text-sm flex-shrink-0" data-icon="warning">warning</span>
+<span class="font-label-sm text-label-sm uppercase font-bold tracking-wider leading-tight">
+            ONE-SHOT PROTOCOL: Single attempt only. Double check flag before executing.
+          </span>
+</div>
+<!-- Terminal Input Field -->
+<div class="relative flex items-center">
+<div class="absolute left-3 flex items-center pointer-events-none text-secondary-container">
+<span class="font-mono text-sm font-bold">&gt;</span>
+</div>
+<input class="w-full bg-[#050811] text-secondary placeholder:text-outline/40 font-mono text-body-md pl-7 pr-8 py-2.5 rounded border border-outline-variant/60 focus:border-secondary-container focus:ring-1 focus:ring-secondary-container focus:outline-none transition-all uppercase tracking-wider" id="flag-input" placeholder="FLAG{ENTER_KEY_HERE}" type="text"/>
+<button class="absolute right-2.5 text-outline-variant hover:text-on-surface transition-colors" id="clear-btn">
+<span class="material-symbols-outlined text-sm" data-icon="close">close</span>
+</button>
+</div>
+<!-- Primary High-Voltage CTA Submit Button -->
+<button class="w-full bg-secondary-container hover:bg-secondary text-surface-container-lowest font-headline-sm text-headline-sm py-3 px-4 rounded chamfer-btn font-extrabold flex items-center justify-center space-x-2 transition-all active:scale-[0.98] phosphor-glow-cyan">
+<span class="tracking-wide">EXECUTE &amp; LOCK IN ANSWER</span>
+<span class="material-symbols-outlined text-lg font-bold" data-icon="arrow_forward">arrow_forward</span>
+</button>
+<!-- Security Telemetry Footer Info -->
+<div class="pt-1 flex flex-wrap items-center justify-between text-[9px] font-label-sm text-outline-variant font-mono">
+<span>CIPHER: AES-GCM-256</span>
+<span>INTEGRITY: VERIFIED</span>
+<span class="text-primary-container">SYS_LATENCY: 12ms</span>
+</div>
+</section>
+</main>
+<!-- Footer (Brand Anchor) -->
+<footer class="w-full py-space-lg px-space-lg flex flex-col items-center justify-center space-y-space-sm border-t border-outline-variant/30 mt-6 z-10">
+<div class="flex flex-wrap items-center justify-center gap-x-4 gap-y-1">
+<a class="font-label-sm text-label-sm text-on-surface-variant hover:text-secondary-fixed-dim transition-colors duration-150" href="#rulebook">RULEBOOK</a>
+<a class="font-label-sm text-label-sm text-on-surface-variant hover:text-secondary-fixed-dim transition-colors duration-150" href="#telemetry">TELEMETRY</a>
+<a class="font-label-sm text-label-sm text-primary-container font-bold underline transition-colors duration-150" href="#encryption_key">ENCRYPTION_KEY</a>
+<a class="font-label-sm text-label-sm text-on-surface-variant hover:text-secondary-fixed-dim transition-colors duration-150" href="#intel">INTEL</a>
+</div>
+<p class="font-label-sm text-label-sm text-on-surface-variant text-center tracking-normal">
+        © 2025 TDI HMIF // NEXUS SEC_OPS VERIFIED [SHA-256: 0x99F4A]
+      </p>
+</footer>
+</div>
+<!-- Interactive Terminal Micro-interactions -->
+<script>
+    // Hint Accordion Logic
+    const hintToggle = document.getElementById('hint-toggle');
+    const hintContent = document.getElementById('hint-content');
+    const hintChevron = document.getElementById('hint-chevron');
+
+    hintToggle.addEventListener('click', () => {
+      const isHidden = hintContent.classList.contains('hidden');
+      if (isHidden) {
+        hintContent.classList.remove('hidden');
+        hintChevron.classList.add('rotate-180');
+      } else {
+        hintContent.classList.add('hidden');
+        hintChevron.classList.remove('rotate-180');
+      }
+    });
+
+    // Clear input functionality
+    const clearBtn = document.getElementById('clear-btn');
+    const flagInput = document.getElementById('flag-input');
+
+    clearBtn.addEventListener('click', () => {
+      flagInput.value = '';
+      flagInput.focus();
+    });
+
+    // Copy Payload Logic
+    const copyBtn = document.getElementById('copy-btn');
+    copyBtn.addEventListener('click', () => {
+      const payloadText = 'TGl2ZSBmcmVlIG9yIGRpZSBieSB0aGUgZmxhZw==';
+      navigator.clipboard.writeText(payloadText).then(() => {
+        const originalHtml = copyBtn.innerHTML;
+        copyBtn.innerHTML = '<span class="material-symbols-outlined text-xs">done</span><span>COPIED</span>';
+        copyBtn.classList.add('text-primary-container');
+        setTimeout(() => {
+          copyBtn.innerHTML = originalHtml;
+          copyBtn.classList.remove('text-primary-container');
+        }, 1500);
+      });
+    });
+  </script>
+</body></html>

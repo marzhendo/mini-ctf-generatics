@@ -1,0 +1,807 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>CYBER_NEXUS // SYS:ROOT - UI Specification &amp; Asset Kit</title>
+<!-- Material Symbols Outlined -->
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<!-- Fonts -->
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700;800&amp;family=Space+Mono:ital,wght@0,400;0,700;1,400&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<!-- Tailwind CSS -->
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+    tailwind.config = {
+      darkMode: "class",
+      theme: {
+        extend: {
+          "colors": {
+            "tertiary-fixed": "#e0e3e5",
+            "on-background": "#dfe2f1",
+            "error-container": "#93000a",
+            "surface-variant": "#313540",
+            "on-tertiary-fixed-variant": "#444749",
+            "tertiary-container": "#dee0e2",
+            "secondary-fixed-dim": "#00daf3",
+            "surface-container-low": "#171b26",
+            "on-primary-container": "#007143",
+            "on-secondary-fixed-variant": "#004f58",
+            "on-secondary-fixed": "#001f24",
+            "surface": "#0f131d",
+            "on-surface": "#dfe2f1",
+            "error": "#ffb4ab",
+            "inverse-primary": "#006d40",
+            "primary-fixed": "#56ffa8",
+            "primary-fixed-dim": "#00e38b",
+            "on-secondary-container": "#00616d",
+            "surface-bright": "#353944",
+            "surface-tint": "#00e38b",
+            "surface-container-lowest": "#0a0e18",
+            "surface-container-high": "#262a35",
+            "background": "#0f131d",
+            "tertiary-fixed-dim": "#c4c7c9",
+            "tertiary": "#fafcfe",
+            "on-primary": "#00391f",
+            "on-secondary": "#00363d",
+            "inverse-surface": "#dfe2f1",
+            "inverse-on-surface": "#2c303b",
+            "on-error-container": "#ffdad6",
+            "outline-variant": "#3b4a3f",
+            "on-tertiary-container": "#606365",
+            "surface-container-highest": "#313540",
+            "on-primary-fixed": "#002110",
+            "on-tertiary": "#2d3133",
+            "on-tertiary-fixed": "#191c1e",
+            "secondary-fixed": "#9cf0ff",
+            "primary-container": "#00ff9d",
+            "secondary-container": "#00e3fd",
+            "surface-dim": "#0f131d",
+            "on-primary-fixed-variant": "#00522f",
+            "on-error": "#690005",
+            "on-surface-variant": "#b9cbbc",
+            "outline": "#849587",
+            "primary": "#f4fff3",
+            "surface-container": "#1c1f2a",
+            "secondary": "#bdf4ff"
+          },
+          "borderRadius": {
+            "DEFAULT": "0.25rem",
+            "lg": "0.5rem",
+            "xl": "0.75rem",
+            "full": "9999px"
+          },
+          "spacing": {
+            "gutter": "0.75rem",
+            "space-sm": "0.5rem",
+            "space-lg": "1rem",
+            "space-xs": "0.25rem",
+            "space-xl": "1.5rem",
+            "space-md": "0.75rem",
+            "margin": "1rem"
+          },
+          "fontFamily": {
+            "label-md": ["JetBrains Mono"],
+            "label-sm": ["JetBrains Mono"],
+            "headline-lg": ["Space Mono"],
+            "headline-xl": ["Space Mono"],
+            "headline-sm": ["Space Mono"],
+            "body-lg": ["JetBrains Mono"],
+            "headline-xl-mobile": ["Space Mono"],
+            "body-sm": ["JetBrains Mono"],
+            "label-lg": ["JetBrains Mono"],
+            "body-md": ["JetBrains Mono"],
+            "headline-md": ["Space Mono"]
+          },
+          "fontSize": {
+            "label-md": ["10px", { "lineHeight": "14px", "letterSpacing": "0.1em", "fontWeight": "700" }],
+            "label-sm": ["9px", { "lineHeight": "12px", "letterSpacing": "0.12em", "fontWeight": "700" }],
+            "headline-lg": ["24px", { "lineHeight": "32px", "letterSpacing": "-0.02em", "fontWeight": "700" }],
+            "headline-xl": ["36px", { "lineHeight": "44px", "letterSpacing": "-0.04em", "fontWeight": "700" }],
+            "headline-sm": ["16px", { "lineHeight": "22px", "letterSpacing": "0.02em", "fontWeight": "700" }],
+            "body-lg": ["14px", { "lineHeight": "22px", "letterSpacing": "0.01em", "fontWeight": "500" }],
+            "headline-xl-mobile": ["28px", { "lineHeight": "34px", "letterSpacing": "-0.03em", "fontWeight": "700" }],
+            "body-sm": ["11px", { "lineHeight": "16px", "letterSpacing": "0.03em", "fontWeight": "400" }],
+            "label-lg": ["12px", { "lineHeight": "16px", "letterSpacing": "0.08em", "fontWeight": "700" }],
+            "body-md": ["12px", { "lineHeight": "18px", "letterSpacing": "0.02em", "fontWeight": "400" }],
+            "headline-md": ["20px", { "lineHeight": "28px", "letterSpacing": "-0.01em", "fontWeight": "700" }]
+          }
+        }
+      }
+    }
+  </script>
+<style>
+    .crt-scanlines {
+      background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.35) 50%), linear-gradient(90deg, rgba(255, 0, 0, 0.03), rgba(0, 255, 0, 0.01), rgba(0, 0, 255, 0.03));
+      background-size: 100% 3px, 6px 100%;
+    }
+    .hud-grid {
+      background-size: 32px 32px;
+      background-image: 
+        linear-gradient(to right, rgba(59, 74, 63, 0.15) 1px, transparent 1px),
+        linear-gradient(to bottom, rgba(59, 74, 63, 0.15) 1px, transparent 1px);
+    }
+    .glow-green {
+      box-shadow: 0 0 16px rgba(0, 255, 157, 0.28);
+    }
+    .glow-cyan {
+      box-shadow: 0 0 16px rgba(0, 229, 255, 0.28);
+    }
+    .glow-amber {
+      box-shadow: 0 0 16px rgba(255, 149, 0, 0.28);
+    }
+    .glow-purple {
+      box-shadow: 0 0 16px rgba(168, 85, 247, 0.28);
+    }
+    .glow-gold {
+      box-shadow: 0 0 20px rgba(255, 215, 0, 0.4);
+    }
+    .chamfer-btn {
+      clip-path: polygon(8px 0, 100% 0, 100% calc(100% - 8px), calc(100% - 8px) 100%, 0 100%, 0 8px);
+    }
+    .chamfer-card {
+      clip-path: polygon(0 0, calc(100% - 14px) 0, 100% 14px, 100% 100%, 14px 100%, 0 calc(100% - 14px));
+    }
+    @keyframes blink {
+      0%, 49% { opacity: 1; }
+      50%, 100% { opacity: 0; }
+    }
+    .cursor-blink {
+      animation: blink 1s infinite;
+    }
+  </style>
+</head>
+<body class="bg-background text-on-background font-body-md antialiased selection:bg-primary-container selection:text-on-primary-fixed min-h-screen relative overflow-x-hidden hud-grid">
+<!-- CRT Scanline Global Atmosphere Overlay -->
+<div class="fixed inset-0 pointer-events-none crt-scanlines z-50 opacity-60"></div>
+<!-- Shared Component: TopNavBar -->
+<header class="flex justify-between items-center w-full px-6 py-3 max-w-full mx-auto bg-surface-container-lowest/95 backdrop-blur-md sticky top-0 z-40 border-b border-outline-variant">
+<div class="flex items-center gap-6">
+<div class="text-headline-md font-headline-md font-bold text-primary-container tracking-wider flex items-center gap-2">
+<span class="material-symbols-outlined text-primary-container animate-pulse" data-icon="terminal">terminal</span>
+<span>CYBER_NEXUS // SYS:ROOT</span>
+</div>
+<div class="hidden lg:flex items-center gap-2 px-2 py-0.5 border border-outline-variant bg-surface-container-low text-primary-container font-label-sm">
+<span class="w-1.5 h-1.5 rounded-full bg-primary-container animate-ping inline-block mr-1"></span>
+        OPERATIVE NET: ONLINE [0x99FF]
+      </div>
+</div>
+<!-- Center Navigation Links -->
+<nav class="hidden md:flex items-center space-x-6">
+<a class="text-on-surface-variant hover:text-secondary pb-1 font-label-lg tracking-wider transition-colors" href="#skills">SKILLS</a>
+<a class="text-on-surface-variant hover:text-secondary pb-1 font-label-lg tracking-wider transition-colors" href="#crates">SUPPLY_CRATES</a>
+<a class="text-on-surface-variant hover:text-secondary pb-1 font-label-lg tracking-wider transition-colors" href="#hex-levels">HEX_LEVELS</a>
+<a class="text-primary-container border-b-2 border-primary-container pb-1 font-label-lg tracking-wider" href="#telemetry">TELEMETRY</a>
+<a class="text-on-surface-variant hover:text-secondary pb-1 font-label-lg tracking-wider transition-colors" href="#terminal">TERMINAL</a>
+</nav>
+<!-- Trailing Actions & Icons -->
+<div class="flex items-center gap-4">
+<div class="hidden xl:flex items-center gap-2 text-on-surface-variant">
+<button class="p-1.5 hover:text-primary-container transition-colors" title="Terminal Access">
+<span class="material-symbols-outlined" data-icon="terminal">terminal</span>
+</button>
+<button class="p-1.5 hover:text-primary-container transition-colors" title="Active Sensors">
+<span class="material-symbols-outlined" data-icon="sensors">sensors</span>
+</button>
+<button class="p-1.5 hover:text-primary-container transition-colors relative" title="Notifications">
+<span class="material-symbols-outlined" data-icon="notifications">notifications</span>
+<span class="absolute top-1 right-1 w-2 h-2 bg-error rounded-full"></span>
+</button>
+</div>
+<div class="flex items-center gap-2">
+<button class="hidden sm:inline-flex items-center px-3 py-1.5 border border-secondary-fixed-dim text-secondary-fixed-dim font-label-lg hover:bg-secondary-fixed-dim/10 transition-colors chamfer-btn">
+          DECRYPT
+        </button>
+<button class="px-4 py-1.5 bg-primary-container text-surface-container-lowest font-headline-sm font-bold tracking-wider hover:opacity-90 transition-all glow-green chamfer-btn flex items-center gap-1.5">
+<span class="material-symbols-outlined text-[18px]" data-icon="bolt">bolt</span>
+          EXECUTE ROOT
+        </button>
+</div>
+<div class="w-8 h-8 rounded border border-outline-variant bg-surface-container-high flex items-center justify-center text-primary-container" title="Operative Avatar Telemetry Badge">
+<span class="material-symbols-outlined text-[20px]" data-icon="smart_toy">smart_toy</span>
+</div>
+</div>
+</header>
+<!-- Main Content Layout -->
+<main class="max-w-7xl mx-auto px-4 md:px-6 py-8 space-y-12">
+<!-- Meta Info & System Header Bar -->
+<section class="border border-outline-variant bg-surface-container-lowest/80 p-5 backdrop-blur-sm relative">
+<div class="absolute -top-2 left-4 px-2 bg-surface-container-lowest border border-outline-variant font-label-sm text-primary-container">
+        // PROTOCOL SPECIFICATION: SPEC-4096-TK
+      </div>
+<div class="flex flex-col lg:flex-row justify-between items-start lg:items-center gap-4 pt-1">
+<div class="space-y-1">
+<div class="flex items-center gap-3">
+<h1 class="text-headline-lg font-headline-lg text-primary tracking-tight">GENERATICS // NEXUS ARTIFACT SPECIFICATION &amp; UI COMPONENT KIT</h1>
+</div>
+<p class="text-body-sm font-body-sm text-on-surface-variant flex items-center gap-3 flex-wrap">
+<span class="text-primary-container font-bold">BUILD: v4.98.02-RELEASE</span>
+<span class="text-outline">|</span>
+<span class="flex items-center gap-1"><span class="material-symbols-outlined text-[14px]" data-icon="schedule">schedule</span> LATENCY: 14.2ms</span>
+<span class="text-outline">|</span>
+<span class="flex items-center gap-1"><span class="material-symbols-outlined text-[14px]" data-icon="memory">memory</span> ARCH: X86_64_SUB_NEXUS</span>
+<span class="text-outline">|</span>
+<span class="text-secondary font-bold">OPERATIVE ID: 0x99FF_ROOT</span>
+</p>
+</div>
+<div class="flex flex-wrap items-center gap-3">
+<!-- Active Color Palette Indicator Chips -->
+<div class="flex items-center gap-1.5 p-1 bg-surface-container-low border border-outline-variant">
+<div class="w-4 h-4 bg-primary-container rounded-none" title="Cyber Green #00FF9D"></div>
+<div class="w-4 h-4 bg-secondary-container rounded-none" title="Cyan #00E5FF"></div>
+<div class="w-4 h-4 bg-[#FF9500] rounded-none" title="Tactical Amber #FF9500"></div>
+<div class="w-4 h-4 bg-[#A855F7] rounded-none" title="Psionic Purple #A855F7"></div>
+<div class="w-4 h-4 bg-[#EF4444] rounded-none" title="Red Alert #EF4444"></div>
+</div>
+<button class="px-3 py-1.5 border border-outline text-on-surface-variant hover:text-primary hover:border-primary-container font-label-md transition-colors flex items-center gap-1.5" onclick="navigator.clipboard.writeText('SYS:ROOT_UI_TOKENS_V4')">
+<span class="material-symbols-outlined text-[16px]" data-icon="content_copy">content_copy</span>
+            COPY SPEC
+          </button>
+<button class="px-3 py-1.5 bg-surface-container-high border border-primary-container text-primary-container font-label-md hover:bg-primary-container hover:text-surface-container-lowest transition-all flex items-center gap-1.5">
+<span class="material-symbols-outlined text-[16px]" data-icon="download">download</span>
+            EXPORT UI TOKENS
+          </button>
+</div>
+</div>
+</section>
+<!-- SECTION 1: Tactical Power-Up Skill Icons -->
+<section class="space-y-4" id="skills">
+<div class="flex items-center justify-between border-b border-outline-variant pb-2">
+<div class="flex items-center gap-2">
+<span class="text-primary-container font-headline-sm font-headline-sm flex items-center gap-2">
+<span class="material-symbols-outlined" data-icon="category">category</span>
+            [SECTION 01] // TACTICAL POWER-UP PAYLOAD ARTIFACTS
+          </span>
+</div>
+<span class="text-label-sm font-label-sm text-on-surface-variant">// QUANTUM RUNTIME BUFFS &amp; SABOTAGE MODULES</span>
+</div>
+<div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+<!-- Skill 1: 2X Multiplier -->
+<div class="border border-outline-variant bg-surface-container-lowest p-5 relative group hover:border-primary-container transition-all duration-200">
+<div class="absolute top-2 right-2 text-label-sm font-label-sm px-1.5 py-0.5 bg-primary-container/10 text-primary-container border border-primary-container/30">
+            [PASSIVE / BOOSTER]
+          </div>
+<div class="text-label-sm text-outline font-label-sm">SLOT: 0xALPHA</div>
+<!-- Icon Graphic Container -->
+<div class="my-5 w-24 h-24 mx-auto relative flex items-center justify-center bg-surface-container-low border border-primary-container/40 glow-green">
+<svg class="w-16 h-16 text-primary-container drop-shadow-[0_0_8px_#00FF9D]" fill="none" stroke="currentColor" viewbox="0 0 64 64">
+<!-- High-voltage gear ring -->
+<circle cx="32" cy="32" r="26" stroke="currentColor" stroke-dasharray="4 2" stroke-width="1.5"></circle>
+<circle cx="32" cy="32" opacity="0.6" r="20" stroke="currentColor" stroke-width="0.75"></circle>
+<!-- Dual Lightning Bolts -->
+<path d="M28 14L20 32H30L26 50L44 28H32L36 14H28Z" fill="#00FF9D" stroke="#00391f" stroke-width="1.5"></path>
+</svg>
+<div class="absolute bottom-1 right-1 font-headline-sm font-bold text-[10px] text-primary-container px-1 bg-surface-container-lowest border border-primary-container/60">2X</div>
+</div>
+<div class="space-y-2">
+<h3 class="font-headline-sm text-headline-sm text-primary">PAYLOAD: OVERCLOCK 2X</h3>
+<div class="bg-surface-container-low p-2 border border-outline-variant space-y-1 font-label-sm text-on-surface-variant">
+<div class="flex justify-between"><span>RADIUS:</span> <span class="text-on-surface">DIRECT_HOST</span></div>
+<div class="flex justify-between"><span>COOLDOWN:</span> <span class="text-primary-container">PASSIVE (0s)</span></div>
+<div class="flex justify-between"><span>HEX ADDR:</span> <span class="text-secondary font-mono">0x2A_VOLT</span></div>
+<div class="flex justify-between"><span>BOOST:</span> <span class="text-primary-container">+100% CTF RATE</span></div>
+</div>
+</div>
+</div>
+<!-- Skill 2: Cryo Freeze -->
+<div class="border border-outline-variant bg-surface-container-lowest p-5 relative group hover:border-secondary-container transition-all duration-200">
+<div class="absolute top-2 right-2 text-label-sm font-label-sm px-1.5 py-0.5 bg-secondary-container/10 text-secondary-container border border-secondary-container/30">
+            [ACTIVE / 15s STALL]
+          </div>
+<div class="text-label-sm text-outline font-label-sm">SLOT: 0xBRAVO</div>
+<!-- Icon Graphic Container -->
+<div class="my-5 w-24 h-24 mx-auto relative flex items-center justify-center bg-surface-container-low border border-secondary-container/40 glow-cyan">
+<svg class="w-16 h-16 text-secondary-container drop-shadow-[0_0_8px_#00E5FF]" fill="none" stroke="currentColor" viewbox="0 0 64 64">
+<!-- Sharded Cryo Snowflake / Spikes -->
+<path d="M32 8V56M8 32H56M15 15L49 49M15 49L49 15" stroke="currentColor" stroke-linecap="round" stroke-width="2"></path>
+<path d="M32 16L27 21M32 16L37 21M32 48L27 43M32 48L37 43" stroke="currentColor" stroke-width="1.5"></path>
+<path d="M16 32L21 27M16 32L21 37M48 32L43 27M48 32L43 37" stroke="currentColor" stroke-width="1.5"></path>
+<!-- Mist Ring -->
+<circle cx="32" cy="32" fill="#00E5FF" fill-opacity="0.2" r="8" stroke="currentColor" stroke-width="1"></circle>
+</svg>
+<div class="absolute bottom-1 right-1 font-headline-sm font-bold text-[10px] text-secondary-container px-1 bg-surface-container-lowest border border-secondary-container/60">CRY</div>
+</div>
+<div class="space-y-2">
+<h3 class="font-headline-sm text-headline-sm text-primary">PAYLOAD: CRYO LOCKOUT</h3>
+<div class="bg-surface-container-low p-2 border border-outline-variant space-y-1 font-label-sm text-on-surface-variant">
+<div class="flex justify-between"><span>RADIUS:</span> <span class="text-on-surface">LOCAL_CLUSTER</span></div>
+<div class="flex justify-between"><span>DURATION:</span> <span class="text-secondary-fixed-dim">15.000 SEC</span></div>
+<div class="flex justify-between"><span>HEX ADDR:</span> <span class="text-secondary font-mono">0x00_FRZ</span></div>
+<div class="flex justify-between"><span>EFFECT:</span> <span class="text-secondary-fixed-dim">HALT SUBMISSION</span></div>
+</div>
+</div>
+</div>
+<!-- Skill 3: EMP Drain -->
+<div class="border border-outline-variant bg-surface-container-lowest p-5 relative group hover:border-[#FF9500] transition-all duration-200">
+<div class="absolute top-2 right-2 text-label-sm font-label-sm px-1.5 py-0.5 bg-[#FF9500]/10 text-[#FF9500] border border-[#FF9500]/30">
+            [SABOTAGE / -100 PTS]
+          </div>
+<div class="text-label-sm text-outline font-label-sm">SLOT: 0xCHARLIE</div>
+<!-- Icon Graphic Container -->
+<div class="my-5 w-24 h-24 mx-auto relative flex items-center justify-center bg-surface-container-low border border-[#FF9500]/40 glow-amber">
+<svg class="w-16 h-16 text-[#FF9500] drop-shadow-[0_0_8px_#FF9500]" fill="none" stroke="currentColor" viewbox="0 0 64 64">
+<!-- Heavy Military Battery -->
+<rect height="38" rx="2" stroke="currentColor" stroke-width="2" width="24" x="20" y="16"></rect>
+<path d="M26 12H38V16H26V12Z" fill="currentColor"></path>
+<!-- Battery discharge bars -->
+<line stroke="currentColor" stroke-width="2" x1="25" x2="39" y1="46" y2="46"></line>
+<line stroke="currentColor" stroke-width="2" x1="25" x2="35" y1="40" y2="40"></line>
+<!-- Warning Lightning -->
+<path d="M33 22L27 32H33L31 40L39 30H33L35 22H33Z" fill="#FF9500"></path>
+</svg>
+<div class="absolute bottom-1 right-1 font-headline-sm font-bold text-[10px] text-[#FF9500] px-1 bg-surface-container-lowest border border-[#FF9500]/60">-100</div>
+</div>
+<div class="space-y-2">
+<h3 class="font-headline-sm text-headline-sm text-primary">PAYLOAD: EMP DRAIN</h3>
+<div class="bg-surface-container-low p-2 border border-outline-variant space-y-1 font-label-sm text-on-surface-variant">
+<div class="flex justify-between"><span>RADIUS:</span> <span class="text-on-surface">500m GLOBAL</span></div>
+<div class="flex justify-between"><span>DRAIN RATE:</span> <span class="text-[#FF9500]">-100 PTS LEAK</span></div>
+<div class="flex justify-between"><span>HEX ADDR:</span> <span class="text-secondary font-mono">0xEE_DRAIN</span></div>
+<div class="flex justify-between"><span>RELOAD:</span> <span class="text-on-surface">45.0 SEC</span></div>
+</div>
+</div>
+</div>
+<!-- Skill 4: Data Siphon -->
+<div class="border border-outline-variant bg-surface-container-lowest p-5 relative group hover:border-[#A855F7] transition-all duration-200">
+<div class="absolute top-2 right-2 text-label-sm font-label-sm px-1.5 py-0.5 bg-[#A855F7]/10 text-[#A855F7] border border-[#A855F7]/30">
+            [VAMPIRIC / STEAL +100]
+          </div>
+<div class="text-label-sm text-outline font-label-sm">SLOT: 0xDELTA</div>
+<!-- Icon Graphic Container -->
+<div class="my-5 w-24 h-24 mx-auto relative flex items-center justify-center bg-surface-container-low border border-[#A855F7]/40 glow-purple">
+<svg class="w-16 h-16 text-[#A855F7] drop-shadow-[0_0_8px_#A855F7]" fill="none" stroke="currentColor" viewbox="0 0 64 64">
+<!-- Swirling vortex siphon rings -->
+<ellipse cx="32" cy="20" rx="18" ry="6" stroke="currentColor" stroke-dasharray="3 2" stroke-width="1.5"></ellipse>
+<ellipse cx="32" cy="32" rx="12" ry="4" stroke="currentColor" stroke-width="1.5"></ellipse>
+<ellipse cx="32" cy="44" rx="6" ry="2" stroke="currentColor" stroke-width="1.5"></ellipse>
+<!-- Siphon core funnel vortex -->
+<path d="M16 20L30 46H34L48 20" stroke="currentColor" stroke-linecap="round" stroke-width="1.5"></path>
+<circle cx="32" cy="46" fill="#A855F7" r="3"></circle>
+</svg>
+<div class="absolute bottom-1 right-1 font-headline-sm font-bold text-[10px] text-[#A855F7] px-1 bg-surface-container-lowest border border-[#A855F7]/60">+100</div>
+</div>
+<div class="space-y-2">
+<h3 class="font-headline-sm text-headline-sm text-primary">PAYLOAD: PSI-SIPHON</h3>
+<div class="bg-surface-container-low p-2 border border-outline-variant space-y-1 font-label-sm text-on-surface-variant">
+<div class="flex justify-between"><span>RADIUS:</span> <span class="text-on-surface">LEADER_TARGET</span></div>
+<div class="flex justify-between"><span>TRANSFER:</span> <span class="text-[#A855F7]">+100 STEAL</span></div>
+<div class="flex justify-between"><span>HEX ADDR:</span> <span class="text-secondary font-mono">0x99_VAMP</span></div>
+<div class="flex justify-between"><span>SECURITY:</span> <span class="text-error">FLAGGED ALPHA</span></div>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- SECTION 2: 3D Isometric Air Drop Supply Crate Showcase -->
+<section class="space-y-4" id="crates">
+<div class="flex items-center justify-between border-b border-outline-variant pb-2">
+<div class="flex items-center gap-2">
+<span class="text-primary-container font-headline-sm font-headline-sm flex items-center gap-2">
+<span class="material-symbols-outlined" data-icon="deployed_code">deployed_code</span>
+            [SECTION 02] // AIR DROP SUPPLY CRATE TELEMETRY &amp; HARDWARE ANALYSIS
+          </span>
+</div>
+<span class="text-label-sm font-label-sm text-on-surface-variant">// ASSET: ISO_CRATE_MK_VII</span>
+</div>
+<!-- Main Crate Inspection Hologram Card -->
+<div class="border border-outline-variant bg-surface-container-lowest p-6 relative overflow-hidden chamfer-card">
+<!-- Corner Brackets -->
+<div class="absolute top-0 left-0 w-4 h-4 border-t-2 border-l-2 border-primary-container"></div>
+<div class="absolute top-0 right-0 w-4 h-4 border-t-2 border-r-2 border-primary-container"></div>
+<div class="absolute bottom-0 left-0 w-4 h-4 border-b-2 border-l-2 border-primary-container"></div>
+<div class="absolute bottom-0 right-0 w-4 h-4 border-b-2 border-r-2 border-primary-container"></div>
+<div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
+<!-- Image Asset Render Preview -->
+<div class="lg:col-span-6 relative flex justify-center items-center">
+<div class="absolute inset-0 bg-gradient-to-r from-secondary-container/10 via-primary-container/5 to-transparent rounded-lg blur-xl pointer-events-none"></div>
+<div class="relative w-full max-w-md aspect-square rounded border border-outline-variant bg-surface-container-low p-3 glow-cyan overflow-hidden flex items-center justify-center">
+<!-- Grid Backdrop behind crate -->
+<div class="absolute inset-0 opacity-20 hud-grid"></div>
+<!-- Telemetry corner overlays -->
+<div class="absolute top-3 left-3 font-mono text-[9px] text-secondary-container">
+<div>BEACON_LOCK: 94.8%</div>
+<div>FREQ: 433.92 MHz</div>
+</div>
+<div class="absolute top-3 right-3 font-mono text-[9px] text-primary-container text-right">
+<div>SYS: ARMORED_MK7</div>
+<div>HAZARD_LVL: 04</div>
+</div>
+<!-- Main Isometric Crate Image -->
+<img alt="Isometric Cyber Tactical Air Drop Crate" class="w-full h-full object-contain relative z-10 transition-transform duration-500 hover:scale-105" src="https://lh3.googleusercontent.com/aida-public/AB6AXuC5-lPF6ds70V_Mtr7nrRounm52h_7tjzTuZdjMCseKHE_jnl9TPjKwbv6Vnx5yhiqeALUnLh-cmZeolUH9L6g93is5_LWGo3LWTDjSeZHKlEEP1dQEoMAk330ux6tzEnNiq1ex5oSzsoA04pyVpn_pc4Rfm9JEV5q1wTbzmiAfyId-ticUsX-zE6hLNYUXNja4oank8QrmXCIlWWUufgRdUHIkqU8PBmk6XLJ2EPUGHmvx_sXGZFDIV-2jeLWKuzYIAc2xsvbbuAIw"/>
+<!-- Lower Scan Bar -->
+<div class="absolute bottom-3 inset-x-3 flex justify-between items-center text-[10px] font-mono bg-surface-container-lowest/80 px-2 py-1 border border-outline-variant z-20">
+<span class="text-primary-container flex items-center gap-1">
+<span class="w-2 h-2 rounded-full bg-primary-container animate-pulse inline-block"></span>
+                  RADAR BEACON ACTIVE
+                </span>
+<span class="text-on-surface-variant">GEO: [45.109, -93.265]</span>
+</div>
+</div>
+</div>
+<!-- Crate Telemetry Data & Actions -->
+<div class="lg:col-span-6 space-y-6">
+<div class="space-y-1">
+<div class="flex items-center gap-2">
+<span class="px-2 py-0.5 bg-[#FF9500]/20 text-[#FF9500] border border-[#FF9500] text-label-sm font-label-sm">
+                  TACTICAL SUPPLY CONTAINER // LEVEL 4 HAZARD
+                </span>
+<span class="text-label-sm text-outline font-label-sm">HASH: 0x99A8FF_CRATE</span>
+</div>
+<h2 class="text-headline-lg font-headline-lg text-primary tracking-tight">MK-VII HEAVY REINFORCED AIR DROP</h2>
+<p class="text-body-md text-on-surface-variant">
+                Tactical deployable container equipped with optical quantum relays, hydraulic seal latching, and active RF transponder. Houses rare zero-day exploits, psionic multi-thread boosters, and classified operative decrypt tools.
+              </p>
+</div>
+<!-- Telemetry Matrix -->
+<div class="grid grid-cols-2 sm:grid-cols-3 gap-3">
+<div class="bg-surface-container-low border border-outline-variant p-3">
+<div class="text-label-sm text-outline">BEACON LOCK</div>
+<div class="text-headline-sm font-headline-sm text-secondary-container">94.8%</div>
+<div class="text-[10px] text-on-surface-variant font-mono">SYMMETRIC SYNC</div>
+</div>
+<div class="bg-surface-container-low border border-outline-variant p-3">
+<div class="text-label-sm text-outline">ARMOR RATING</div>
+<div class="text-headline-sm font-headline-sm text-primary-container">TITANIUM-IV</div>
+<div class="text-[10px] text-on-surface-variant font-mono">BLAST RESISTANT</div>
+</div>
+<div class="bg-surface-container-low border border-outline-variant p-3">
+<div class="text-label-sm text-outline">LOOT CAPACITY</div>
+<div class="text-headline-sm font-headline-sm text-[#FF9500]">3 SLOTS</div>
+<div class="text-[10px] text-on-surface-variant font-mono">TIER 1 - 3 ARTIFACTS</div>
+</div>
+<div class="bg-surface-container-low border border-outline-variant p-3">
+<div class="text-label-sm text-outline">DECRYPTION KEY</div>
+<div class="text-headline-sm font-headline-sm text-[#A855F7]">ECDSA-521</div>
+<div class="text-[10px] text-on-surface-variant font-mono">HEX SEED REQ</div>
+</div>
+<div class="bg-surface-container-low border border-outline-variant p-3">
+<div class="text-label-sm text-outline">DEPLOY TIME</div>
+<div class="text-headline-sm font-headline-sm text-primary">00:01:45</div>
+<div class="text-[10px] text-on-surface-variant font-mono">PARACHUTE RETRACT</div>
+</div>
+<div class="bg-surface-container-low border border-outline-variant p-3">
+<div class="text-label-sm text-outline">STATUS</div>
+<div class="text-headline-sm font-headline-sm text-primary-container">UNOPENED</div>
+<div class="text-[10px] text-primary-container font-mono">INTEGRITY 100%</div>
+</div>
+</div>
+<!-- Deployment & Extraction Controls -->
+<div class="pt-2 flex flex-wrap gap-4">
+<button class="px-6 py-2.5 bg-primary-container text-surface-container-lowest font-headline-sm font-bold tracking-wider hover:opacity-90 transition-all glow-green chamfer-btn flex items-center gap-2">
+<span class="material-symbols-outlined text-[18px]" data-icon="flight_land">flight_land</span>
+                SIMULATE DROP
+              </button>
+<button class="px-5 py-2.5 border border-secondary-container text-secondary-container font-headline-sm hover:bg-secondary-container/10 transition-colors chamfer-btn flex items-center gap-2">
+<span class="material-symbols-outlined text-[18px]" data-icon="inventory_2">inventory_2</span>
+                EXTRACT LOOT TABLE
+              </button>
+<button class="px-3 py-2.5 border border-outline text-on-surface-variant hover:text-primary transition-colors text-label-lg font-mono">
+                [ DIAGNOSTICS: OK ]
+              </button>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- SECTION 3: Node Level Badges (Progressive Hexagonal Progression 01 to 10) -->
+<section class="space-y-4" id="hex-levels">
+<div class="flex items-center justify-between border-b border-outline-variant pb-2">
+<div class="flex items-center gap-2">
+<span class="text-primary-container font-headline-sm font-headline-sm flex items-center gap-2">
+<span class="material-symbols-outlined" data-icon="token">token</span>
+            [SECTION 03] // PROGRESSIVE NODE LEVEL BADGE MATRIX (01 - 10)
+          </span>
+</div>
+<span class="text-label-sm font-label-sm text-on-surface-variant">// HIERARCHICAL ACCESS TIERS &amp; ROOT MASTERY</span>
+</div>
+<!-- Hexagonal Progression Grid -->
+<div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-4">
+<!-- Tier 1: Level 01 (Beginner) -->
+<div class="border border-primary-container/40 bg-surface-container-lowest p-3 relative text-center group hover:border-primary-container transition-all">
+<div class="text-[9px] font-mono text-outline">TIER 1 // BEG</div>
+<div class="my-3 flex justify-center">
+<svg class="w-16 h-16 text-primary-container drop-shadow-[0_0_8px_#00FF9D]" viewbox="0 0 100 100">
+<polygon fill="#171b26" points="50,5 90,25 90,75 50,95 10,75 10,25" stroke="#00FF9D" stroke-width="3"></polygon>
+<polygon fill="none" opacity="0.6" points="50,15 80,30 80,70 50,85 20,70 20,30" stroke="#00FF9D" stroke-dasharray="3 2" stroke-width="1"></polygon>
+<text fill="#00FF9D" font-family="Space Mono" font-size="24" font-weight="bold" text-anchor="middle" x="50" y="58">01</text>
+</svg>
+</div>
+<div class="font-headline-sm text-[12px] text-primary truncate">WEB INJECTION</div>
+<div class="text-[9px] font-mono text-primary-container mt-1">EMERALD PERMIT</div>
+</div>
+<!-- Tier 1: Level 02 (Beginner) -->
+<div class="border border-primary-container/40 bg-surface-container-lowest p-3 relative text-center group hover:border-primary-container transition-all">
+<div class="text-[9px] font-mono text-outline">TIER 1 // BEG</div>
+<div class="my-3 flex justify-center">
+<svg class="w-16 h-16 text-primary-container drop-shadow-[0_0_8px_#00FF9D]" viewbox="0 0 100 100">
+<polygon fill="#171b26" points="50,5 90,25 90,75 50,95 10,75 10,25" stroke="#00FF9D" stroke-width="3"></polygon>
+<polygon fill="none" opacity="0.6" points="50,15 80,30 80,70 50,85 20,70 20,30" stroke="#00FF9D" stroke-dasharray="3 2" stroke-width="1"></polygon>
+<text fill="#00FF9D" font-family="Space Mono" font-size="24" font-weight="bold" text-anchor="middle" x="50" y="58">02</text>
+</svg>
+</div>
+<div class="font-headline-sm text-[12px] text-primary truncate">TRACE ROUTE</div>
+<div class="text-[9px] font-mono text-primary-container mt-1">EMERALD PERMIT</div>
+</div>
+<!-- Tier 1: Level 03 (Beginner) -->
+<div class="border border-primary-container/40 bg-surface-container-lowest p-3 relative text-center group hover:border-primary-container transition-all">
+<div class="text-[9px] font-mono text-outline">TIER 1 // BEG</div>
+<div class="my-3 flex justify-center">
+<svg class="w-16 h-16 text-primary-container drop-shadow-[0_0_8px_#00FF9D]" viewbox="0 0 100 100">
+<polygon fill="#171b26" points="50,5 90,25 90,75 50,95 10,75 10,25" stroke="#00FF9D" stroke-width="3"></polygon>
+<polygon fill="none" opacity="0.6" points="50,15 80,30 80,70 50,85 20,70 20,30" stroke="#00FF9D" stroke-dasharray="3 2" stroke-width="1"></polygon>
+<text fill="#00FF9D" font-family="Space Mono" font-size="24" font-weight="bold" text-anchor="middle" x="50" y="58">03</text>
+</svg>
+</div>
+<div class="font-headline-sm text-[12px] text-primary truncate">CRYPTO CIPHER</div>
+<div class="text-[9px] font-mono text-primary-container mt-1">EMERALD PERMIT</div>
+</div>
+<!-- Tier 2: Level 04 (Intermediate) -->
+<div class="border border-secondary-container/40 bg-surface-container-lowest p-3 relative text-center group hover:border-secondary-container transition-all">
+<div class="text-[9px] font-mono text-outline">TIER 2 // INT</div>
+<div class="my-3 flex justify-center">
+<svg class="w-16 h-16 text-secondary-container drop-shadow-[0_0_8px_#00E5FF]" viewbox="0 0 100 100">
+<polygon fill="#171b26" points="50,5 90,25 90,75 50,95 10,75 10,25" stroke="#00E5FF" stroke-width="3"></polygon>
+<polygon fill="none" opacity="0.7" points="50,15 80,30 80,70 50,85 20,70 20,30" stroke="#00E5FF" stroke-dasharray="4 2" stroke-width="1"></polygon>
+<text fill="#00E5FF" font-family="Space Mono" font-size="24" font-weight="bold" text-anchor="middle" x="50" y="58">04</text>
+</svg>
+</div>
+<div class="font-headline-sm text-[12px] text-primary truncate">REVERSE ENG</div>
+<div class="text-[9px] font-mono text-secondary-container mt-1">CYAN VECTOR</div>
+</div>
+<!-- Tier 2: Level 05 (Intermediate) -->
+<div class="border border-secondary-container/40 bg-surface-container-lowest p-3 relative text-center group hover:border-secondary-container transition-all">
+<div class="text-[9px] font-mono text-outline">TIER 2 // INT</div>
+<div class="my-3 flex justify-center">
+<svg class="w-16 h-16 text-secondary-container drop-shadow-[0_0_8px_#00E5FF]" viewbox="0 0 100 100">
+<polygon fill="#171b26" points="50,5 90,25 90,75 50,95 10,75 10,25" stroke="#00E5FF" stroke-width="3"></polygon>
+<polygon fill="none" opacity="0.7" points="50,15 80,30 80,70 50,85 20,70 20,30" stroke="#00E5FF" stroke-dasharray="4 2" stroke-width="1"></polygon>
+<text fill="#00E5FF" font-family="Space Mono" font-size="24" font-weight="bold" text-anchor="middle" x="50" y="58">05</text>
+</svg>
+</div>
+<div class="font-headline-sm text-[12px] text-primary truncate">STEGANO MATRIX</div>
+<div class="text-[9px] font-mono text-secondary-container mt-1">CYAN VECTOR</div>
+</div>
+<!-- Tier 2: Level 06 (Intermediate) -->
+<div class="border border-secondary-container/40 bg-surface-container-lowest p-3 relative text-center group hover:border-secondary-container transition-all">
+<div class="text-[9px] font-mono text-outline">TIER 2 // INT</div>
+<div class="my-3 flex justify-center">
+<svg class="w-16 h-16 text-secondary-container drop-shadow-[0_0_8px_#00E5FF]" viewbox="0 0 100 100">
+<polygon fill="#171b26" points="50,5 90,25 90,75 50,95 10,75 10,25" stroke="#00E5FF" stroke-width="3"></polygon>
+<polygon fill="none" opacity="0.7" points="50,15 80,30 80,70 50,85 20,70 20,30" stroke="#00E5FF" stroke-dasharray="4 2" stroke-width="1"></polygon>
+<text fill="#00E5FF" font-family="Space Mono" font-size="24" font-weight="bold" text-anchor="middle" x="50" y="58">06</text>
+</svg>
+</div>
+<div class="font-headline-sm text-[12px] text-primary truncate">MEMORY OVERFLOW</div>
+<div class="text-[9px] font-mono text-secondary-container mt-1">CYAN VECTOR</div>
+</div>
+<!-- Tier 3: Level 07 (Advanced) -->
+<div class="border border-[#EF4444]/40 bg-surface-container-lowest p-3 relative text-center group hover:border-[#EF4444] transition-all">
+<div class="text-[9px] font-mono text-[#EF4444]">TIER 3 // ADV</div>
+<div class="my-3 flex justify-center">
+<svg class="w-16 h-16 text-[#EF4444] drop-shadow-[0_0_8px_#EF4444]" viewbox="0 0 100 100">
+<polygon fill="#171b26" points="50,5 90,25 90,75 50,95 10,75 10,25" stroke="#EF4444" stroke-width="3"></polygon>
+<polygon fill="none" opacity="0.8" points="50,15 80,30 80,70 50,85 20,70 20,30" stroke="#A855F7" stroke-dasharray="4 1" stroke-width="1"></polygon>
+<text fill="#EF4444" font-family="Space Mono" font-size="24" font-weight="bold" text-anchor="middle" x="50" y="58">07</text>
+</svg>
+</div>
+<div class="font-headline-sm text-[12px] text-primary truncate">KERNEL PWN</div>
+<div class="text-[9px] font-mono text-[#EF4444] mt-1">RED ALERT</div>
+</div>
+<!-- Tier 3: Level 08 (Advanced) -->
+<div class="border border-[#A855F7]/40 bg-surface-container-lowest p-3 relative text-center group hover:border-[#A855F7] transition-all">
+<div class="text-[9px] font-mono text-[#A855F7]">TIER 3 // ADV</div>
+<div class="my-3 flex justify-center">
+<svg class="w-16 h-16 text-[#A855F7] drop-shadow-[0_0_8px_#A855F7]" viewbox="0 0 100 100">
+<polygon fill="#171b26" points="50,5 90,25 90,75 50,95 10,75 10,25" stroke="#A855F7" stroke-width="3"></polygon>
+<polygon fill="none" opacity="0.8" points="50,15 80,30 80,70 50,85 20,70 20,30" stroke="#EF4444" stroke-dasharray="4 1" stroke-width="1"></polygon>
+<text fill="#A855F7" font-family="Space Mono" font-size="24" font-weight="bold" text-anchor="middle" x="50" y="58">08</text>
+</svg>
+</div>
+<div class="font-headline-sm text-[12px] text-primary truncate">QUANTUM CIPHER</div>
+<div class="text-[9px] font-mono text-[#A855F7] mt-1">PSIONIC PURPLE</div>
+</div>
+<!-- Tier 3: Level 09 (Advanced) -->
+<div class="border border-[#EF4444]/40 bg-surface-container-lowest p-3 relative text-center group hover:border-[#EF4444] transition-all">
+<div class="text-[9px] font-mono text-[#EF4444]">TIER 3 // ADV</div>
+<div class="my-3 flex justify-center">
+<svg class="w-16 h-16 text-[#EF4444] drop-shadow-[0_0_8px_#EF4444]" viewbox="0 0 100 100">
+<polygon fill="#171b26" points="50,5 90,25 90,75 50,95 10,75 10,25" stroke="#EF4444" stroke-width="3"></polygon>
+<polygon fill="none" opacity="0.8" points="50,15 80,30 80,70 50,85 20,70 20,30" stroke="#A855F7" stroke-dasharray="4 1" stroke-width="1"></polygon>
+<text fill="#EF4444" font-family="Space Mono" font-size="24" font-weight="bold" text-anchor="middle" x="50" y="58">09</text>
+</svg>
+</div>
+<div class="font-headline-sm text-[12px] text-primary truncate">PACKET SNIFFER</div>
+<div class="text-[9px] font-mono text-[#EF4444] mt-1">RED ALERT</div>
+</div>
+<!-- Tier 4: Level 10 (Boss / Nexus Root) -->
+<div class="border-2 border-[#FFD700] bg-surface-container-lowest p-3 relative text-center glow-gold group col-span-2 sm:col-span-3 md:col-span-1">
+<div class="text-[9px] font-mono text-[#FFD700] font-bold animate-pulse">// BOSS ROOT //</div>
+<div class="my-2 flex justify-center relative">
+<svg class="w-18 h-18 text-[#FFD700] drop-shadow-[0_0_12px_#FFD700]" viewbox="0 0 100 100">
+<!-- Golden Hexagon & Crown Accents -->
+<polygon fill="#1c1f2a" points="50,4 92,25 92,75 50,96 8,75 8,25" stroke="#FFD700" stroke-width="3"></polygon>
+<path d="M30 30L38 42L50 28L62 42L70 30L68 50H32L30 30Z" fill="#FFD700" opacity="0.85"></path>
+<!-- Crosshair Lines -->
+<line opacity="0.5" stroke="#FFD700" stroke-dasharray="2 2" stroke-width="1" x1="50" x2="50" y1="12" y2="88"></line>
+<line opacity="0.5" stroke="#FFD700" stroke-dasharray="2 2" stroke-width="1" x1="16" x2="84" y1="50" y2="50"></line>
+<text fill="#FFD700" font-family="Space Mono" font-size="20" font-weight="bold" text-anchor="middle" x="50" y="74">10</text>
+</svg>
+</div>
+<div class="font-headline-sm text-[11px] text-[#FFD700] font-bold truncate">NEXUS ROOT</div>
+<div class="text-[8px] font-mono text-tertiary mt-0.5">// PWN MASTER //</div>
+</div>
+</div>
+</section>
+<!-- SECTION 4: Status Chips, Micro HUD Elements & Terminal Inputs -->
+<section class="space-y-4" id="telemetry">
+<div class="flex items-center justify-between border-b border-outline-variant pb-2">
+<div class="flex items-center gap-2">
+<span class="text-primary-container font-headline-sm font-headline-sm flex items-center gap-2">
+<span class="material-symbols-outlined" data-icon="widgets">widgets</span>
+            [SECTION 04] // STATUS CHIPS, TELEMETRY NUMERICS &amp; TERMINAL CONTROLS
+          </span>
+</div>
+<span class="text-label-sm font-label-sm text-on-surface-variant">// ATOMIC COMPONENT ARTIFACTS</span>
+</div>
+<div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+<!-- Subsection A: Status Chips Matrix -->
+<div class="border border-outline-variant bg-surface-container-lowest p-5 space-y-4">
+<div class="text-label-sm font-label-sm text-primary-container flex items-center gap-2">
+<span class="material-symbols-outlined text-[14px]" data-icon="adjust">adjust</span>
+            // REAL-TIME OPERATIVE STATUS CHIPS
+          </div>
+<div class="flex flex-wrap gap-2.5">
+<!-- Online -->
+<span class="inline-flex items-center gap-2 px-3 py-1 bg-surface-container-low border border-primary-container/60 text-primary-container font-label-sm">
+<span class="w-2 h-2 rounded-full bg-primary-container animate-pulse"></span>
+              ONLINE [0x01]
+            </span>
+<!-- Frozen -->
+<span class="inline-flex items-center gap-2 px-3 py-1 bg-surface-container-low border border-secondary-container/60 text-secondary-container font-label-sm">
+<span class="w-2 h-2 rounded-full bg-secondary-container"></span>
+              FROZEN [15s]
+            </span>
+<!-- Breach Failed -->
+<span class="inline-flex items-center gap-2 px-3 py-1 bg-surface-container-low border border-[#EF4444]/60 text-[#EF4444] font-label-sm">
+<span class="w-2 h-2 rounded-full bg-[#EF4444] animate-ping"></span>
+              BREACH FAILED
+            </span>
+<!-- Air Drop Ready -->
+<span class="inline-flex items-center gap-2 px-3 py-1 bg-surface-container-low border border-[#FFD700]/60 text-[#FFD700] font-label-sm">
+<span class="w-2 h-2 rounded-full bg-[#FFD700] animate-bounce"></span>
+              AIR DROP READY
+            </span>
+<!-- Standby -->
+<span class="inline-flex items-center gap-2 px-3 py-1 bg-surface-container-low border border-surface-variant text-on-surface-variant font-label-sm">
+<span class="w-2 h-2 rounded-full bg-outline"></span>
+              STANDBY [IDLE]
+            </span>
+</div>
+<!-- Secondary Chip row with detailed telemetry metadata -->
+<div class="space-y-2 pt-2 border-t border-outline-variant/50">
+<div class="text-label-sm text-outline">// ADVANCED METADATA SYNTAX CHIPS</div>
+<div class="flex flex-wrap gap-2">
+<span class="px-2 py-0.5 bg-surface-container border border-outline font-mono text-[10px] text-tertiary">
+                SYS_SEC: ALPHA_CLEARANCE
+              </span>
+<span class="px-2 py-0.5 bg-surface-container border border-outline font-mono text-[10px] text-primary-container">
+                SIG: 0xDEAD_BEEF
+              </span>
+<span class="px-2 py-0.5 bg-surface-container border border-outline font-mono text-[10px] text-secondary">
+                VLAN: 1024_TACTICAL
+              </span>
+</div>
+</div>
+</div>
+<!-- Subsection B: Tabular Numeric Clocks & Deltas -->
+<div class="border border-outline-variant bg-surface-container-lowest p-5 space-y-4">
+<div class="text-label-sm font-label-sm text-secondary-container flex items-center gap-2">
+<span class="material-symbols-outlined text-[14px]" data-icon="timer">timer</span>
+            // TABULAR CHRONO READOUTS &amp; SCORE DELTAS
+          </div>
+<div class="space-y-3 font-mono">
+<!-- Digital Clock 1 -->
+<div class="p-3 bg-surface-container-low border border-outline-variant flex justify-between items-center">
+<div>
+<div class="text-[10px] text-outline">NODE LOCKOUT CLOCK</div>
+<div class="text-headline-lg font-headline-lg text-primary-container tracking-wider drop-shadow-[0_0_6px_#00FF9D]">
+                  00:14:29.84
+                </div>
+</div>
+<div class="text-right">
+<span class="px-2 py-1 bg-primary-container/10 border border-primary-container text-primary-container text-label-sm font-bold">
+                  +450 PTS
+                </span>
+<div class="text-[9px] text-outline mt-1">STREAK: 5X</div>
+</div>
+</div>
+<!-- Digital Clock 2 -->
+<div class="p-3 bg-surface-container-low border border-outline-variant flex justify-between items-center">
+<div>
+<div class="text-[10px] text-outline">CRYO FREEZE TIMEOUT</div>
+<div class="text-headline-lg font-headline-lg text-secondary-container tracking-wider drop-shadow-[0_0_6px_#00E5FF]">
+                  00:00:15.00
+                </div>
+</div>
+<div class="text-right">
+<span class="px-2 py-1 bg-[#EF4444]/10 border border-[#EF4444] text-[#EF4444] text-label-sm font-bold">
+                  -100 PTS
+                </span>
+<div class="text-[9px] text-outline mt-1">PENALTY DRAIN</div>
+</div>
+</div>
+</div>
+</div>
+<!-- Subsection C: Interactive Terminal Input & Flag Submission -->
+<div class="border border-outline-variant bg-surface-container-lowest p-5 space-y-4" id="terminal">
+<div class="text-label-sm font-label-sm text-primary flex items-center gap-2">
+<span class="material-symbols-outlined text-[14px]" data-icon="terminal">terminal</span>
+            // INTERACTIVE OPERATIVE INPUT NODES
+          </div>
+<div class="space-y-3">
+<!-- Command Line Field -->
+<div class="space-y-1">
+<label class="text-label-sm text-on-surface-variant flex justify-between">
+<span>SHELL EXECUTION INPUT</span>
+<span class="text-primary-container font-mono">PORT 22_SSH</span>
+</label>
+<div class="flex items-center px-3 py-2 bg-surface-container-high border border-outline-variant focus-within:border-primary-container transition-colors font-mono text-[12px]">
+<span class="text-primary-container mr-1.5 whitespace-nowrap">root@nexus-ctf:~$</span>
+<input class="w-full bg-transparent border-0 p-0 text-on-background focus:ring-0 font-mono text-[12px]" spellcheck="false" type="text" value="decrypt --node 0x99 --payload overclock"/>
+<span class="w-2 h-4 bg-primary-container inline-block cursor-blink"></span>
+</div>
+</div>
+<!-- CTF Flag Submission Field -->
+<div class="space-y-1">
+<label class="text-label-sm text-on-surface-variant flex justify-between">
+<span>FLAG VERIFICATION SUBMIT</span>
+<span class="text-secondary font-mono">MD5_REQD</span>
+</label>
+<div class="flex gap-2">
+<div class="relative flex-1 flex items-center bg-surface-container-high border border-outline-variant focus-within:border-secondary-container transition-colors px-2">
+<span class="material-symbols-outlined text-outline text-[16px] mr-1.5" data-icon="key">key</span>
+<input class="w-full bg-transparent border-0 p-1 text-on-background placeholder:text-outline font-mono text-[11px] focus:ring-0" placeholder="FLAG{N3XUS_R00T_0x99FF_PWN3D}" type="text"/>
+</div>
+<button class="px-3 py-1 bg-secondary-container text-on-secondary-container font-headline-sm font-bold text-[12px] hover:opacity-90 transition-opacity whitespace-nowrap chamfer-btn">
+                  VERIFY
+                </button>
+</div>
+</div>
+</div>
+</div>
+</div>
+</section>
+</main>
+<!-- Shared Component: Footer -->
+<footer class="w-full border-t border-outline-variant bg-surface-container-lowest font-body-sm mt-16">
+<div class="max-w-7xl mx-auto px-6 py-6 flex flex-col md:flex-row justify-between items-center gap-4">
+<div class="flex flex-col sm:flex-row items-center gap-3">
+<span class="text-headline-sm font-headline-sm font-bold text-primary-container">// SYSTEM CORE ACTIVE - 0x99FF</span>
+<span class="text-on-surface-variant text-label-sm">// ALL OPERATIVE CHANNELS SECURED</span>
+</div>
+<!-- Footer Links Array from Shared Components JSON -->
+<div class="flex flex-wrap items-center gap-4">
+<a class="text-on-surface-variant hover:text-secondary-fixed-dim font-label-sm transition-colors" href="#doc">DOCUMENTATION</a>
+<a class="text-on-surface-variant hover:text-secondary-fixed-dim font-label-sm transition-colors" href="#api">API_NODES</a>
+<a class="text-on-surface-variant hover:text-secondary-fixed-dim font-label-sm transition-colors" href="#sec">SECURITY_DIRECTIVE</a>
+<a class="text-on-surface-variant hover:text-secondary-fixed-dim font-label-sm transition-colors" href="#logs">TERMINAL_LOGS</a>
+<a class="text-primary-container font-label-sm" href="#status">SYSTEM_STATUS</a>
+</div>
+</div>
+</footer>
+<!-- Micro Interaction Script for Dynamic HUD feedback -->
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+      // Add subtle scan click effect to all interactive buttons
+      const buttons = document.querySelectorAll('button');
+      buttons.forEach(btn => {
+        btn.addEventListener('click', () => {
+          btn.classList.add('scale-95');
+          setTimeout(() => btn.classList.remove('scale-95'), 100);
+        });
+      });
+    });
+  </script>
+</body></html>

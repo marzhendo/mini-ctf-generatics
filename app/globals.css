@@ -1,0 +1,162 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --bg-app: #080a0f;
+  --bg-surface: #0e111a;
+  --bg-card: #131724;
+  --bg-elevated: #1a1f30;
+  --border-subtle: rgba(255, 255, 255, 0.08);
+  --border-medium: rgba(255, 255, 255, 0.14);
+  --border-hover: rgba(255, 255, 255, 0.22);
+  --accent-emerald: #00e38b;
+  --accent-cyan: #00d2ee;
+  --accent-amber: #facc15;
+  --accent-rose: #f43f5e;
+  --foreground: #e2e8f0;
+  --foreground-muted: #94a3b8;
+  --shake-distance: 6px;
+  --shake-overshoot: 4px;
+  --shake-ease: cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+body {
+  color: var(--foreground);
+  background: var(--bg-app);
+  font-family: var(--font-jetbrains-mono), ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+  overflow-x: hidden;
+  min-height: 100vh;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* Accessible Interactive Affordances */
+button, a[href], [role="button"], label[for] {
+  cursor: pointer;
+}
+button:disabled, [aria-disabled="true"] {
+  cursor: not-allowed;
+}
+
+/* Custom modern scrollbar */
+::-webkit-scrollbar {
+  width: 5px;
+  height: 5px;
+}
+
+::-webkit-scrollbar-track {
+  background: #080a0f;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #23293d;
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #384260;
+}
+
+/* Subtle micro-dot pattern for technical depth without visual clutter */
+.subtle-grid {
+  background-size: 24px 24px;
+  background-image: 
+    linear-gradient(to right, rgba(255, 255, 255, 0.03) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(255, 255, 255, 0.03) 1px, transparent 1px);
+}
+
+/* Linear-style Dev Cards */
+.dev-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border-subtle);
+  border-radius: 0.5rem;
+  transition: border-color 0.15s ease, box-shadow 0.15s ease;
+}
+
+.dev-card:hover {
+  border-color: var(--border-hover);
+}
+
+.dev-card-elevated {
+  background: var(--bg-elevated);
+  border: 1px solid var(--border-medium);
+  border-radius: 0.75rem;
+  box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.5), 0 8px 10px -6px rgba(0, 0, 0, 0.5);
+}
+
+/* Precision Action Buttons */
+.dev-btn-primary {
+  background: var(--accent-emerald);
+  color: #05140b;
+  font-weight: 700;
+  border-radius: 0.375rem;
+  transition: all 0.15s ease;
+}
+
+.dev-btn-primary:hover {
+  background: #26f09e;
+  box-shadow: 0 0 16px rgba(0, 227, 139, 0.3);
+}
+
+.dev-btn-primary:active {
+  transform: scale(0.98);
+}
+
+.dev-btn-secondary {
+  background: rgba(255, 255, 255, 0.04);
+  color: #e2e8f0;
+  border: 1px solid var(--border-subtle);
+  border-radius: 0.375rem;
+  transition: all 0.15s ease;
+}
+
+.dev-btn-secondary:hover {
+  background: rgba(255, 255, 255, 0.08);
+  border-color: var(--border-hover);
+}
+
+.dev-btn-secondary:active {
+  transform: scale(0.98);
+}
+
+/* Radar pulse animation for live drops */
+@keyframes radar-pulse {
+  0% { transform: scale(0.95); opacity: 0.8; }
+  50% { transform: scale(1.3); opacity: 0.2; }
+  100% { transform: scale(0.95); opacity: 0.8; }
+}
+
+.animate-radar {
+  animation: radar-pulse 2s ease-in-out infinite;
+}
+
+/* Tabular Numbers for Timers & Scores (make-interfaces-feel-better) */
+.tabular-nums {
+  font-variant-numeric: tabular-nums;
+  font-feature-settings: "tnum";
+}
+
+/* Transitions.dev - Error State Shake */
+@keyframes t-error-shake {
+  0% { transform: translateX(0); }
+  20% { transform: translateX(calc(-1 * var(--shake-distance))); }
+  40% { transform: translateX(var(--shake-overshoot)); }
+  60% { transform: translateX(calc(-0.5 * var(--shake-overshoot))); }
+  80% { transform: translateX(calc(0.25 * var(--shake-overshoot))); }
+  100% { transform: translateX(0); }
+}
+
+.t-input-shake {
+  animation: t-error-shake 320ms var(--shake-ease);
+}
+
+/* Reduced motion accessibility */
+@media (prefers-reduced-motion: reduce) {
+  *, ::before, ::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}

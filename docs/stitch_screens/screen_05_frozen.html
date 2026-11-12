@@ -1,0 +1,397 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=390, height=844, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" name="viewport"/>
+<title>CRYO LOCKOUT // PROTOCOL: CRYO_V2</title>
+<!-- Google Fonts: Space Mono & JetBrains Mono -->
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700;800&amp;family=Space+Mono:ital,wght@0,400;0,700;1,700&amp;display=swap" rel="stylesheet"/>
+<!-- Material Symbols Outlined -->
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<!-- Tailwind CSS with Forms & Container Queries -->
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+    tailwind.config = {
+      darkMode: "class",
+      theme: {
+        extend: {
+          "colors": {
+            "secondary-fixed": "#9cf0ff",
+            "error-container": "#93000a",
+            "surface-tint": "#00e38b",
+            "on-surface-variant": "#b9cbbc",
+            "surface": "#0f131d",
+            "surface-container-lowest": "#0a0e18",
+            "on-secondary": "#00363d",
+            "inverse-surface": "#dfe2f1",
+            "surface-bright": "#353944",
+            "inverse-on-surface": "#2c303b",
+            "surface-dim": "#0f131d",
+            "on-tertiary": "#2d3133",
+            "secondary-container": "#00e3fd",
+            "on-error": "#690005",
+            "surface-container-highest": "#313540",
+            "surface-container-low": "#171b26",
+            "tertiary": "#fafcfe",
+            "secondary": "#bdf4ff",
+            "on-secondary-fixed": "#001f24",
+            "on-tertiary-fixed": "#191c1e",
+            "on-secondary-container": "#00616d",
+            "on-background": "#dfe2f1",
+            "on-primary-container": "#007143",
+            "on-surface": "#dfe2f1",
+            "on-error-container": "#ffdad6",
+            "on-primary-fixed": "#002110",
+            "primary-container": "#00ff9d",
+            "surface-container": "#1c1f2a",
+            "primary-fixed-dim": "#00e38b",
+            "background": "#0f131d",
+            "on-primary-fixed-variant": "#00522f",
+            "on-primary": "#00391f",
+            "surface-container-high": "#262a35",
+            "error": "#ffb4ab",
+            "surface-variant": "#313540",
+            "on-secondary-fixed-variant": "#004f58",
+            "outline": "#849587",
+            "secondary-fixed-dim": "#00daf3",
+            "inverse-primary": "#006d40",
+            "tertiary-fixed": "#e0e3e5",
+            "tertiary-container": "#dee0e2",
+            "primary": "#f4fff3",
+            "outline-variant": "#3b4a3f",
+            "on-tertiary-container": "#606365",
+            "on-tertiary-fixed-variant": "#444749",
+            "primary-fixed": "#56ffa8",
+            "tertiary-fixed-dim": "#c4c7c9"
+          },
+          "borderRadius": {
+            "DEFAULT": "0.25rem",
+            "lg": "0.5rem",
+            "xl": "0.75rem",
+            "full": "9999px"
+          },
+          "spacing": {
+            "space-xs": "0.25rem",
+            "space-lg": "1rem",
+            "space-md": "0.75rem",
+            "space-xl": "1.5rem",
+            "gutter": "0.75rem",
+            "space-sm": "0.5rem",
+            "margin": "1rem"
+          },
+          "fontFamily": {
+            "headline-xl-mobile": ["Space Mono"],
+            "label-md": ["JetBrains Mono"],
+            "label-lg": ["JetBrains Mono"],
+            "headline-xl": ["Space Mono"],
+            "body-sm": ["JetBrains Mono"],
+            "headline-md": ["Space Mono"],
+            "headline-sm": ["Space Mono"],
+            "body-md": ["JetBrains Mono"],
+            "label-sm": ["JetBrains Mono"],
+            "headline-lg": ["Space Mono"],
+            "body-lg": ["JetBrains Mono"]
+          },
+          "fontSize": {
+            "headline-xl-mobile": ["28px", { "lineHeight": "34px", "letterSpacing": "-0.03em", "fontWeight": "700" }],
+            "label-md": ["10px", { "lineHeight": "14px", "letterSpacing": "0.1em", "fontWeight": "700" }],
+            "label-lg": ["12px", { "lineHeight": "16px", "letterSpacing": "0.08em", "fontWeight": "700" }],
+            "headline-xl": ["36px", { "lineHeight": "44px", "letterSpacing": "-0.04em", "fontWeight": "700" }],
+            "body-sm": ["11px", { "lineHeight": "16px", "letterSpacing": "0.03em", "fontWeight": "400" }],
+            "headline-md": ["20px", { "lineHeight": "28px", "letterSpacing": "-0.01em", "fontWeight": "700" }],
+            "headline-sm": ["16px", { "lineHeight": "22px", "letterSpacing": "0.02em", "fontWeight": "700" }],
+            "body-md": ["12px", { "lineHeight": "18px", "letterSpacing": "0.02em", "fontWeight": "400" }],
+            "label-sm": ["9px", { "lineHeight": "12px", "letterSpacing": "0.12em", "fontWeight": "700" }],
+            "headline-lg": ["24px", { "lineHeight": "32px", "letterSpacing": "-0.02em", "fontWeight": "700" }],
+            "body-lg": ["14px", { "lineHeight": "22px", "letterSpacing": "0.01em", "fontWeight": "500" }]
+          }
+        }
+      }
+    }
+  </script>
+<style>
+    /* Cryo Scanlines overlay */
+    .scanlines-overlay {
+      background: repeating-linear-gradient(
+        0deg,
+        rgba(0, 229, 255, 0.03) 0px,
+        rgba(0, 229, 255, 0.03) 1px,
+        transparent 1px,
+        transparent 3px
+      );
+      pointer-events: none;
+    }
+
+    /* Glitch Chromatic Aberration Text */
+    .cryo-glitch-text {
+      text-shadow: -1px 0 rgba(0, 229, 255, 0.8), 1px 0 rgba(255, 60, 100, 0.6), 0 0 10px rgba(0, 229, 255, 0.4);
+    }
+
+    /* Frost Hex Frame Chamfer */
+    .chamfer-frost {
+      clip-path: polygon(
+        8px 0%, calc(100% - 8px) 0%, 
+        100% 8px, 100% calc(100% - 8px), 
+        calc(100% - 8px) 100%, 8px 100%, 
+        0% calc(100% - 8px), 0% 8px
+      );
+    }
+
+    /* Radial Frost Vignette */
+    .frost-vignette {
+      box-shadow: inset 0 0 35px rgba(0, 229, 255, 0.25), inset 0 0 80px rgba(10, 30, 48, 0.85);
+    }
+
+    /* Animated Segmented Bar */
+    @keyframes pulseStripe {
+      0% { background-position: 0 0; }
+      100% { background-position: 28px 0; }
+    }
+    .segmented-frost-bar {
+      background: repeating-linear-gradient(
+        -45deg,
+        rgba(0, 229, 255, 0.85),
+        rgba(0, 229, 255, 0.85) 6px,
+        rgba(0, 97, 109, 0.5) 6px,
+        rgba(0, 97, 109, 0.5) 12px
+      );
+      background-size: 28px 28px;
+      animation: pulseStripe 1.2s linear infinite;
+    }
+
+    /* Subtle CRT Flicker */
+    @keyframes crtFlicker {
+      0% { opacity: 0.98; }
+      50% { opacity: 1; }
+      52% { opacity: 0.92; }
+      54% { opacity: 0.99; }
+      100% { opacity: 0.98; }
+    }
+    .crt-flicker {
+      animation: crtFlicker 0.2s infinite;
+    }
+  </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-surface-container-lowest text-on-surface antialiased flex justify-center items-center min-h-screen overflow-hidden p-0 m-0">
+<!-- Mobile Viewport Container (390 x 844) -->
+<main class="relative w-[390px] h-[844px] bg-[#06141D] overflow-hidden flex flex-col justify-between border border-secondary-container/30 shadow-[0_0_50px_rgba(0,229,255,0.18)] frost-vignette crt-flicker select-none">
+<!-- Scanline Raster Texture Overlay -->
+<div class="scanlines-overlay absolute inset-0 z-30 pointer-events-none"></div>
+<!-- Glitch / RGB Interference Horizontals -->
+<div class="absolute inset-0 z-20 pointer-events-none overflow-hidden opacity-30">
+<div class="w-full h-[1px] bg-secondary absolute top-[18%] shadow-[0_0_8px_#00e3fd]"></div>
+<div class="w-full h-[2px] bg-error absolute top-[44%] shadow-[0_0_6px_#ffb4ab]"></div>
+<div class="w-full h-[1px] bg-secondary-fixed-dim absolute top-[76%] shadow-[0_0_10px_#00daf3]"></div>
+</div>
+<!-- Frosted Edge Crystals Emulation -->
+<div class="absolute -top-12 -left-12 w-32 h-32 bg-secondary-container/20 rounded-full blur-2xl pointer-events-none"></div>
+<div class="absolute -bottom-10 -right-10 w-36 h-36 bg-secondary-fixed/20 rounded-full blur-2xl pointer-events-none"></div>
+<!-- ========================================== -->
+<!-- 1. TOP APP BAR (Shared Components Token)  -->
+<!-- ========================================== -->
+<header class="relative z-40 w-full bg-surface-container-lowest/80 backdrop-blur-md px-margin py-space-sm border-b border-outline-variant flex justify-between items-center">
+<div class="flex items-center gap-space-sm">
+<span class="material-symbols-outlined text-secondary-container animate-pulse" data-icon="terminal">terminal</span>
+<div>
+<span class="font-headline-sm text-headline-sm tracking-wider uppercase text-secondary-container cryo-glitch-text block">
+            PAYLOAD_DROP // 0x77
+          </span>
+<span class="font-label-sm text-label-sm text-error flex items-center gap-1">
+<span class="material-symbols-outlined text-[10px] text-error" data-icon="ac_unit">ac_unit</span>
+            ALERT: THREAD_FROZEN
+          </span>
+</div>
+</div>
+<div class="flex items-center gap-space-xs">
+<span class="font-label-sm text-label-sm text-secondary px-space-xs py-0.5 border border-secondary-container/40 bg-secondary-container/10 chamfer-frost">
+          LOCK: 0x7F
+        </span>
+<button class="text-on-surface-variant hover:text-secondary-container transition-colors duration-150 p-1 flex items-center justify-center">
+<span class="material-symbols-outlined" data-icon="close">close</span>
+</button>
+</div>
+</header>
+<!-- ========================================== -->
+<!-- 2. CENTRAL CRYO LOCKOUT CONTENT CANVAS     -->
+<!-- ========================================== -->
+<div class="relative z-30 flex-1 px-margin pt-space-xs pb-space-xs flex flex-col justify-between overflow-hidden">
+<!-- Attack Intel Card Header -->
+<section class="flex flex-col items-center text-center mt-1">
+<!-- Hex Cryo Padlock Badge -->
+<div class="relative mb-2 flex items-center justify-center">
+<div class="w-14 h-14 bg-surface-container-low border border-secondary-container/60 chamfer-frost flex items-center justify-center shadow-[0_0_20px_rgba(0,229,255,0.4)]">
+<span class="material-symbols-outlined text-secondary-fixed text-[30px] animate-pulse" data-icon="lock" style="font-variation-settings: 'FILL' 1;">lock</span>
+</div>
+<!-- Orbiting micro-crystal indicators -->
+<span class="material-symbols-outlined absolute -top-1 -right-1 text-secondary text-sm animate-spin" data-icon="ac_unit" style="animation-duration: 9s;">ac_unit</span>
+<span class="material-symbols-outlined absolute -bottom-1 -left-1 text-secondary-container text-xs animate-ping" data-icon="emergency_heat">emergency_heat</span>
+</div>
+<h1 class="font-headline-sm text-headline-sm text-secondary-container tracking-wider uppercase cryo-glitch-text mb-0.5">
+          SYSTEM FROZEN // CRYO LOCKOUT
+        </h1>
+<p class="font-body-sm text-body-sm text-secondary/80 max-w-[290px] leading-tight">
+          Sub-zero cryptographic lock injected into local memory buffer.
+        </p>
+<!-- Offender Tag Badge -->
+<div class="mt-2 inline-flex items-center gap-1.5 px-space-sm py-0.5 border border-error bg-error-container/40 chamfer-frost shadow-[0_0_10px_rgba(255,180,171,0.2)]">
+<span class="w-2 h-2 rounded-full bg-error animate-ping"></span>
+<span class="font-label-md text-label-md text-error-container tracking-wide font-bold uppercase text-error">
+            ATTACKED BY OPERATOR: [AXEL_99] (Via Cryo Freeze Payload)
+          </span>
+</div>
+</section>
+<!-- Giant Circular Progress Ring & Countdown -->
+<section class="flex flex-col items-center justify-center my-1">
+<div class="relative w-40 h-40 flex items-center justify-center">
+<!-- Circular Progress Meter (SVG) -->
+<svg class="w-full h-full -rotate-90 transform" viewbox="0 0 160 160">
+<!-- Background Track -->
+<circle class="opacity-80" cx="80" cy="80" fill="none" r="66" stroke="#171b26" stroke-width="8"></circle>
+<!-- Segmented tick marks -->
+<circle class="opacity-40" cx="80" cy="80" fill="none" r="74" stroke="#00e3fd" stroke-dasharray="2 6" stroke-width="1.5"></circle>
+<!-- Active Frozen Progress Arc -->
+<circle class="filter drop-shadow-[0_0_12px_rgba(0,229,255,0.75)]" cx="80" cy="80" fill="none" r="66" stroke="#00e3fd" stroke-dasharray="415" stroke-dashoffset="135" stroke-linecap="round" stroke-width="9"></circle>
+</svg>
+<!-- Core Typography Inside Timer -->
+<div class="absolute inset-0 flex flex-col items-center justify-center text-center">
+<span class="font-label-sm text-label-sm text-secondary-fixed-dim uppercase tracking-widest -mb-1">
+              RESTORATION IN
+            </span>
+<span class="font-headline-xl text-headline-xl text-secondary-container tracking-tighter cryo-glitch-text font-bold" id="countdown-val">
+              12s
+            </span>
+<span class="font-label-sm text-label-sm text-on-surface-variant uppercase tracking-[0.2em]">
+              REMAINING
+            </span>
+</div>
+</div>
+<!-- Purge Sub-bar with Segmented Animation -->
+<div class="w-full max-w-[290px] mt-1">
+<div class="flex justify-between items-center mb-1">
+<span class="font-label-sm text-label-sm text-secondary flex items-center gap-1">
+<span class="material-symbols-outlined text-[11px] animate-spin" data-icon="sync">sync</span>
+              PURGING CRYOGENIC VIRUS...
+            </span>
+<span class="font-label-sm text-label-sm text-secondary-container font-bold">
+              42%
+            </span>
+</div>
+<div class="w-full h-2.5 bg-surface-container-low border border-secondary-container/40 p-[1px] chamfer-frost">
+<div class="h-full w-[42%] segmented-frost-bar shadow-[0_0_10px_#00e3fd]"></div>
+</div>
+</div>
+</section>
+<!-- 3. FROZEN / DISABLED INTERFACE (Node 03 Challenge) -->
+<section class="relative w-full border border-secondary-container/30 bg-surface-container-low/60 backdrop-blur-sm p-space-sm chamfer-frost">
+<!-- The Diagonal Security Seal / Stamp -->
+<div class="absolute inset-0 z-30 flex items-center justify-center pointer-events-none overflow-hidden">
+<div class="w-[125%] transform -rotate-12 bg-error-container/90 border-y-2 border-error py-1.5 px-3 text-center shadow-[0_0_20px_rgba(255,60,60,0.6)] backdrop-blur-md">
+<p class="font-label-md text-label-md text-primary tracking-widest font-extrabold uppercase">
+              ⚡ TERMINAL INPUT MUTED // ACCESS BLOCKED [15s PENALTY] ⚡
+            </p>
+</div>
+</div>
+<!-- Blurred, Inactive Node Container -->
+<div class="opacity-35 blur-[1.5px] pointer-events-none filter select-none space-y-space-xs">
+<div class="flex justify-between items-center border-b border-outline-variant/60 pb-1">
+<span class="font-label-sm text-label-sm text-on-surface-variant uppercase font-bold">
+              NODE_03 :: QUANTUM_KEY_INJECTION
+            </span>
+<span class="font-label-sm text-label-sm text-outline">
+              VAL: 450 PTS
+            </span>
+</div>
+<!-- Dummy Frosted Input -->
+<div class="relative">
+<div class="w-full bg-surface-container-lowest border border-outline px-space-sm py-1.5 flex items-center justify-between text-on-surface-variant font-body-sm text-body-sm">
+<span class="tracking-widest">FLAG{c7y0_fr0z3n_b7ff3r_99x}</span>
+<span class="material-symbols-outlined text-xs text-outline" data-icon="lock">lock</span>
+</div>
+</div>
+<!-- Disabled Primary Execute CTA -->
+<button class="w-full bg-primary-container text-on-primary font-headline-sm text-headline-sm uppercase py-2 chamfer-frost opacity-50 flex items-center justify-center gap-1">
+<span class="material-symbols-outlined text-sm" data-icon="terminal">terminal</span>
+            EXECUTE &amp; LOCK IN ANSWER
+          </button>
+</div>
+</section>
+<!-- Bottom Warning Ticker & Hardware Diagnostics -->
+<section class="space-y-1 mt-1">
+<!-- Alert Ticker -->
+<div class="w-full bg-surface-container-high/60 border border-secondary-container/30 px-2 py-1 flex items-center gap-1.5 chamfer-frost">
+<span class="material-symbols-outlined text-secondary-fixed text-sm flex-shrink-0" data-icon="warning">warning</span>
+<p class="font-label-sm text-label-sm text-secondary-fixed leading-tight">
+            DO NOT REFRESH. Local memory stream will automatically restore when the countdown finishes.
+          </p>
+</div>
+<!-- Telemetry Diagnostics Strip -->
+<div class="w-full border-t border-secondary-container/20 pt-1 flex justify-between items-center text-secondary/60 font-label-sm text-label-sm">
+<span>SYS_TEMP: <strong class="text-secondary-container">-42°C</strong></span>
+<span>THROTTLE: <strong class="text-error">99.8%</strong></span>
+<span>FROZEN: <strong class="text-secondary-container">0x99F4A</strong></span>
+</div>
+</section>
+</div>
+<!-- ========================================== -->
+<!-- 4. FROZEN MOBILE BOTTOM NAVIGATION BAR    -->
+<!-- (Shared Components Token - style injected) -->
+<!-- Active State: 'TERMINAL' is frozen active   -->
+<!-- ========================================== -->
+<nav class="relative z-40 bg-surface-container-lowest dark:bg-surface-container-lowest border-t border-outline-variant dark:border-outline-variant flex justify-around items-center px-gutter py-space-xs w-full filter brightness-75 backdrop-blur-md">
+<!-- Destination 1: TERMINAL (Active) -->
+<div class="flex flex-col items-center justify-center text-primary-container dark:text-primary-container font-bold border-t-2 border-primary-container pt-1 relative">
+<span class="material-symbols-outlined text-xl" data-icon="terminal">terminal</span>
+<span class="font-label-sm text-label-sm tracking-wider">TERMINAL</span>
+<!-- Locked overlay icon -->
+<span class="material-symbols-outlined absolute -top-1 -right-2 text-[10px] text-secondary" data-icon="lock">lock</span>
+</div>
+<!-- Destination 2: PAYLOADS -->
+<div class="flex flex-col items-center justify-center text-on-surface-variant dark:text-on-surface-variant pt-1 opacity-50 relative">
+<span class="material-symbols-outlined text-xl" data-icon="deployed_code">deployed_code</span>
+<span class="font-label-sm text-label-sm tracking-wider">PAYLOADS</span>
+<span class="material-symbols-outlined absolute -top-1 -right-2 text-[10px] text-secondary" data-icon="lock">lock</span>
+</div>
+<!-- Destination 3: TARGETS -->
+<div class="flex flex-col items-center justify-center text-on-surface-variant dark:text-on-surface-variant pt-1 opacity-50 relative">
+<span class="material-symbols-outlined text-xl" data-icon="crosshair">file_download_done</span>
+<span class="font-label-sm text-label-sm tracking-wider">TARGETS</span>
+<span class="material-symbols-outlined absolute -top-1 -right-2 text-[10px] text-secondary" data-icon="lock">lock</span>
+</div>
+<!-- Destination 4: TELEMETRY -->
+<div class="flex flex-col items-center justify-center text-on-surface-variant dark:text-on-surface-variant pt-1 opacity-50 relative">
+<span class="material-symbols-outlined text-xl" data-icon="monitoring">monitoring</span>
+<span class="font-label-sm text-label-sm tracking-wider">TELEMETRY</span>
+<span class="material-symbols-outlined absolute -top-1 -right-2 text-[10px] text-secondary" data-icon="lock">lock</span>
+</div>
+</nav>
+</main>
+<!-- Interactive Subtle Countdown Decrement Script -->
+<script>
+    document.addEventListener("DOMContentLoaded", () => {
+      let seconds = 12;
+      const countEl = document.getElementById("countdown-val");
+      
+      const interval = setInterval(() => {
+        if (seconds > 1) {
+          seconds--;
+          if (countEl) {
+            countEl.textContent = `${seconds}s`;
+          }
+        } else {
+          if (countEl) {
+            countEl.textContent = "0s";
+          }
+          clearInterval(interval);
+        }
+      }, 1000);
+    });
+  </script>
+</body></html>

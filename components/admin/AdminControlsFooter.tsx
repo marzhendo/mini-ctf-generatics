@@ -1,0 +1,104 @@
+'use client';
+
+import React, { useState } from 'react';
+import { Package, Pause, Play, Trophy, Loader2 } from 'lucide-react';
+import { triggerAirDrop } from '@/app/actions/triggerAirDrop';
+import { sound } from '@/lib/audio';
+import confetti from 'canvas-confetti';
+
+interface AdminControlsFooterProps {
+  isTimerPaused: boolean;
+  onTogglePauseTimer: () => void;
+  onRevealWinners: () => void;
+}
+
+export function AdminControlsFooter({
+  isTimerPaused,
+  onTogglePauseTimer,
+  onRevealWinners,
+}: AdminControlsFooterProps) {
+  const [isTriggeringDrop, setIsTriggeringDrop] = useState(false);
+
+  const handleAirDropClick = async () => {
+    if (isTriggeringDrop) return;
+    setIsTriggeringDrop(true);
+    sound.playAirDropAlert();
+
+    try {
+      const res = await triggerAirDrop();
+      if (!res.success) {
+        alert(res.error || 'Gagal memicu Air Drop.');
+      }
+    } catch {
+      alert('Gagal menghubungi server.');
+    } finally {
+      setIsTriggeringDrop(false);
+    }
+  };
+
+  const handleEndMatch = () => {
+    sound.playSuccess();
+    try {
+      confetti({
+        particleCount: 100,
+        spread: 80,
+        origin: { y: 0.5 },
+        colors: ['#ffd700', '#00ff9d', '#00e3fd', '#ffffff'],
+      });
+    } catch {}
+    onRevealWinners();
+  };
+
+  return (
+    <footer className="w-full z-40 flex flex-col sm:flex-row justify-between items-center px-5 py-2.5 border-t border-white/10 bg-[#080A0F] shrink-0">
+      {/* Left Info */}
+      <div className="flex items-center gap-3 mb-2 sm:mb-0">
+        <span className="font-sans text-xs font-semibold text-zinc-300">
+          Panel Kontrol MC &amp; Operator Panggung
+        </span>
+        <div className="hidden md:flex items-center gap-2 text-zinc-500 font-mono text-xs">
+          <span>•</span>
+          <span>Sesi: CTF-AUDITORIUM-2026</span>
+        </div>
+      </div>
+
+      {/* Action Buttons */}
+      <div className="flex items-center gap-2.5 flex-wrap justify-end">
+        {/* Trigger Air Drop Button */}
+        <button
+          onClick={handleAirDropClick}
+          disabled={isTriggeringDrop}
+          className="bg-amber-500 hover:bg-amber-400 text-zinc-950 font-sans text-xs font-semibold px-3 py-1.5 rounded-md transition-colors flex items-center gap-1.5 disabled:opacity-50"
+        >
+          {isTriggeringDrop ? (
+            <Loader2 className="w-3.5 h-3.5 animate-spin" />
+          ) : (
+            <Package className="w-3.5 h-3.5" />
+          )}
+          <span>Luncurkan Air Drop</span>
+        </button>
+
+        {/* Pause/Resume Timer Button */}
+        <button
+          onClick={() => {
+            sound.playBeep(1000, 0.04);
+            onTogglePauseTimer();
+          }}
+          className="bg-white/10 hover:bg-white/15 text-zinc-200 font-sans text-xs font-semibold px-3 py-1.5 rounded-md transition-colors flex items-center gap-1.5 border border-white/10"
+        >
+          {isTimerPaused ? <Play className="w-3.5 h-3.5 fill-current" /> : <Pause className="w-3.5 h-3.5 fill-current" />}
+          <span>{isTimerPaused ? 'Lanjutkan Timer' : 'Jeda Timer'}</span>
+        </button>
+
+        {/* End Match & Reveal Winners Button */}
+        <button
+          onClick={handleEndMatch}
+          className="bg-emerald-500 hover:bg-emerald-400 text-zinc-950 font-sans text-xs font-semibold px-3.5 py-1.5 rounded-md transition-colors flex items-center gap-1.5"
+        >
+          <Trophy className="w-3.5 h-3.5" />
+          <span>Umumkan Pemenang (Reveal Podium)</span>
+        </button>
+      </div>
+    </footer>
+  );
+}
