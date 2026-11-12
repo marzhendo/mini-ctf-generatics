@@ -68,12 +68,12 @@ async function runAllTests() {
   // ----------------------------------------------------
   console.log('\n--- TEST GROUP 3: Correct Flag & Case Normalization ---');
 
-  // Level 1 target answer is 'GENERATICS_NEXUS_START'
+  // Level 1 target answer is 'B' (Multiple Choice - Talent Development & Innovation)
   // Test case-insensitive and whitespace trimmed submission
   const subLvl1 = await submitFlag({
     userId: user.id,
     level: 1,
-    inputFlag: '  generatics_nexus_start  ',
+    inputFlag: '  b  ',
   });
 
   assert(subLvl1.success && subLvl1.is_correct === true, 'Accept case-insensitive trimmed flag');
@@ -89,7 +89,7 @@ async function runAllTests() {
   const retryLvl1 = await submitFlag({
     userId: user.id,
     level: 1,
-    inputFlag: 'GENERATICS_NEXUS_START',
+    inputFlag: 'B',
   });
 
   assert(!retryLvl1.success, 'Reject duplicate attempt on Level 1 (One-Shot Enforcement)');
@@ -102,7 +102,7 @@ async function runAllTests() {
   const skipToLvl4 = await submitFlag({
     userId: user.id,
     level: 4,
-    inputFlag: 'CYBERSPACE',
+    inputFlag: 'HTML',
   });
 
   assert(!skipToLvl4.success, 'Reject skipping level (must solve Level 2 first)');
@@ -136,11 +136,11 @@ async function runAllTests() {
 
   assert(buff2x.success, 'Activate DOUBLE_POINTS skill');
 
-  // Level 3 answer is 'B' (Multiple Choice - TDI HMIF, base 150 PTS -> double should be 300 PTS)
+  // Level 3 answer is 'A' (Multiple Choice - NGAFIRMATICS, base 150 PTS -> double should be 300 PTS)
   const subLvl3 = await submitFlag({
     userId: user.id,
     level: 3,
-    inputFlag: 'B',
+    inputFlag: 'A',
   });
 
   assert(subLvl3.success && subLvl3.is_correct === true, 'Level 3 solved correctly');
@@ -152,7 +152,7 @@ async function runAllTests() {
   const subLvl4 = await submitFlag({
     userId: user.id,
     level: 4,
-    inputFlag: 'CYBERSPACE',
+    inputFlag: 'HTML',
   });
 
   assert(subLvl4.points_awarded === 150, 'Multiplier auto-reset to 1X on next solve (150 PTS awarded)');

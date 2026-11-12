@@ -98,17 +98,17 @@ async function run20ParticipantsE2ETest() {
   );
 
   // ----------------------------------------------------
-  // STEP 4: Level 1 (Text Flag - Base64) Submission
+  // STEP 4: Level 1 (Multiple Choice - Kepanjangan TDI)
   // 16 Correct, 4 Wrong (Testing Permadeath & Progression)
   // ----------------------------------------------------
   console.log('\n--- STEP 4: Level 1 Submissions (16 Correct, 4 Wrong) ---');
   const lvl1Ch = await getChallenge(1);
-  assert(lvl1Ch.success && lvl1Ch.challenge?.question_type === 'FLAG', 'Level 1 is a FLAG question');
+  assert(lvl1Ch.success && lvl1Ch.challenge?.question_type === 'MULTIPLE_CHOICE', 'Level 1 is MULTIPLE_CHOICE');
 
   const lvl1Subs = await Promise.all(
     participants.map((user, idx) => {
-      // First 16 answer correctly, last 4 answer incorrectly
-      const flag = idx < 16 ? 'GENERATICS_NEXUS_START' : 'WRONG_FLAG_SAMPLE';
+      // First 16 answer correctly ('B'), last 4 answer incorrectly ('D')
+      const flag = idx < 16 ? 'B' : 'D';
       return submitFlag({
         userId: user.id,
         level: 1,
@@ -136,17 +136,17 @@ async function run20ParticipantsE2ETest() {
   const duplicateLvl1 = await submitFlag({
     userId: participants[0].id,
     level: 1,
-    inputFlag: 'GENERATICS_NEXUS_START',
+    inputFlag: 'B',
   });
   assert(!duplicateLvl1.success, 'Enforce One-Shot: Level 1 re-submission rejected');
 
   // ----------------------------------------------------
-  // STEP 5: Level 2 (Text Flag - Binary ASCII)
+  // STEP 5: Level 2 (Text Flag - Core TDI: IDAA)
   // ----------------------------------------------------
   console.log('\n--- STEP 5: Level 2 Submissions ---');
   const lvl2Subs = await Promise.all(
     participants.map((user, idx) => {
-      const flag = idx < 16 ? 'HMIF' : 'WRONG';
+      const flag = idx < 16 ? 'IDAA' : 'WRONG';
       return submitFlag({
         userId: user.id,
         level: 2,
@@ -161,8 +161,8 @@ async function run20ParticipantsE2ETest() {
   assert(correctLvl2[0].streak_count === 2, 'Streak is now 2');
 
   // ----------------------------------------------------
-  // STEP 6: Level 3 (Multiple Choice - TDI HMIF)
-  // Testing Option 'B' vs Text Choice
+  // STEP 6: Level 3 (Multiple Choice - NGAFIRMATICS)
+  // Testing Option 'A' vs Text Choice
   // ----------------------------------------------------
   console.log('\n--- STEP 6: Level 3 Submissions (Multiple Choice) ---');
   const lvl3Ch = await getChallenge(3);
@@ -171,8 +171,7 @@ async function run20ParticipantsE2ETest() {
 
   const lvl3Subs = await Promise.all(
     participants.map((user, idx) => {
-      // Alternate between selecting 'B' and 'B. Divisi Teknologi, Desain, & Inovasi (TDI)'
-      const choice = idx < 16 ? (idx % 2 === 0 ? 'B' : 'B. Divisi Teknologi, Desain, & Inovasi (TDI)') : 'C';
+      const choice = idx < 16 ? (idx % 2 === 0 ? 'A' : 'A. NGAFIRMATICS') : 'C';
       return submitFlag({
         userId: user.id,
         level: 3,
@@ -189,12 +188,12 @@ async function run20ParticipantsE2ETest() {
 
   // ----------------------------------------------------
   // STEP 7: Level 4 (Streak 4 Multiplier: +25% Bonus Points)
-  // Base points: 150. Bonus: round(150 * 1.25) = 188 PTS!
+  // Question: HTML. Base: 150 PTS -> +25% = 188 PTS!
   // ----------------------------------------------------
   console.log('\n--- STEP 7: Level 4 Submissions (STREAK 4: +25% BONUS) ---');
   const lvl4Subs = await Promise.all(
     participants.map((user, idx) => {
-      const flag = idx < 16 ? 'CYBERSPACE' : 'WRONG';
+      const flag = idx < 16 ? 'HTML' : 'WRONG';
       return submitFlag({
         userId: user.id,
         level: 4,
@@ -219,12 +218,12 @@ async function run20ParticipantsE2ETest() {
 
   // ----------------------------------------------------
   // STEP 8: Level 5 (Streak 5 Multiplier: +50% Bonus Points)
-  // Base points: 200. Bonus: round(200 * 1.50) = 300 PTS!
+  // Question: INFENTRA (Option 'B'). Base: 200 PTS -> +50% = 300 PTS!
   // ----------------------------------------------------
   console.log('\n--- STEP 8: Level 5 Submissions (STREAK 5: +50% BONUS) ---');
   const lvl5Subs = await Promise.all(
     participants.map((user, idx) => {
-      const flag = idx < 16 ? 'TOKEN_BAKE_SUCCESS' : 'WRONG';
+      const flag = idx < 16 ? 'B' : 'WRONG';
       return submitFlag({
         userId: user.id,
         level: 5,
