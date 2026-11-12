@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useState } from 'react';
-import { Package, Pause, Play, Trophy, Loader2, RefreshCw, BarChart3 } from 'lucide-react';
+import { Package, Pause, Play, Trophy, Loader2, RefreshCw, BarChart3, Volume2, VolumeX } from 'lucide-react';
 import { triggerAirDrop } from '@/app/actions/triggerAirDrop';
 import { sound } from '@/lib/audio';
 import confetti from 'canvas-confetti';
@@ -24,6 +24,15 @@ export function AdminControlsFooter({
   onOpenAnalysis,
 }: AdminControlsFooterProps) {
   const [isTriggeringDrop, setIsTriggeringDrop] = useState(false);
+  const [isSoundMuted, setIsSoundMuted] = useState(() => sound.isMuted());
+
+  const handleToggleSound = () => {
+    const muted = sound.toggleMute();
+    setIsSoundMuted(muted);
+    if (!muted) {
+      sound.playBeep(1000, 0.05);
+    }
+  };
 
   const handleAirDropClick = async () => {
     if (isTriggeringDrop) return;
@@ -85,6 +94,29 @@ export function AdminControlsFooter({
             <span>Sync</span>
           </button>
         )}
+
+        {/* Sound FX Mute Toggle Button */}
+        <button
+          onClick={handleToggleSound}
+          className={`border text-xs px-2.5 py-1.5 rounded-md transition-all flex items-center gap-1.5 font-sans ${
+            isSoundMuted
+              ? 'border-rose-500/30 bg-rose-500/10 text-rose-300 hover:bg-rose-500/20'
+              : 'border-white/10 bg-white/5 hover:bg-white/10 text-zinc-300 hover:text-white'
+          }`}
+          title={isSoundMuted ? 'Suara dinonaktifkan (Klik untuk aktifkan)' : 'Suara aktif (Klik untuk mute)'}
+        >
+          {isSoundMuted ? (
+            <>
+              <VolumeX className="w-3.5 h-3.5 text-rose-400" />
+              <span>Muted</span>
+            </>
+          ) : (
+            <>
+              <Volume2 className="w-3.5 h-3.5 text-emerald-400" />
+              <span>Audio FX</span>
+            </>
+          )}
+        </button>
 
         {/* Question Analysis (Quizizz Mode) Button */}
         {onOpenAnalysis && (

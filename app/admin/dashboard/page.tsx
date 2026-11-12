@@ -14,6 +14,7 @@ import { CombatLogFeed } from '@/components/admin/CombatLogFeed';
 import { AdminControlsFooter } from '@/components/admin/AdminControlsFooter';
 import { WinnerRevealModal } from '@/components/admin/WinnerRevealModal';
 import QuestionAnalysisModal from '@/components/admin/QuestionAnalysisModal';
+import { StageStreakBanner, StageStreakAlert } from '@/components/admin/StageStreakBanner';
 import { sound } from '@/lib/audio';
 
 export default function AdminDashboardPage() {
@@ -23,8 +24,10 @@ export default function AdminDashboardPage() {
   const [isTimerPaused, setIsTimerPaused] = useState(false);
   const [isWinnerModalOpen, setIsWinnerModalOpen] = useState(false);
   const [isAnalysisModalOpen, setIsAnalysisModalOpen] = useState(false);
+  const [activeStreakAlert, setActiveStreakAlert] = useState<StageStreakAlert | null>(null);
   const [isRefreshing, setIsRefreshing] = useState(false);
   const isFetchingRef = useRef(false);
+  const alertedStreakUsersRef = useRef<Set<string>>(new Set());
 
   // 1. Initial & Periodic Data Fetch (Auto-Sync)
   const fetchData = useCallback(async (isManual = false) => {
@@ -41,6 +44,20 @@ export default function AdminDashboardPage() {
 
       if (leaderboardRes.success && leaderboardRes.users) {
         setUsers(leaderboardRes.users);
+
+        // Check for hot streaks (Streak >= 4) to broadcast banner
+        const hotUser = leaderboardRes.users.find(
+          (u) => u.streak && u.streak >= 4 && !alertedStreakUsersRef.current.has(`${u.id}-${u.streak}`)
+        );
+        if (hotUser && hotUser.streak) {
+          alertedStreakUsersRef.current.add(`${hotUser.id}-${hotUser.streak}`);
+          setActiveStreakAlert({
+            id: `streak-${Date.now()}`,
+            userName: hotUser.name,
+            streakCount: hotUser.streak,
+            bonusPercent: hotUser.streak === 4 ? '25%' : '50%',
+          });
+        }
       }
       if (eventsRes.success && eventsRes.events) {
         setEvents(eventsRes.events);
@@ -120,6 +137,22 @@ export default function AdminDashboardPage() {
           } else {
             sound.playBeep(950, 0.05);
           }
+
+          if (newEvt.description && newEvt.description.includes('Streak')) {
+            const streakMatch = newEvt.description.match(/Streak\s*(\d+)x/i);
+            const streakNum = streakMatch ? parseInt(streakMatch[1], 10) : 0;
+            if (streakNum >= 4) {
+              const nameMatch = newEvt.description.match(/^(.*?)\s+menyelesaikan/);
+              const opName = nameMatch ? nameMatch[1] : 'Operator';
+              setActiveStreakAlert({
+                id: `streak-${Date.now()}`,
+                userName: opName,
+                streakCount: streakNum,
+                bonusPercent: streakNum === 4 ? '25%' : '50%',
+              });
+            }
+          }
+
           fetchData();
         }
       )
@@ -231,6 +264,12 @@ export default function AdminDashboardPage() {
       <QuestionAnalysisModal
         isOpen={isAnalysisModalOpen}
         onClose={() => setIsAnalysisModalOpen(false)}
+      />
+
+      {/* Stage Streak Alert Banner (Streak >= 4x / 5x) */}
+      <StageStreakBanner
+        alert={activeStreakAlert}
+        onDismiss={() => setActiveStreakAlert(null)}
       />
     </div>
   );

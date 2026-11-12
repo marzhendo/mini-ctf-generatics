@@ -62,7 +62,10 @@ export function ChallengeTerminal({ challenge }: ChallengeTerminalProps) {
   const isMultipleChoice = challenge.question_type === 'MULTIPLE_CHOICE';
 
   return (
-    <article className="dev-card p-0 overflow-hidden shadow-2xl">
+    <article
+      key={challenge.level}
+      className="dev-card p-0 overflow-hidden shadow-2xl animate-terminal-enter border border-white/10 hover:border-cyan-500/30 transition-colors"
+    >
       {/* IDE Window Titlebar */}
       <div className="h-10 px-3.5 bg-[#0D111A] border-b border-white/10 flex items-center justify-between">
         <div className="flex items-center gap-2">

@@ -62,7 +62,7 @@ export function FlagInputSection({
       <form onSubmit={handleSubmit} className="space-y-3">
         {/* Render Multiple Choice Options OR Monospace Input */}
         {isMultipleChoice && options.length > 0 ? (
-          <div className={`space-y-2 ${shake ? 't-input-shake' : ''}`}>
+          <div className={`space-y-2 transition-all ${shake ? 't-input-shake p-1 rounded-lg border border-rose-500/80 shadow-[0_0_12px_rgba(244,63,94,0.4)]' : ''}`}>
             <span className="text-xs font-mono text-zinc-400 block mb-1">
               PILIH SALAH SATU OPSI DI BAWAH:
             </span>
@@ -109,7 +109,7 @@ export function FlagInputSection({
           </div>
         ) : (
           /* Modern Monospace Input Box for Flag text */
-          <div className={`relative flex items-center ${shake ? 't-input-shake' : ''}`}>
+          <div className={`relative flex items-center transition-all ${shake ? 't-input-shake border border-rose-500/80 rounded-lg shadow-[0_0_12px_rgba(244,63,94,0.4)]' : ''}`}>
             <div className="absolute left-3.5 flex items-center pointer-events-none text-cyan-400">
               <span className="font-mono text-sm font-semibold">&gt;</span>
             </div>

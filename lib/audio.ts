@@ -5,8 +5,36 @@
 
 class SoundEngine {
   private ctx: AudioContext | null = null;
+  private muted = false;
+
+  constructor() {
+    if (typeof window !== 'undefined') {
+      try {
+        this.muted = localStorage.getItem('nexus_sound_muted') === 'true';
+      } catch {}
+    }
+  }
+
+  isMuted(): boolean {
+    return this.muted;
+  }
+
+  setMuted(muted: boolean) {
+    this.muted = muted;
+    if (typeof window !== 'undefined') {
+      try {
+        localStorage.setItem('nexus_sound_muted', muted ? 'true' : 'false');
+      } catch {}
+    }
+  }
+
+  toggleMute(): boolean {
+    this.setMuted(!this.muted);
+    return this.muted;
+  }
 
   private getContext(): AudioContext | null {
+    if (this.muted) return null;
     if (typeof window === 'undefined') return null;
     if (!this.ctx) {
       const AudioCtx = window.AudioContext || (window as unknown as { webkitAudioContext: typeof AudioContext }).webkitAudioContext;

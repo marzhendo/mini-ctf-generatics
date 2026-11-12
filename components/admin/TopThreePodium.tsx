@@ -3,6 +3,7 @@
 import React from 'react';
 import { Trophy, Medal, Star, Snowflake, Zap } from 'lucide-react';
 import { LeaderboardUser } from '@/lib/types';
+import { AnimatedCounter } from '@/components/ui/AnimatedCounter';
 
 interface TopThreePodiumProps {
   topUsers: LeaderboardUser[];
@@ -61,7 +62,7 @@ export function TopThreePodium({ topUsers }: TopThreePodiumProps) {
         </div>
         <div className="text-right font-mono">
           <div className="text-2xl lg:text-3xl font-extrabold text-slate-100 tabular-nums">
-            {rank2 ? rank2.score.toLocaleString() : '0'}
+            {rank2 ? <AnimatedCounter value={rank2.score} /> : '0'}
           </div>
           <div className="text-[10px] text-zinc-500 uppercase">
             Poin
@@ -118,7 +119,7 @@ export function TopThreePodium({ topUsers }: TopThreePodiumProps) {
         </div>
         <div className="text-right font-mono">
           <div className="text-2xl lg:text-3xl font-extrabold text-amber-300 tabular-nums">
-            {rank1 ? rank1.score.toLocaleString() : '0'}
+            {rank1 ? <AnimatedCounter value={rank1.score} /> : '0'}
           </div>
           <div className="text-[10px] text-zinc-500 uppercase">
             Poin
@@ -172,7 +173,7 @@ export function TopThreePodium({ topUsers }: TopThreePodiumProps) {
         </div>
         <div className="text-right font-mono">
           <div className="text-2xl lg:text-3xl font-extrabold text-amber-400/90 tabular-nums">
-            {rank3 ? rank3.score.toLocaleString() : '0'}
+            {rank3 ? <AnimatedCounter value={rank3.score} /> : '0'}
           </div>
           <div className="text-[10px] text-zinc-500 uppercase">
             Poin

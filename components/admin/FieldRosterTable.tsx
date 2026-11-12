@@ -1,8 +1,9 @@
 'use client';
 
-import React from 'react';
-import { Table, Snowflake } from 'lucide-react';
+import React, { useRef, useEffect, useState } from 'react';
+import { Table, Snowflake, Flame, ArrowUp, ArrowDown } from 'lucide-react';
 import { LeaderboardUser } from '@/lib/types';
+import { AnimatedCounter } from '@/components/ui/AnimatedCounter';
 
 interface FieldRosterTableProps {
   users: LeaderboardUser[];
@@ -11,6 +12,35 @@ interface FieldRosterTableProps {
 export function FieldRosterTable({ users }: FieldRosterTableProps) {
   // If more than 3 users, show from rank 4 onwards or all users if <= 3
   const displayUsers = users.length > 3 ? users.slice(3) : users;
+
+  const prevRanksRef = useRef<Map<string, number>>(new Map());
+  const [rankShifts, setRankShifts] = useState<Map<string, 'UP' | 'DOWN'>>(new Map());
+
+  // Detect ranking shifts for smooth visual highlights
+  useEffect(() => {
+    const shifts = new Map<string, 'UP' | 'DOWN'>();
+    users.forEach((u) => {
+      const prev = prevRanksRef.current.get(u.id);
+      if (prev && u.rank) {
+        if (u.rank < prev) {
+          shifts.set(u.id, 'UP');
+        } else if (u.rank > prev) {
+          shifts.set(u.id, 'DOWN');
+        }
+      }
+      if (u.rank) {
+        prevRanksRef.current.set(u.id, u.rank);
+      }
+    });
+
+    if (shifts.size > 0) {
+      setRankShifts(shifts);
+      const timer = setTimeout(() => {
+        setRankShifts(new Map());
+      }, 2500);
+      return () => clearTimeout(timer);
+    }
+  }, [users]);
 
   return (
     <section className="col-span-12 lg:col-span-8 dev-card bg-[#0A0D15] p-0 flex flex-col min-h-0 shadow-xl overflow-hidden">
@@ -49,7 +79,7 @@ export function FieldRosterTable({ users }: FieldRosterTableProps) {
         <div className="col-span-2 text-right">Status</div>
       </div>
 
-      {/* Scrollable High Density Rows */}
+      {/* Scrollable High Density Rows with Layout Shift Highlights */}
       <div className="flex-1 overflow-y-auto divide-y divide-white/5 font-mono">
         {displayUsers.length === 0 ? (
           <div className="py-12 text-center text-zinc-500 font-sans text-xs">
@@ -59,24 +89,37 @@ export function FieldRosterTable({ users }: FieldRosterTableProps) {
           displayUsers.map((u) => {
             const rankStr = u.rank ? (u.rank < 10 ? `#0${u.rank}` : `#${u.rank}`) : '#--';
             const nodeMatrix = u.nodeMatrix || [];
+            const shift = rankShifts.get(u.id);
 
             return (
               <div
                 key={u.id}
-                className={`grid grid-cols-12 px-4 py-2.5 items-center transition-colors text-xs ${
-                  u.isFrozen
+                className={`grid grid-cols-12 px-4 py-2.5 items-center transition-all duration-300 text-xs ${
+                  shift === 'UP'
+                    ? 'bg-emerald-500/15 border-l-2 border-emerald-400 shadow-[0_0_12px_rgba(0,255,136,0.2)]'
+                    : shift === 'DOWN'
+                    ? 'bg-rose-500/10 border-l-2 border-rose-500/60'
+                    : u.isFrozen
                     ? 'bg-cyan-500/10 border-l-2 border-cyan-400'
-                    : 'hover:bg-white/5'
+                    : 'hover:bg-white/5 border-l-2 border-transparent'
                 }`}
               >
-                {/* Rank */}
-                <div className="col-span-1 font-mono text-zinc-400 font-semibold">
-                  {rankStr}
+                {/* Rank & Movement Indicator */}
+                <div className="col-span-1 font-mono text-zinc-400 font-semibold flex items-center gap-1">
+                  <span>{rankStr}</span>
+                  {shift === 'UP' && <ArrowUp className="w-3 h-3 text-emerald-400 animate-bounce" />}
+                  {shift === 'DOWN' && <ArrowDown className="w-3 h-3 text-rose-400" />}
                 </div>
 
-                {/* Operator Name */}
+                {/* Operator Name & Badges */}
                 <div className="col-span-3 font-sans text-xs text-white font-medium flex items-center gap-1.5 truncate pr-2">
                   <span className="truncate">{u.name}</span>
+                  {u.streak && u.streak >= 3 ? (
+                    <span className="px-1.5 py-0.2 bg-rose-500/20 border border-rose-500/40 text-rose-300 text-[9px] font-bold rounded flex items-center gap-0.5 animate-pulse">
+                      <Flame className="w-2.5 h-2.5 text-rose-400" />
+                      <span>{u.streak}X</span>
+                    </span>
+                  ) : null}
                   {u.isFrozen && (
                     <Snowflake className="w-3.5 h-3.5 text-cyan-400 animate-spin" />
                   )}
@@ -111,7 +154,7 @@ export function FieldRosterTable({ users }: FieldRosterTableProps) {
 
                 {/* Score */}
                 <div className="col-span-2 text-right font-mono text-xs text-amber-300 font-bold tabular-nums">
-                  {u.score.toLocaleString()}
+                  <AnimatedCounter value={u.score} />
                 </div>
 
                 {/* Status */}

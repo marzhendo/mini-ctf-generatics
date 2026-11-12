@@ -3,6 +3,7 @@
 import React from 'react';
 import Image from 'next/image';
 import { Terminal, Bot, Trophy, Timer, Radio, Zap, Flame } from 'lucide-react';
+import { AnimatedCounter } from '@/components/ui/AnimatedCounter';
 
 interface ArenaHeaderProps {
   userName: string;
@@ -93,9 +94,10 @@ export function ArenaHeader({
           {/* Points / Score Badge */}
           <div className="flex items-center space-x-1.5 px-2.5 py-1 rounded bg-amber-400/10 border border-amber-400/30">
             <Trophy className="w-3.5 h-3.5 text-amber-400" />
-            <span className="text-amber-300 font-extrabold text-sm tabular-nums">
-              {score.toLocaleString()}
-            </span>
+            <AnimatedCounter
+              value={score}
+              className="text-amber-300 font-extrabold text-sm tabular-nums"
+            />
             <span className="text-[10px] text-amber-400/80">PTS</span>
           </div>
 
@@ -153,7 +155,7 @@ export function ArenaHeader({
 
           <div className="flex items-center gap-1.5">
             {currentStreak >= 3 && (
-              <span className="px-2 py-0.5 bg-rose-500/20 border border-rose-500/50 text-rose-300 text-[10px] font-bold rounded flex items-center gap-1">
+              <span className="px-2 py-0.5 bg-rose-500/20 border border-rose-500/50 text-rose-300 text-[10px] font-bold rounded flex items-center gap-1 animate-streak-fire">
                 <Flame className="w-3 h-3 text-rose-400 animate-bounce" />
                 <span>{currentStreak}X{streakBonusText ? ` (${streakBonusText})` : ''}</span>
               </span>
