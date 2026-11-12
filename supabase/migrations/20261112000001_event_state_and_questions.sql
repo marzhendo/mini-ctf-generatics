@@ -19,12 +19,29 @@ INSERT INTO event_state (id, status, duration_minutes, seconds_remaining)
 VALUES ('current', 'WAITING', 30, 1800)
 ON CONFLICT (id) DO NOTHING;
 
--- Enable Realtime for event_state
-ALTER PUBLICATION supabase_realtime ADD TABLE event_state;
+-- Enable Realtime for event_state (Idempotent / Safe to re-run)
+DO $$
+BEGIN
+  ALTER PUBLICATION supabase_realtime ADD TABLE event_state;
+EXCEPTION
+  WHEN duplicate_object THEN NULL;
+END $$;
 
 ALTER TABLE event_state ENABLE ROW LEVEL SECURITY;
-CREATE POLICY "Public can view event state" ON event_state FOR SELECT USING (true);
-CREATE POLICY "Service Role can manage event state" ON event_state FOR ALL USING (auth.role() = 'service_role');
+
+DO $$
+BEGIN
+  CREATE POLICY "Public can view event state" ON event_state FOR SELECT USING (true);
+EXCEPTION
+  WHEN duplicate_object THEN NULL;
+END $$;
+
+DO $$
+BEGIN
+  CREATE POLICY "Service Role can manage event state" ON event_state FOR ALL USING (auth.role() = 'service_role');
+EXCEPTION
+  WHEN duplicate_object THEN NULL;
+END $$;
 
 -- 2. Alter Table challenges (Multiple Choice & Category Support)
 ALTER TABLE challenges
